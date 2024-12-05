@@ -1,0 +1,212 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa2                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/02 16:15:26 by jurrutia          #+#    #+#             */
+/*   Updated: 2024/05/02 18:21:59 by jurrutia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+static int	count_digits(int n)
+{
+	int	count;
+
+	count = 0;
+	while (n != 0)
+	{
+		n = n / 10;
+		count++;
+	}
+	return (count);
+}
+
+void	calcular_num_digits(int n, int *num_digits)
+{
+	long long	num;
+	int			sign;
+
+	num = n;
+	sign = 1;
+	*num_digits = 0;
+	if (num < 0)
+	{
+		sign = -1;
+		num = -num;
+	}
+	if (num == 0)
+		*num_digits = 1;
+	else if (num == -2147483648)
+		*num_digits = count_digits((long long)2147483647) + 1;
+	else
+		*num_digits = count_digits(num);
+	if (sign == -1)
+		(*num_digits)++;
+}
+
+char	*ft_itoa(int n)
+{
+	long long	num;
+	int			sign;
+	int			num_digits;
+	char		*result;
+	int			i;
+
+	num = n;
+	sign = 1;
+	num_digits = 0;
+	calcular_num_digits(n, &num_digits);
+	result = (char *)malloc((num_digits + 1) * sizeof(char));
+	if (result == NULL)
+		return (NULL);
+	result[num_digits] = '\0';
+	i = num_digits - 1;
+	if (num < 0)
+	{
+		sign = -1;
+		num = -num;
+	}
+	while (i >= 0)
+	{
+		result[i] = (char)('0' + (num - (num / 10) * 10));
+		num = num / 10;
+		i--;
+	}
+	if (sign == -1)
+		result[0] = '-';
+	return (result);
+}
+
+/* int	main(void)
+{
+	int		num;
+	char	*str;
+
+	num = 2147483647;
+	str = ft_itoa(num);
+	if (str != NULL)
+	{
+		printf("Número: %d, Cadena: %s\n", num, str);
+		free(str);
+	}
+	num = -2147483648;
+	str = ft_itoa(num);
+	if (str != NULL)
+	{
+		printf("Número: %d, Cadena: %s\n", num, str);
+		free(str);
+	}
+	return (0);
+} */
+
+// DESCRIPCION.Utilizando malloc(3), genera una string que represente
+// el valor entero recibido como argumento. Los números negativos
+// tienen que gestionarse.
+
+// VALOR DEVUELTO. La string que represente el número. NULL si falla la
+// reserva de memoria.
+
+// PARAMETROS
+// n: el entero a convertir.
+
+// La función ft_itoa convierte un número entero n en una cadena de 
+// caracteres correspondiente a su representación en base 10. 
+
+// 1-Determinación de la longitud de la cadena resultante contando el 
+// número de dígitos en el número entero n
+// 2-Asignación de memoria para la nueva cadena utilizando malloc, 
+// con un tamaño igual a la longitud calculada más uno para el carácter nulo \0.
+// 3-Conversión del número entero en una cadena de caracteres. La función
+//  convierte cada dígito del número entero n en un carácter, empezando por 
+// el último dígito y avanzando hacia la izquierda
+// 4-Manejo del signo del número. Si n es negativo, se coloca el signo - 
+// al principio de la cadena y se convierte el valor absoluto de n.
+// 5- Inversión de la cadena. Una vez que todos los dígitos se han agregado 
+// a la cadena, esta se invierte para que los dígitos estén en el orden 
+// correcto
+// 6-Devolver la nueva cadena: La función devuelve la nueva cadena que
+// contiene la representación de n en formato de caracteres
+
+/* // Función para calcular la longitud de un entero //
+size_t	ft_int_len(int n)
+{
+	size_t len; // Variable para almacenar la longitud del número
+
+	len = 0; // Inicializamos la longitud a 0
+	if (n < 0)
+		len++; // Si el número es negativo, incrementamos la longitud en 1
+	while (n != 0)
+	{
+		n = n / 10; // Dividimos el número por 10 para obtener el siguiente
+		 dígito
+		len++;     // Incrementamos la longitud para contar el dígito
+	}
+	return (len); // Devolvemos la longitud del número
+}
+
+// Función para convertir un entero en una cadena de caracteres //
+void imprimir_numero(int n, char *n_str)
+{
+	int divisor; // Variable para calcular los dígitos del número
+	int digito;  // Variable para almacenar cada dígito del número
+	int almacen; // Variable para llevar la cuenta de la posición en la cadena
+
+	divisor = 1; // Inicializamos el divisor a 1
+	almacen = 0; // Inicializamos el contador de almacenamiento a 0
+	// Ajustamos el divisor para encontrar el dígito más significativo del número
+	while (n / divisor >= 10)
+		divisor = divisor * 10;
+	// Si el primer carácter de la cadena es '-', incrementamos el contador
+	 de almacenamiento
+	if (n_str[0] == '-')
+		almacen++;
+	// Iteramos sobre el número para obtener cada dígito y almacenarlo en la
+	 cadena
+	while (divisor > 0)
+	{
+		digito = n / divisor;          // Obtenemos el dígito actual
+		n_str[almacen] = digito + '0'; // Almacenamos el dígito en la cadena
+		almacen++;                     // Incrementamos el contador de 
+										almacenamiento
+		n -= digito * divisor;         // Restamos el dígito del número
+		divisor = divisor / 10;        // Reducimos el divisor para obtener 
+		el siguiente dígito
+	}
+	n_str[almacen] = '\0'; // Agregamos el carácter nulo al final de la cadena
+}
+
+// Función para convertir un entero en una cadena de caracteres //
+char *ft_itoa(int n)
+{
+	char *n_str;   // Puntero para almacenar la cadena resultante
+	size_t len;    // Variable para almacenar la longitud de la cadena
+
+	// Casos especiales para los valores límite y el cero
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648")); // Devolvemos una cadena 
+		predefinida para el valor mínimo
+	if (n == 0)
+		return (ft_strdup("0")); // Devolvemos una cadena predefinida para 
+		el valor cero
+
+	len = ft_int_len(n); // Calculamos la longitud de la cadena necesaria
+	// Asignamos memoria para la cadena resultante
+	n_str = (char *)malloc((len + 1) * sizeof(char));
+	// Verificamos si la asignación de memoria fue exitosa
+	if (n_str == NULL)
+		return (NULL); // Si falla, devolvemos NULL
+	n_str[len] = '\0'; // Agregamos el carácter nulo al final de la cadena
+	// Caso especial para números negativos
+	if (n < 0)
+	{
+		n_str[0] = '-'; // Establecemos el primer carácter como '-'
+		n = -n;         // Convertimos el número a positivo
+	}
+	// Llamamos a la función para imprimir el número en la cadena
+	imprimir_numero(n, n_str);
+	return (n_str); // Devolvemos la cadena resultante
+} */

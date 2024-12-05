@@ -1,0 +1,19 @@
+
+
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 -o programa get_next_line.c get_next_line_utils.c main.c
+
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 -o programa get_next_line.c get_next_line_utils.c
+
+./programa texto1.txt
+
+sin main
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c
+./get_next_line texto2.txt 
+
+./programa texto1.txt
+
+
+
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 -o programa get_next_line_bonus.c get_next_line_utils_bonus.c
+
+./programa texto1.txt texto2.txt texto3.txt

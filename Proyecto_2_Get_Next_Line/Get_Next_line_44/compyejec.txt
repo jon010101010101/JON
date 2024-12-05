@@ -1,0 +1,34 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    compyejec.txt                                      :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/05/31 20:13:08 by jurrutia          #+#    #+#              #
+#    Updated: 2024/06/13 11:17:52 by jurrutia         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+gcc -o get_next_line main.c get_next_line.c get_next_line_utils.c
+
+gcc -o get_next_line get_next_line.c get_next_line_utils.c
+
+./get_next_line texto2.txt 
+
+gcc -Wall -Wextra -Werror main.c get_next_line_bonus.c get_next_line_utils_bonus.c -o programa
+
+./programa texto3.txt texto4.txt texto5.txt
+
+
+
+42
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 <archivos>.c.
+
+cc -Wall -Werror -Wextra -D BUFFER_SIZE=42 -o get_next_line get_next_line.c get_next_line_utils.c
+./get_next_line texto2.txt 
+
+
+cc -Wall -Wextra -Werror main.c get_next_line_bonus.c get_next_line_utils_bonus.c -o programa
+
+./programa texto3.txt texto4.txt texto5.txt

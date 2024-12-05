@@ -1,0 +1,8 @@
+# This is a comment describing the build system section
+[build-system]
+requires = ["setuptools>=42", "wheel"]  # Dependencies needed to build the package
+build-backend = "setuptools.build_meta"  # Backend that will be used for the build
+
+
+# See explanation in README.md
+

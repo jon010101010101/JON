@@ -1,0 +1,7 @@
+TEXTO CON SALTOS DE LINEA Y VACIO
+hola
+
+
+amigo
+
+
