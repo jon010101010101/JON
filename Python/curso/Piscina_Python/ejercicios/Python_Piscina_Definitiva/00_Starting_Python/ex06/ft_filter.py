@@ -1,12 +1,15 @@
+def ft_filter(func, iterable):
+    """
+    Filtra los elementos del iterable según la función proporcionada.
+    
+    Args:
+        func: Función que determina si un elemento debe ser incluido.
+        iterable: Iterable a filtrar.
 
-def ft_filter(function, iterable):
-    """filter(function or None, iterable) --> filter object\n
-Return an iterator yielding those items of iterable for which function(item)
-is true. If function is None, return the items that are true."""
-    if function:
-        return (item for item in iterable if function(item))
-    return (item for item in iterable if item)
-
+    Returns:
+        List de elementos que cumplen la condición.
+    """
+    return [item for item in iterable if func(item)] #lista de compresion
 
 """
 ¿Qué es una lista de comprensión?
@@ -30,5 +33,4 @@ Ventajas de las Listas de Comprensión
 
 <list> es el tipo de datos, mientras que la lista de comprensión es una técnica
  para crear listas.
-
-"""
+ """
