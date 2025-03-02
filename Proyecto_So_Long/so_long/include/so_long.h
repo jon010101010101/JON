@@ -9,7 +9,7 @@
 #include "../libft/libft.h"
 
 // Definición de constantes
-#define TILE_SIZE 64
+#define TILE_SIZE 32
 #define MAX_MAP_HEIGHT 100
 #define MAX_MAP_WIDTH 100
 

@@ -1,7 +1,8 @@
 #include "../include/so_long.h"
 
 // Función para inicializar el juego
-void init_game(t_game *game) {
+void init_game(t_game *game)
+{
     // Inicializa MiniLibX
     game->mlx = mlx_init();
     game->win = NULL; // Inicializa la ventana como NULL
@@ -11,7 +12,8 @@ void init_game(t_game *game) {
     // Inicializa otras variables según sea necesario
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     t_game game;
 
     // Verifica que se haya pasado un argumento para el archivo del mapa
@@ -24,7 +26,8 @@ int main(int argc, char **argv) {
     init_game(&game);
 
     // Carga el mapa
-    if (load_map(&game, argv[1]) < 0) {
+    if (load_map(&game, argv[1]) < 0)
+    {
         return -1; // Manejo de errores al cargar el mapa
     }
 
@@ -36,7 +39,8 @@ int main(int argc, char **argv) {
 
     // Crea la ventana
     game.win = mlx_new_window(game.mlx, game.width * TILE_SIZE, game.height * TILE_SIZE, "So Long");
-    if (!game.win) {
+    if (!game.win)
+    {
         fprintf(stderr, "Error: Could not create window\n");
         return -1;
     }
@@ -44,8 +48,12 @@ int main(int argc, char **argv) {
     // Renderiza el juego
     render_game(&game);
 
+    // Añade estos hooks:
+    mlx_key_hook(game.win, key_press, &game);
+    mlx_hook(game.win, 17, 0, close_window, &game);  // Para manejar el cierre de la ventana
+
     // Bucle principal del juego (eventos, actualización)
-    mlx_loop(game.mlx); // Suponiendo que usas MiniLibX
+    mlx_loop(game.mlx);
 
     return 0;
 }

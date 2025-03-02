@@ -63,7 +63,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    game.win = mlx_new_window(game.mlx, game.width * TILE_SIZE, game.height * TILE_SIZE, "So Long");
+    // Modificación aquí: establecemos un tamaño fijo para la ventana
+    int window_width = 1280;
+    int window_height = 720;
+    game.win = mlx_new_window(game.mlx, window_width, window_height, "So Long");
     if (!game.win)
     {
         ft_putstr_fd("Error: No se pudo crear la ventana\n", 2);
