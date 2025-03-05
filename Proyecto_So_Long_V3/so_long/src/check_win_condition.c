@@ -1,13 +1,23 @@
-#include "../include/so_long.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_win_condition.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/05 13:19:08 by jurrutia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int check_win_condition(t_game *game)
+#include "../include/so_long.h"
+#include <stdio.h>
+
+void	check_win_condition(t_game *game)
 {
-    // Verifica si el número de coleccionables recogidos es igual al número total de coleccionables
-    // y si hay al menos una salida en el mapa
-    if (game->collected == game->collectibles && game->exit_count > 0)
-    {
-        ft_printf("¡Felicidades! Has ganado el juego en %d movimientos.\n", game->moves);
-        return 1; // Condición de victoria cumplida
-    }
-    return 0; // Condición de victoria no cumplida
+	if (game->map[game->player_y][game->player_x] == 'E')
+	{
+		printf("¡Felicidades! ¡Has llegado a la meta!\n");
+		close_game(game);
+	}
 }

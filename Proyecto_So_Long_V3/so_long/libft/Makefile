@@ -6,7 +6,7 @@
 #    By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 17:51:15 by jurrutia          #+#    #+#              #
-#    Updated: 2025/03/04 10:19:42 by jurrutia         ###   ########.fr        #
+#    Updated: 2025/03/01 19:37:48 by jurrutia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,9 +44,8 @@ clean:
 	rm -f $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
-	rm -f $(NAME) $(OBJS) $(BONUS_OBJS) # Añadido: eliminar también los .o
+	rm -f $(NAME)
 
 re: fclean all
 
 .PHONY: all bonus clean fclean re
-

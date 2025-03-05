@@ -1,40 +1,28 @@
 NAME = so_long
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -I./include -I./minilibx-linux -I./libft
-LDFLAGS = -L./minilibx-linux -L./libft -lft -lmlx -lX11 -lXext -lm
+CFLAGS = -Wall -Wextra -Werror -g3
+INC = -I./include -I./minilibx-linux -I.
+LIB = -L./minilibx-linux -lmlx -Llibft -lft -lX11 -lXext -lm
 
-SRCS = src/main.c src/load_map.c src/load_images.c src/render_game.c \
-       src/key_press.c src/player.c src/close_window.c src/error_handling.c \
-       src/utils.c src/check_win_condition.c
+SRC_DIR = src
+OBJ_DIR = obj
 
-OBJS = $(SRCS:.c=.o)
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
-MLX_DIR = minilibx-linux
-MLX = $(MLX_DIR)/libmlx.a
+all: $(NAME)
 
-all: $(LIBFT) $(MLX) $(NAME)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
-
-$(MLX):
-	$(MAKE) -C $(MLX_DIR)
-
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(MLX) $(LDFLAGS) -o $(NAME)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(INC) $(OBJ) $(LIB) -o $(NAME)
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	$(MAKE) -C $(MLX_DIR) clean
-	rm -f $(OBJS)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
 
 re: fclean all

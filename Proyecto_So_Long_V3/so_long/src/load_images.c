@@ -1,38 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   load_images.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/04 12:49:27 by jurrutia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/so_long.h"
 
-void load_images(t_game *game)
+// Función auxiliar para cargar una imagen desde un archivo XPM
+static void	*load_xpm_image(
+	void *mlx_ptr,
+	char *filename,
+	int *width,
+	int *height
+)
+
 {
-    int width, height;
+	void	*img_ptr;
 
-    // Carga las imágenes desde archivos XPM con la ruta correcta
-    game->img_wall = mlx_xpm_file_to_image(game->mlx, "src/textures/wall.xpm", &width, &height);
-    game->img_empty = mlx_xpm_file_to_image(game->mlx, "src/textures/empty.xpm", &width, &height);
-    game->img_collectible = mlx_xpm_file_to_image(game->mlx, "src/textures/collectible.xpm", &width, &height);
-    game->img_exit = mlx_xpm_file_to_image(game->mlx, "src/textures/exit.xpm", &width, &height);
-    game->img_player = mlx_xpm_file_to_image(game->mlx, "src/textures/player.xpm", &width, &height);
+	img_ptr = mlx_xpm_file_to_image(mlx_ptr, filename, width, height);
+	return (img_ptr);
+}
 
-    // Verifica si las imágenes se han cargado correctamente
-    if (!game->img_wall || !game->img_empty || !game->img_collectible || 
-        !game->img_exit || !game->img_player)
-    {
-        ft_printf("Error: Failed to load one or more images\n");
-        // Liberar las imágenes que se hayan cargado correctamente
-        if (game->img_wall)
-            mlx_destroy_image(game->mlx, game->img_wall);
-        if (game->img_empty)
-            mlx_destroy_image(game->mlx, game->img_empty);
-        if (game->img_collectible)
-            mlx_destroy_image(game->mlx, game->img_collectible);
-        if (game->img_exit)
-            mlx_destroy_image(game->mlx, game->img_exit);
-        if (game->img_player)
-            mlx_destroy_image(game->mlx, game->img_player);
-        exit(EXIT_FAILURE); // Termina el programa si hay un error
-    }
+// Función auxiliar para verificar si una imagen se cargó correctamente
+static void	check_image(void *img_ptr, char *filename)
+{
+	if (!img_ptr)
+	{
+		ft_printf("Error: Failed to load image %s\n", filename);
+		exit(EXIT_FAILURE);
+	}
+}
 
-    // Almacena las dimensiones de las imágenes
-    game->img_width = width;
-    game->img_height = height;
+// Función auxiliar para cargar las dimensiones de la imagen
+static void	store_image_dimensions(t_game *game, int width, int height)
+{
+	game->img_width = width;
+	game->img_height = height;
+	ft_printf("Images loaded successfully. ");
+	ft_printf("Width: %d, Height: %d\n", width, height);
+}
 
-    ft_printf("Images loaded successfully. Width: %d, Height: %d\n", width, height);
+void	load_images(t_game *game)
+{
+	int	width;
+	int	height;
+
+	game->img_wall = load_xpm_image(game->mlx, "src/textures/wall.xpm", \
+									&width, &height);
+	check_image(game->img_wall, "src/textures/wall.xpm");
+	game->img_empty = load_xpm_image(game->mlx, "src/textures/empty.xpm", \
+									&width, &height);
+	check_image(game->img_empty, "src/textures/empty.xpm");
+	game->img_collectible = load_xpm_image(game->mlx, \
+										"src/textures/collectible.xpm", \
+										&width, &height);
+	check_image(game->img_collectible, "src/textures/collectible.xpm");
+	game->img_exit = load_xpm_image(game->mlx, "src/textures/exit.xpm", \
+									&width, &height);
+	check_image(game->img_exit, "src/textures/exit.xpm");
+	game->img_player = load_xpm_image(game->mlx, "src/textures/player.xpm", \
+									&width, &height);
+	check_image(game->img_player, "src/textures/player.xpm");
+	store_image_dimensions(game, width, height);
 }

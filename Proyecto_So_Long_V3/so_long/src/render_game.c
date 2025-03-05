@@ -1,72 +1,106 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_game.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/05 12:21:02 by jurrutia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/so_long.h"
+#include <stdio.h>
 
-typedef struct s_image_map
+#include "../include/so_long.h"
+#include <stdio.h>
+
+// Limpia la ventana y dibuja un tile
+void	clear_and_draw_tile(t_game *game, int x, int y)
 {
-    char key;
-    void *img;
-} t_image_map;
+	void	*img;
+	int		x_pixels;
+	int		y_pixels;
 
-void render_position(t_game *game, int x, int y, t_image_map *img_map)
-{
-    if (x < 0 || x >= game->width || y < 0 || y >= game->height)
-        return;
-
-    char tile = game->map[y][x];
-
-    while (img_map->key != '\0')
-    {
-        if (img_map->key == tile)
-        {
-            mlx_put_image_to_window(game->mlx, game->win, img_map->img, x * TILE_SIZE, y * TILE_SIZE);
-            break;
-        }
-        img_map++;
-    }
+	img = NULL;
+	if (game->map[y][x] == '1')
+		img = game->img_wall;
+	else if (game->map[y][x] == '0')
+		img = game->img_empty;
+	else if (game->map[y][x] == 'C')
+		img = game->img_collectible;
+	else if (game->map[y][x] == 'E')
+		img = game->img_exit;
+	if (!img)
+		return ;
+	x_pixels = x * TILE_SIZE;
+	y_pixels = y * TILE_SIZE;
+	mlx_clear_window(game->mlx, game->win);
+	mlx_put_image_to_window(game->mlx, game->win, img, x_pixels, y_pixels);
 }
 
-void render_recursive(t_game *game, int x, int y, t_image_map *img_map)
+// Dibuja el mapa
+void	draw_map(t_game *game)
 {
-    if (y >= game->height)
-        return;
-    if (x >= game->width)
-    {
-        render_recursive(game, 0, y + 1, img_map);
-        return;
-    }
+	static int	x = 0;
+	static int	y = 0;
 
-    render_position(game, x, y, img_map);
-    render_recursive(game, x + 1, y, img_map);
+	if (y < game->height)
+	{
+		if (x < game->width)
+		{
+			clear_and_draw_tile(game, x, y);
+			x++;
+		}
+		if (x == game->width)
+		{
+			x = 0;
+			y++;
+		}
+		draw_map(game);
+	}
+	else
+	{
+		x = 0;
+		y = 0;
+	}
 }
 
-void print_current_map(t_game *game)
+// Dibuja al jugador
+void	draw_player(t_game *game)
 {
-    printf("Current map state:\n");
-    for (int y = 0; y < game->height; y++)
-    {
-        for (int x = 0; x < game->width; x++)
-        {
-            printf("%c", game->map[y][x]);
-        }
-        printf("\n");
-    }
+	int		player_x_pixels;
+	int		player_y_pixels;
+	void	*img;
+
+	img = game->img_player;
+	player_x_pixels = game->player_x * TILE_SIZE;
+	player_y_pixels = game->player_y * TILE_SIZE;
+	mlx_put_image_to_window(game->mlx, game->win, img,
+		player_x_pixels, player_y_pixels);
 }
 
-int render_game(t_game *game)
+// Muestra el número de movimientos
+void	show_moves(t_game *game)
 {
-    mlx_clear_window(game->mlx, game->win);
+	char	*moves_str;
+	char	*message;
 
-    t_image_map img_map[] =
-    {
-        {'1', game->img_wall},
-        {'0', game->img_empty},
-        {'C', game->img_collectible},
-        {'E', game->img_exit},
-        {'P', game->img_player},
-        {'\0', NULL}
-    };
+	moves_str = ft_itoa(game->moves);
+	message = ft_strjoin("Moves: ", moves_str);
+	mlx_string_put(game->mlx, game->win, 10, 20, 0x00FFFFFF, message);
+	free(moves_str);
+	free(message);
+}
 
-    printf("Before rendering: Width = %d, Height = %d\n", game->width, game->height);
-    print_current_map(game);
-    render_recursive(game, 0, 0, img_map);
-    return 0;
+// Renderiza el juego
+int	render_game(t_game *game)
+{
+	if (!game)
+		return (1);
+	draw_map(game);
+	draw_player(game);
+	show_moves(game);
+	return (0);
 }

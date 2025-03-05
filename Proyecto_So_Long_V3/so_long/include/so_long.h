@@ -1,67 +1,129 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/05 13:39:01 by jurrutia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
-#define SO_LONG_H
+# define SO_LONG_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include "../minilibx-linux/mlx.h"
-#include "../libft/libft.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include "../libft/libft.h"
+# include <mlx.h>
 
-// Definición de constantes
-#define TILE_SIZE 32
-#define MAX_MAP_HEIGHT 100
-#define MAX_MAP_WIDTH 100
+# define MAX_MAP_WIDTH 400
+# define MAX_MAP_HEIGHT 400
+# define TILE_SIZE 32
 
-// Definición de teclas (ajusta según tu sistema)
-#define KEY_ESC 65307
-#define KEY_W 119
-#define KEY_A 97
-#define KEY_S 115
-#define KEY_D 100
-#define KEY_UP 65362
-#define KEY_DOWN 65364
-#define KEY_LEFT 65361
-#define KEY_RIGHT 65363
+// Define las teclas
+# define KEY_ESC 53
+# define KEY_W 13
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_UP 126
+# define KEY_LEFT 123
+# define KEY_DOWN 125
+# define KEY_RIGHT 124
 
-// Definición de la estructura t_game
-typedef struct s_game {
-    void *mlx;       // Puntero a la instancia de MiniLibX
-    void *win;       // Puntero a la ventana del juego
-    char **map;      // Matriz que representa el mapa del juego
-    int width;       // Ancho del mapa (en tiles)
-    int height;      // Alto del mapa (en tiles)
-    int player_x;    // Coordenada X del jugador (en tiles)
-    int player_y;    // Coordenada Y del jugador (en tiles)
-    int exit_x;      // Coordenada X de la salida (en tiles)
-    int exit_y;      // Coordenada Y de la salida (en tiles)
-    int collectibles; // Número total de objetos coleccionables en el mapa
-    int collected;   // Número de objetos coleccionados por el jugador
-     int exit_count;  //Cantidad de salidas
-    int moves;       // Número de movimientos realizados por el jugador
-    void *img_wall;    // Puntero a la imagen del muro
-    void *img_empty;   // Puntero a la imagen del espacio vacío
-    void *img_collectible; // Puntero a la imagen del coleccionable
-    void *img_exit;    // Puntero a la imagen de la salida
-    void *img_player;  // Puntero a la imagen del jugador
-     int img_width;   //Ancho de la imagen
-     int img_height;  //Alto de la imagen
-} t_game;
+typedef struct s_game
+{
+	void	*mlx;
+	void	*win;
+	char	**map;
+	int		width;
+	int		height;
+	int		player_x;
+	int		player_y;
+	int		exit_x;
+	int		exit_y;
+	int		collectibles;
+	int		collected;
+	int		exit_count;
+	int		moves;
+	int		win_condition;
+	void	*img_wall;
+	void	*img_empty;
+	void	*img_collectible;
+	void	*img_exit;
+	void	*img_player;
+	int		img_width;
+	int		img_height;
+}	t_game;
 
-// Declaraciones de funciones
-void init_game(t_game *game);
-int load_map(t_game *game, const char *filename);
-void load_images(t_game *game);
-int key_press(int keycode, t_game *game);
-int render_game(t_game *game);
-int close_window(t_game *game); // Modificado el tipo de parámetro
-int is_valid_move(t_game *game, int x, int y);
-void update_player_position(t_game *game, int new_x, int new_y);
-void print_moves(t_game *game);
-int check_win_condition(t_game *game);
-void error_exit(const char *message);
-void warning(const char *message);
-void debug_log(const char *message);
-int validate_map(t_game *game);
+typedef struct s_image_map
+{
+	char	tile;
+	void	*img;
+}	t_image_map;
 
-#endif // SO_LONG_H
+// Funciones en init_game.c
+void	init_game(t_game *game);
+
+// Funciones en load_images.c
+void	load_images(t_game *game);
+
+// Funciones en load_map.c
+int		load_map(t_game *game, const char *filename);
+void 	init_game_variables(t_game *game);
+int     allocate_map_memory(t_game *game, int fd);
+int 	open_map_file(const char *filename);
+int     load_and_validate_map(int fd, t_game *game);
+
+// Funciones en map_reader.c
+int 	read_map_from_file(int fd, t_game *game);
+int 	process_map_line(char *line_start, t_game *game, int total_height);
+
+// Funciones en map_processor.c
+int     process_read_line(char *buffer, t_game *game, int fd);
+int 	process_line(char *buffer, t_game *game, int height);
+
+// Funciones en map_validation.c
+int		validate_map(t_game *game);
+int		validate_horizontal_borders(t_game *game);
+int		validate_vertical_borders(t_game *game);
+int		validate_map_elements(t_game *game, int *player_count);
+int		validate_map_rules(t_game *game, int player_count);
+
+// Funciones en map_utils.c
+int 	handle_lseek(int fd, ssize_t read_bytes, char *buffer);
+
+// Funciones en key_press.c
+int		key_press(int keycode, t_game *game);
+int     is_valid_move(t_game *game, int x, int y);
+void 	update_player_position(t_game *game, int keycode);
+void 	check_win_condition(t_game *game);
+void    close_game(t_game *game);
+
+// Funciones en close_window.c
+int		close_window(void *param);
+
+// Funciones en render_game.c
+int		render_game(t_game *game);
+void 	clear_and_draw_tile(t_game *game, int x, int y);
+void 	draw_map(t_game *game);
+void 	draw_player(t_game *game);
+void 	show_moves(t_game *game);
+
+// Funciones en utils.c
+void	print_moves(t_game *game);
+
+// Funciones en error_handling.c
+int		handle_error(const char *message, int fd);
+
+// Funciones en player.c
+void calculate_new_position(int keycode, int *new_x, int *new_y);
+void update_map(t_game *game, int new_x, int new_y);
+
+#endif
+
+

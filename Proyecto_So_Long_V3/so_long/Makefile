@@ -1,34 +1,48 @@
 NAME = so_long
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -I./include -I../../minilibx-linux -I./libft
-MLX_FLAGS = -L../../minilibx-linux -lmlx -lX11 -lXext -lm
+CFLAGS = -Wall -Wextra -Werror -g3
+INC = -I./include -I./minilibx-linux -I./libft -I.
+LIB = -L./minilibx-linux -lmlx -L./libft -lft -lX11 -lXext -lm
 
-SRCS = src/main.c src/load_map.c src/load_images.c src/render_game.c \
-       src/key_press.c src/player.c src/close_window.c src/error_handling.c \
-       src/utils.c src/check_win_condition.c src/validate_map.c
+SRC_DIR = src
+OBJ_DIR = obj
 
-OBJS = $(SRCS:.c=.o)
+SRC = $(SRC_DIR)/check_win_condition.c \
+      $(SRC_DIR)/close_window.c \
+      $(SRC_DIR)/error_handling.c \
+      $(SRC_DIR)/init_game.c \
+      $(SRC_DIR)/key_press.c \
+      $(SRC_DIR)/load_images.c \
+      $(SRC_DIR)/load_map.c \
+      $(SRC_DIR)/map_reader.c \
+      $(SRC_DIR)/map_processor.c \
+      $(SRC_DIR)/map_validation.c \
+      $(SRC_DIR)/map_utils.c \
+      $(SRC_DIR)/main.c \
+      $(SRC_DIR)/player.c \
+      $(SRC_DIR)/render_game.c \
+      $(SRC_DIR)/utils.c
 
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-all: $(LIBFT) $(NAME)
+all: $(NAME)
 
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+# Add libft dependency
+$(NAME): $(OBJ) libft/libft.a
+	$(CC) $(CFLAGS) $(INC) $(OBJ) $(LIB) -o $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Libft rule
+libft/libft.a:
+	@$(MAKE) -C libft
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -f $(OBJS)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
 
 re: fclean all
