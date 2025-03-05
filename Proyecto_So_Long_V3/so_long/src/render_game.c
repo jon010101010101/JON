@@ -6,12 +6,9 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 12:21:02 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:57:54 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/so_long.h"
-#include <stdio.h>
 
 #include "../include/so_long.h"
 #include <stdio.h>
@@ -32,38 +29,33 @@ void	clear_and_draw_tile(t_game *game, int x, int y)
 		img = game->img_collectible;
 	else if (game->map[y][x] == 'E')
 		img = game->img_exit;
+	else if (game->map[y][x] == 'P')
+	{
+		img = game->img_player;
+	}
 	if (!img)
 		return ;
 	x_pixels = x * TILE_SIZE;
 	y_pixels = y * TILE_SIZE;
-	mlx_clear_window(game->mlx, game->win);
 	mlx_put_image_to_window(game->mlx, game->win, img, x_pixels, y_pixels);
 }
 
 // Dibuja el mapa
 void	draw_map(t_game *game)
 {
-	static int	x = 0;
-	static int	y = 0;
+	int	x;
+	int	y;
 
-	if (y < game->height)
+	y = 0;
+	while (y < game->height)
 	{
-		if (x < game->width)
+		x = 0;
+		while (x < game->width)
 		{
 			clear_and_draw_tile(game, x, y);
 			x++;
 		}
-		if (x == game->width)
-		{
-			x = 0;
-			y++;
-		}
-		draw_map(game);
-	}
-	else
-	{
-		x = 0;
-		y = 0;
+		y++;
 	}
 }
 
@@ -99,6 +91,7 @@ int	render_game(t_game *game)
 {
 	if (!game)
 		return (1);
+	mlx_clear_window(game->mlx, game->win);
 	draw_map(game);
 	draw_player(game);
 	show_moves(game);
