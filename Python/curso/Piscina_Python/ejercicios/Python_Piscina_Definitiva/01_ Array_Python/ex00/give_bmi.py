@@ -1,3 +1,5 @@
+import numpy as np
+
 def give_bmi(
     height: list[int | float],
     weight: list[int | float]

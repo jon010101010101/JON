@@ -24,7 +24,7 @@ def ft_tqdm(lst: range) -> None:
     for i, elem in enumerate(lst):
         yield elem
         percent = (i + 1) / total * 100
-        bar_length = 40
+        bar_length = 160
         block = int(bar_length * percent // 100)
         bar = '█' * block + '-' * (bar_length - block)
         sys.stdout.write(
