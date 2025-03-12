@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 13:14:04 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:18:50 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../libft/libft.h"
 #include <stdio.h>
 
-// Procesa una línea leída del archivo
+// Process a line read from the file
 int	process_read_line(char *buffer, t_game *game, int fd)
 {
 	char	*newline;
@@ -34,7 +34,7 @@ int	process_read_line(char *buffer, t_game *game, int fd)
 	return (line_length);
 }
 
-// Procesa el archivo
+// Process the file
 int	process_line(char *buffer, t_game *game, int height)
 {
 	int	i;
@@ -58,7 +58,7 @@ int	process_line(char *buffer, t_game *game, int height)
 	return (0);
 }
 
-// Procesa una línea del mapa
+// Process a map line
 int	process_map_line(char *line_start, t_game *game, int total_height)
 {
 	int	line_length;

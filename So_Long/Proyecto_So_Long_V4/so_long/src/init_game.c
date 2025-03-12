@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 17:01:17 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 18:27:51 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	init_mlx_and_map(t_game *game)
 	game->mlx = mlx_init();
 	if (!game->mlx)
 	{
-		ft_putstr_fd("Error: No se pudo inicializar MLX\n", 2);
+		ft_putstr_fd("Error: Could not initialize MLX\n", 2);
+		close_game(game);
 		exit(1);
 	}
 	game->win = NULL;
@@ -64,7 +65,7 @@ void	create_window(t_game *game)
 				game->height * TILE_SIZE, "So Long");
 		if (!game->win)
 		{
-			ft_putstr_fd("Error: No se pudo crear la ventana\n", 2);
+			ft_putstr_fd("Error: Could not create the window\n", 2);
 			exit(1);
 		}
 	}

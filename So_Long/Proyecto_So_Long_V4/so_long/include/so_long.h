@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 17:21:15 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:23:15 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_image_map
 	void	*img;
 }	t_image_map;
 
-// Declaraciones de funciones
+// Function declarations
 void	init_game(t_game *game);
 void	init_mlx_and_map(t_game *game);
 void	init_player_and_images(t_game *game);
@@ -103,5 +103,9 @@ int		validate_map_elements(t_game *game, int *player_count);
 int		validate_map_rules(t_game *game, int player_count);
 int		handle_lseek(int fd, ssize_t read_bytes, char *buffer);
 void	load_images(t_game *game);
+void	close_game(t_game *game);
+void	destroy_images_part1(t_game *game);
+void	destroy_images_part2(t_game *game);
+void	destroy_window_and_display(t_game *game);
 
 #endif

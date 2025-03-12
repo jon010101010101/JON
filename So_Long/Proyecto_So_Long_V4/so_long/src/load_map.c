@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 13:30:14 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 18:24:53 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int	read_map_from_file(int fd, t_game *game);
 int	validate_map(t_game *game);
 
-// Inicializa las variables del juego
+// Initialize game variables
 void	init_game_variables(t_game *game)
 {
 	game->width = 0;
@@ -66,7 +66,7 @@ int	load_and_validate_map(int fd, t_game *game)
 	return (0);
 }
 
-// Carga el mapa desde el archivo
+// Load the map from the file
 int	load_map(t_game *game, const char *filename)
 {
 	int	fd;

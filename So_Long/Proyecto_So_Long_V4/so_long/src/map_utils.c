@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 12:27:45 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:20:02 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../libft/libft.h"
 #include <unistd.h>
 
-// Maneja el lseek del archivo
+// Handle file lseek
 int	handle_lseek(int fd, ssize_t read_bytes, char *buffer)
 {
 	char	*newline_ptr;

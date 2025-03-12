@@ -5,15 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 16:57:54 by jurrutia         ###   ########.fr       */
+/*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/07 19:22:42 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 #include <stdio.h>
 
-// Limpia la ventana y dibuja un tile
+// Clear the window and draw a tile
 void	clear_and_draw_tile(t_game *game, int x, int y)
 {
 	void	*img;
@@ -40,7 +40,7 @@ void	clear_and_draw_tile(t_game *game, int x, int y)
 	mlx_put_image_to_window(game->mlx, game->win, img, x_pixels, y_pixels);
 }
 
-// Dibuja el mapa
+// Draw the map
 void	draw_map(t_game *game)
 {
 	int	x;
@@ -59,7 +59,7 @@ void	draw_map(t_game *game)
 	}
 }
 
-// Dibuja al jugador
+// Draw the player
 void	draw_player(t_game *game)
 {
 	int		player_x_pixels;
@@ -73,7 +73,7 @@ void	draw_player(t_game *game)
 		player_x_pixels, player_y_pixels);
 }
 
-// Muestra el número de movimientos
+// Display the number of moves
 void	show_moves(t_game *game)
 {
 	char	*moves_str;
@@ -86,7 +86,7 @@ void	show_moves(t_game *game)
 	free(message);
 }
 
-// Renderiza el juego
+// Render the game
 int	render_game(t_game *game)
 {
 	if (!game)

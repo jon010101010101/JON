@@ -5,19 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 17:06:39 by jurrutia         ###   ########.fr       */
+/*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/07 19:14:55 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 #include <stdio.h>
 
-// Funciones auxiliares
+// Auxiliary functions
 void	calculate_new_position(int keycode, int *new_x, int *new_y);
 void	update_map(t_game *game, int new_x, int new_y);
 
-// Función para actualizar la posición del jugador
+// Function to update the player's position
 void	update_player_position(t_game *game, int keycode)
 {
 	int	new_x;
@@ -39,7 +39,7 @@ void	update_player_position(t_game *game, int keycode)
 		printf("Movimiento inválido.\n");
 }
 
-// Función auxiliar para calcular la nueva posición
+// Auxiliary function to calculate the new position
 void	calculate_new_position(int keycode, int *new_x, int *new_y)
 {
 	if (keycode == 65362 || keycode == 119)
@@ -52,16 +52,20 @@ void	calculate_new_position(int keycode, int *new_x, int *new_y)
 		(*new_x)++;
 }
 
-// Función auxiliar para actualizar el mapa
+// Auxiliary function to update the map
 void	update_map(t_game *game, int new_x, int new_y)
 {
-	game->map[game->player_y][game->player_x] = '0';
-	if (game->map[new_y][new_x] == 'C')
+	char	current_tile;
+
+	current_tile = game->map[new_y][new_x];
+	if (game->map[game->player_y][game->player_x] == 'P')
+		game->map[game->player_y][game->player_x] = '0';
+	if (current_tile == 'C')
 	{
 		game->collected++;
 		game->map[new_y][new_x] = '0';
 	}
-	else if (game->map[new_y][new_x] == 'E')
+	else if (current_tile == 'E')
 	{
 		if (game->collected == game->collectibles)
 		{
@@ -70,15 +74,15 @@ void	update_map(t_game *game, int new_x, int new_y)
 			return ;
 		}
 		else
-		{
-			printf("Debes recoger todos los coleccionables.\n");
-			return ;
-		}
+			printf("You must collect all the collectibles.\n");
 	}
-	game->map[new_y][new_x] = 'P';
+	game->player_x = new_x;
+	game->player_y = new_y;
+	if (current_tile != 'E')
+		game->map[new_y][new_x] = 'P';
 }
 
-// Función para verificar si el movimiento es válido
+// Function to check if the move is valid
 int	is_valid_move(t_game *game, int x, int y)
 {
 	if (x < 0 || x >= game->width || y < 0 || y >= game->height)

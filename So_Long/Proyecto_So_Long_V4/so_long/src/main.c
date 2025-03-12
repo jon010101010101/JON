@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/04 19:32:57 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 18:41:24 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,28 @@ int	setup_window_and_hooks(t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game	game;
+	t_game	*game;
 
+	game = ft_calloc(1, sizeof(t_game));
 	if (argc != 2)
 	{
 		fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
 		return (1);
 	}
-	init_game(&game);
-	if (load_game_resources(&game, argv[1]) < 0)
+	init_game(game);
+	if (load_game_resources(game, argv[1]) < 0)
 	{
 		return (-1);
 	}
-	printf("Before rendering: Width = %d, Height = %d\n", game.width,
-		game.height);
-	if (setup_window_and_hooks(&game) < 0)
+	printf("Before rendering: Width = %d, Height = %d\n", game->width,
+		game->height);
+	if (setup_window_and_hooks(game) < 0)
 	{
 		return (-1);
 	}
-	render_game(&game);
-	mlx_loop(game.mlx);
+	render_game(game);
+	mlx_loop(game->mlx);
 	return (0);
 }
+
+void	close_game(t_game *game);

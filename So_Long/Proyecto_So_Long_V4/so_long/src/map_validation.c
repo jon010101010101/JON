@@ -5,15 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 12:00:00 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 12:26:12 by jurrutia         ###   ########.fr       */
+/*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
+/*   Updated: 2025/03/07 19:20:47 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 #include "../libft/libft.h"
 
-// Declaraciones de funciones (pueden estar en so_long.h)
+// Function declarations (can be placed in so_long.h)
 int	validate_horizontal_borders(t_game *game);
 int	validate_vertical_borders(t_game *game);
 int	validate_map_elements(t_game *game, int *player_count);

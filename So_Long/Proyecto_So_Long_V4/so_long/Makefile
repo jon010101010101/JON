@@ -10,20 +10,22 @@ LIBFT_A = $(LIBFT_PATH)/libft.a
 
 SRCS_PATH = src
 SRCS_FILES = main.c \
-			  load_map.c \
-			  map_reader.c \
-			  map_processor.c \
-			  map_validation.c \
-			  map_utils.c \
-			  init_game.c \
-			  load_images.c \
-			  key_press.c \
-			  close_window.c \
-			  render_game.c \
-			  utils.c \
-			  error_handling.c \
-			  player.c \
-			  check_win_condition.c
+              load_map.c \
+              map_reader.c \
+              map_processor.c \
+              map_validation.c \
+              map_utils.c \
+              init_game.c \
+              load_images.c \
+              key_press.c \
+              close_window.c \
+              render_game.c \
+              utils.c \
+              error_handling.c \
+              player.c \
+              check_win_condition.c \
+              cleanup.c
+
 SRCS = $(addprefix $(SRCS_PATH)/, $(SRCS_FILES))
 
 OBJS_PATH = obj

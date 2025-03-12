@@ -6,7 +6,7 @@
 /*   By: jurrutia <jurrutia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:19:44 by jurrutia          #+#    #+#             */
-/*   Updated: 2025/03/05 13:27:36 by jurrutia         ###   ########.fr       */
+/*   Updated: 2025/03/07 19:19:35 by jurrutia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 int	process_map_line(char *line_start, t_game *game, int total_height);
 
-// Procesa el búfer leído del archivo
+// Process the buffer read from the file
 int	process_buffer(char *buffer, t_game *game, int *total_height)
 {
 	char	*line_start;
@@ -45,7 +45,7 @@ int	process_buffer(char *buffer, t_game *game, int *total_height)
 	return (0);
 }
 
-// Lee el mapa desde el archivo
+// Read the map from the file
 int	read_map_from_file(int fd, t_game *game)
 {
 	char	buffer[MAX_MAP_WIDTH + 1];
