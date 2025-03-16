@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snippets Integration</title>
+</head>
+<body>
+    <script>
+        async function loadAndExecuteScripts() {
+            try {
+                const scriptNames = ["file4.js", "file1.js", "file3.js", "file2.js"]; // Correct order for execution
+                let allCode = "";
+
+                for (const scriptName of scriptNames) {
+                    const response = await fetch(scriptName);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch ${scriptName}: ${response.status}`);
+                    }
+                    const scriptCode = await response.text();
+                    allCode += scriptCode + ";\n"; // Concatenate Javascript with a semicolon
+                }
+
+                const scriptElement = document.createElement('script');
+                scriptElement.textContent = allCode;
+                document.body.appendChild(scriptElement);
+
+            } catch (error) {
+                console.error("Error loading and executing scripts:", error);
+            }
+        }
+
+        loadAndExecuteScripts();
+    </script>
+</body>
+</html>
