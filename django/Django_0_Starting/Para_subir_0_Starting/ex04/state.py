@@ -14,25 +14,24 @@ def get_state_from_capital(capital):
         "CO": "Denver"
     }
 
-    # Crear un diccionario inverso de capital_cities
+    # Create an inverse dictionary of capital_cities
     cities_to_abbr = {v: k for k, v in capital_cities.items()}
     
-    # Crear un diccionario inverso de states
+    # Create an inverse dictionary of states
     abbr_to_states = {v: k for k, v in states.items()}
 
-    # Buscar la capital en el diccionario inverso
+    # Look up the capital in the inverse dictionary
     if capital in cities_to_abbr:
-        # Obtener la abreviatura del estado
         abbr = cities_to_abbr[capital]
-        # Obtener el nombre completo del estado
         state = abbr_to_states[abbr]
         print(state)
     else:
         print("Unknown capital city")
 
 if __name__ == '__main__':
-    # Verificar si hay exactamente un argumento
+    # Check if there is exactly one argument
     if len(sys.argv) == 2:
         capital = sys.argv[1]
         get_state_from_capital(capital)
-    # Si no hay argumentos o hay más de uno, no hacer nada y salir
+
+

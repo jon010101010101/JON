@@ -1,23 +1,24 @@
 def read_and_print_numbers():
     try:
-        # Abrir el archivo numbers.txt en modo lectura
+        # Open the file numbers.txt in read mode (r)
         with open('numbers.txt', 'r') as file:
-            # Leer el contenido del archivo
+            # Read the content of the file
             content = file.read()
             
-            # Dividir el contenido por comas
+            # Split the content by commas
             numbers = content.split(',')
             
-            # Imprimir cada número en una línea separada
+            # Print each number on a separate line
             for number in numbers:
-                # strip() elimina espacios en blanco al inicio y al final
+                # strip() removes whitespace at the beginning and end
                 print(number.strip())
     
     except FileNotFoundError:
-        print("Error: El archivo 'numbers.txt' no se encontró.")
+        print("Error: The file 'numbers.txt' was not found.")
     except Exception as e:
-        print(f"Error inesperado: {e}")
+        print(f"Unexpected error: {e}")
 
-# Llamar a la función cuando se ejecute el script
+# Call the function when the script is executed
 if __name__ == '__main__':
     read_and_print_numbers()
+

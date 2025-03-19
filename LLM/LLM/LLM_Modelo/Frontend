@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Sentimientos</title>
+</head>
+<body>
+    <h1>Análisis de Sentimientos</h1>
+    <form id="sentiment-form">
+        <textarea name="text" rows="5" cols="40" placeholder="Escribe tu texto aquí..."></textarea><br>
+        <button type="submit">Analizar Sentimiento</button>
+    </form>
+    <h2 id="result"></h2>
+
+    <script>
+        const form = document.getElementById('sentiment-form');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            result.textContent = `Sentimiento: ${data.sentiment}`;
+        });
+    </script>
+</body>
+</html>

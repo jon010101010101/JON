@@ -1,5 +1,5 @@
 def create_dict_from_list():
-    # List of tuples as provided in the instructions
+    # List of tuples provided in the instructions
     d = [
         ('Hendrix', '1942'),
         ('Allman', '1946'),
@@ -26,24 +26,20 @@ def create_dict_from_list():
     # Create a dictionary where the year is the key and the musician's name is the value
     # If multiple musicians have the same year, they will be concatenated with a space
     musician_dict = {}
+
+    # Iterate through the list of tuples `d`, where each tuple contains a name and a year
     for name, year in d:
         if year in musician_dict:
-            musician_dict[year] += f" {name}"
+            musician_dict[year] += f" {name}"  # Concatenate the current name to the existing value, separated by a space
         else:
             musician_dict[year] = name
 
-    # Print the dictionary in the required format
+    # Iterate through the dictionary items to print them in the required format
     for year, names in musician_dict.items():
         print(f"{year} : {names}")
-
 
 # Call the function when the script is executed directly
 if __name__ == '__main__':
     create_dict_from_list()
 
 
-# El orden final no tendrá que ser el mismo que en el ejemplo. 
-# Es un comportamiento habitual.
-#¿Sabes por qué?  el orden dependerá del momento y método de inserción. 
-# Para garantizar un orden específico, es necesario usar herramientas 
-# como sorted() o estructuras como OrderedDict

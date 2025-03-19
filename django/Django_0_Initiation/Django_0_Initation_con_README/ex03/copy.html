@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replicating Web Page</title>
+  <link rel="stylesheet" href="style.css"> <!-- Includes CSS file -->
+  <style>
+    body {
+      margin-left: 50px; /* Increased left margin */
+    }
+  </style>
+</head>
+<body>
+    <!-- Frontend skills -->
+    <ul>
+        <li>
+            <h2>Frontend</h2>
+            <p class="html5" style="width: 80%" data-value="80">HTML5</p>
+            <progress class="html5" value="80" max="100"></progress>
+                
+            <p class="css3" style="width: 60%" data-value="60">CSS3</p>
+            <progress class="css3" value="60" max="100"></progress>
+                
+            <p class="jquery" style="width: 50%" data-value="50">jQuery</p>
+            <progress class="jquery" value="50" max="100"></progress>
+        
+        </li>
+        <!-- Backend skills -->
+        <li>
+            <h2>Backend</h2>
+            <p class="python" style="width: 75%" data-value="75">Python</p>
+            <progress class="python" value="75" max="100"></progress>
+
+            <p class="php" style="width: 65%" data-value="65">PHP</p>
+            <progress class="php" value="65" max="100"></progress>
+
+            <p class="node-js" style="width: 35%" data-value="35">Node.js</p>
+            <progress class="node-js" value="35" max="100"></progress>
+        </li>
+    </ul>
+</body>
+</html>
+
+
+
+
+<!--
+COMENTARIOS
+
+<p>Este es un elemento de párrafo HTML. Se utiliza para mostrar un bloque de texto. 
+En este caso, muestra el nombre de la habilidad ("HTML5").
+
+class="html5"Esto asigna la clase "html5" al elemento de párrafo. Se pueden aplicar 
+estilos CSS a los elementos de esta clase. En este caso, el style.cssarchivo contiene 
+estilos específicos para elementos de la clase "html5", pero solo para la barra de 
+progreso , no para el párrafo.
+    
+style="width: 80%"Este es un estilo en línea que establece la widthpropiedad del 
+párrafo al 80 %. Debe eliminarlo. El objetivo es que la página se vea bien usando 
+solo el CSS proporcionado, por lo que no se permiten los estilos en línea .
+    
+data-value="80"Este es un atributo de datos personalizado. Los data-*atributos permiten
+ almacenar información adicional en elementos HTML estándar. En este caso, se almacena 
+ el valor porcentual (80) asociado a la habilidad. El CSS usa este data-valueatributo 
+ para mostrar el texto "80%" junto al texto "HTML5". El CSS accede a esto mediantecontent: attr(data-value) '%';
+    
+HTML5: Este es el contenido de texto del párrafo, que es el nombre de la habilidad que
+ se muestra.
+    
+</p>: Esta es la etiqueta de cierre para el elemento de párrafo.
+    
+<progress class="html5" value="80" max="100"></progress>
+    
+<progress>Este es un elemento HTML5 que representa el progreso de una tarea. En este 
+    caso, se utiliza para representar visualmente el nivel de habilidad .
+    
+class="html5"Esto asigna la clase "html5" al elemento de progreso. El style.cssarchivo
+ contiene estilos específicos para las barras de progreso con la clase "html5", incluyendo el degradado de color y la animación de rayas .
+    
+value="80": Esto establece el valor actual de la barra de progreso en 80. Esto 
+significa que la barra de progreso se llenará al 80% de su valor máximo.
+    
+max="100": Esto establece el valor máximo de la barra de progreso en 100.
+    
+</progress>: Esta es la etiqueta de cierre para el elemento de progreso.
+<!-- 
+    

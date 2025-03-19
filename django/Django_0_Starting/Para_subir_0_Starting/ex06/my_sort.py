@@ -24,7 +24,8 @@ d = {
 
 # Sort the dictionary items
 # Key function: (birth year as integer, name)
-# This ensures sorting by year first, then alphabetically for the same year
+# The lambda reverses each tuple, for ('Hendrix', '1942'),
+# it returns (1942, 'Hendrix').
 sorted_musicians = sorted(d.items(), key=lambda x: (int(x[1]), x[0]))
 
 # Print each musician's name in the sorted order

@@ -1,142 +1,151 @@
 import os
 
 def parse_periodic_table(file_path):
-    """Analiza el archivo periodic_table.txt y devuelve los datos de los elementos."""
-    elementos = []
+    """Parse the periodic_table.txt file and return the element data."""
+    elements = []
+    # Open the file in read mode
     with open(file_path, 'r') as file:
+        # Iterate over each line in the file
         for line in file:
-            if line.strip():  # Ignorar líneas vacías
-                datos = line.strip().split(' = ')
-                nombre = datos[0].strip()
-                atributos = dict(item.split(':') for item in datos[1].split(', '))
+            # Check if the line is not empty after removing spaces
+            if line.strip():
+                # Split the line into name and attributes
+                data = line.strip().split(' = ')
+                # Get the element name
+                name = data[0].strip()
+                # Create a dictionary with the element's attributes
+                attributes = dict(item.split(':') for item in data[1].split(', '))
                 
-                # Determinar posición en la tabla
-                columna = int(atributos.get('position', '0'))
-                numero_atomico = int(atributos.get('number', '0'))
+                # Get the element's position (column), convert to integer
+                column = int(attributes.get('position', '0'))
+                # Get the element's atomic number, convert to integer
+                atomic_number = int(attributes.get('number', '0'))
 
-                # Calcular fila basada en el número atómico
-                if numero_atomico <= 2:
-                    fila = 1
-                elif numero_atomico <= 10:
-                    fila = 2
-                elif numero_atomico <= 18:
-                    fila = 3
-                elif numero_atomico <= 36:
-                    fila = 4
-                elif numero_atomico <= 54:
-                    fila = 5
-                elif numero_atomico <= 86:
-                    fila = 6
+                # Determine the element's row based on its atomic number
+                if atomic_number <= 2:
+                    row = 1
+                elif atomic_number <= 10:
+                    row = 2
+                elif atomic_number <= 18:
+                    row = 3
+                elif atomic_number <= 36:
+                    row = 4
+                elif atomic_number <= 54:
+                    row = 5
+                elif atomic_number <= 86:
+                    row = 6
                 else:
-                    fila = 7
+                    row = 7
 
-                elemento = {
-                    "nombre": nombre,
-                    "numero_atomico": numero_atomico,
-                    "simbolo": atributos.get('small', ''),
-                    "masa_atomica": atributos.get('molar', ''),
-                    "electron": atributos.get('electron', ''),
-                    "posicion": (fila, columna)
+                # Create a dictionary with the element's information
+                element = {
+                    "name": name,
+                    "atomic_number": atomic_number,
+                    "symbol": attributes.get('small', ''),
+                    "atomic_mass": attributes.get('molar', ''), # ' ' default value
+                    "electron": attributes.get('electron', ''),
+                    "position": (row, column) # Defines the row and column
                 }
-                elementos.append(elemento)
-    return elementos
+                # Add the element to the list of elements
+                elements.append(element)
+    # Return the complete list of elements
+    return elements
 
-def generar_html(elementos, archivo_salida):
-    """Genera un archivo HTML que representa la tabla periódica."""
-    contenido_html = """
+def generate_html(elements, output_file):
+    """Generate an HTML file representing the periodic table."""
+    # Start the HTML content with basic structure and CSS styles
+    html_content = """
     <!DOCTYPE html>
-    <html lang="es">
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tabla Periódica</title>
+        <title>Periodic Table</title>
         <style>
             table { border-collapse: collapse; width: auto; }
             td { border: 1px solid black; padding: 10px; text-align: center; vertical-align: top; width: 80px; height: 80px; }
             h4 { margin: 0; }
             ul { padding-left: 20px; margin: 5px; list-style-type: none; }
-            .vacio { background-color: lightgray; }
+            .empty { background-color: lightgray; }
         </style>
     </head>
     <body>
-        <h1>Tabla Periódica de los Elementos</h1>
+        <h1>Periodic Table of Elements</h1>
         <table>
     """
+    # Comes from the tuple defined when creating the dictionary "position": (row, column),
+    # position 0 row and position 1 column
+    # Determine the maximum number of rows in the table
+    max_row = max(element["position"][0] for element in elements)
+    # Determine the maximum number of columns in the table
+    max_column = max(element["position"][1] for element in elements)
 
-    # Determinar dimensiones de la tabla
-    max_fila = max(elemento["posicion"][0] for elemento in elementos)
-    max_columna = max(elemento["posicion"][1] for elemento in elementos)
-
-    # Crear filas y columnas de la tabla
-    for fila in range(1, max_fila + 1):
-        contenido_html += "<tr>\n"
-        for columna in range(0, max_columna + 1):
-            elemento = next((el for el in elementos if el["posicion"] == (fila, columna)), None)
-            if elemento:
-                contenido_html += f"""
+    # Iterate over each row of the table, creates a loop from 1 to max row
+    for row in range(1, max_row + 1):
+        # Add an HTML tag to start a new table row
+        html_content += "<tr>\n"
+        # Iterate over each column of the row, creates a loop from 0 to max columns
+        for column in range(0, max_column + 1):
+            # Search in the elements list for the first element whose position matches
+            # the current row and column. If found, assign to element. If not, None.
+            element = next((el for el in elements if el["position"] == (row, column)), None)
+            if element:
+                # Add a cell with the element's information
+                html_content += f"""
                 <td>
-                    <h4>{elemento['nombre']}</h4>
+                    <h4>{element['name']}</h4>
                     <ul>
-                        <li>No {elemento['numero_atomico']}</li>
-                        <li>{elemento['simbolo']}</li>
-                        <li>{elemento['masa_atomica']}</li>
-                        <li>{elemento['electron']} electrones</li>
+                        <li>No {element['atomic_number']}</li>
+                        <li>{element['symbol']}</li>
+                        <li>{element['atomic_mass']}</li>
+                        <li>{element['electron']} electrons</li>
                     </ul>
                 </td>
                 """
             else:
-                contenido_html += '<td class="vacio"></td>\n'
-        contenido_html += "</tr>\n"
+                # If there's no element, add an empty cell
+                html_content += '<td class="empty"></td>\n'
+        # Close the HTML row
+        html_content += "</tr>\n"
 
-    contenido_html += """
+    # Close the HTML structure
+    html_content += """
         </table>
     </body>
     </html>
     """
 
-    with open(archivo_salida, 'w') as file:
-        file.write(contenido_html)
+    # Write the HTML content to the output file
+    with open(output_file, 'w') as file:
+        file.write(html_content)
 
 def main():
+    # os.path.dirname(path): Extracts the directory name from a full path
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    archivo_entrada = os.path.join(script_dir, "periodic_table.txt")
-    archivo_salida = os.path.join(script_dir, "periodic_table.html")
+    # Build the full path of the input file
+    input_file = os.path.join(script_dir, "periodic_table.txt")
+    # Build the full path of the output file
+    output_file = os.path.join(script_dir, "periodic_table.html")
 
-    print(f"Intentando abrir el archivo: {archivo_entrada}")
+    # Print a message indicating the attempt to open the file
+    print(f"Attempting to open file: {input_file}")
 
-    if not os.path.exists(archivo_entrada):
-        print(f"Error: No se encontró el archivo de entrada '{archivo_entrada}'.")
+    # Check if the input file exists
+    if not os.path.exists(input_file):
+        print(f"Error: Input file '{input_file}' not found.")
         return
 
     try:
-        elementos = parse_periodic_table(archivo_entrada)
-        generar_html(elementos, archivo_salida)
-        print(f"Tabla periódica generada en HTML: {archivo_salida}")
+        # Parse the input file to get the element data
+        elements = parse_periodic_table(input_file)
+        # Generate the HTML file with the periodic table
+        generate_html(elements, output_file)
+        # Print a success message
+        print(f"Periodic table generated in HTML: {output_file}")
     except Exception as e:
-        print(f"Error al procesar el archivo: {e}")
+        print(f"Error processing file: {e}")
         import traceback
         print(traceback.format_exc())
 
 if __name__ == "__main__":
     main()
-
-
-#  COMENTARIOS
-
-# La tabla periodica tiene 7 filas y 18 columnas, y en cada fila los elementos tienene generalmente 
-# numeros atomicos consecutivos
-
-# Disponer los elementos en líneas y columnas (también denominados "períodos" y 
-# "grupos") dentro de un rectángulo, con sus pesos atómicos en orden ascendente 
-# de Izquierda a derecha dentro de la misma línea hasta bajar a la segunda y así 
-# sucesivamente.
-
-# relacion numero/fila 
-
-#Fila 1: Z = 1-2
-#Fila 2: Z = 3-10
-#Fila 3: Z = 11-18
-#Fila 4: Z = 19-36
-#Fila 5: Z = 37-54
-#Fila 6: Z = 55-86
-#Fila 7: Z = 87-118
