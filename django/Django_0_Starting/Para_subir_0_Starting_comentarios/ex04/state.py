@@ -14,7 +14,11 @@ def get_state_from_capital(capital):
         "CO": "Denver"
     }
 
-    # Crear un diccionario inverso de capital_cities
+    # Crear un diccionario inverso de capital_cities. es una lista de comprensión de diccionario
+    # capital_cities.items() devuelve pares de (clave, valor) del diccionario capital_cities
+    # for k, v in itera sobre estos pares, donde k es la clave y v es el valor.
+    # v: k invierte el orden, haciendo que el valor original sea la nueva clave y la clave original 
+    # sea el nuevo valor.
     cities_to_abbr = {v: k for k, v in capital_cities.items()}
     
     # Crear un diccionario inverso de states

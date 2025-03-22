@@ -20,9 +20,9 @@ def process_locations(input_string):
     capital_to_state = {capital: state for state, capital in state_to_capital.items()}
 
     # Process each expression
-    expressions = [expr.strip() for expr in input_string.split(',')]
+    expressions = [expr.strip() for expr in input_string.split(',') if expr.strip()]
     
-    if '' in expressions:
+    if not expressions:
         return
 
     for expr in expressions:
@@ -44,5 +44,6 @@ if __name__ == '__main__':
 
 
 
-#py all_in.py "New jersey, Tren ton, NewJersey, Trenton, toto, Salem"
+
+#py all_in.py "New jersey, Tren ton, NewJersey, Trenton, toto, , sAlem"
  

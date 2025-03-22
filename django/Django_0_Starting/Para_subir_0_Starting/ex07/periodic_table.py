@@ -128,11 +128,11 @@ def main():
     output_file = os.path.join(script_dir, "periodic_table.html")
 
     # Print a message indicating the attempt to open the file
-    print(f"Attempting to open file: {input_file}")
+    print(f"Attempting to open file: {os.path.basename(input_file)}")
 
     # Check if the input file exists
     if not os.path.exists(input_file):
-        print(f"Error: Input file '{input_file}' not found.")
+        print(f"Error: Input file '{os.path.basename(input_file)}' not found.")
         return
 
     try:
@@ -141,7 +141,7 @@ def main():
         # Generate the HTML file with the periodic table
         generate_html(elements, output_file)
         # Print a success message
-        print(f"Periodic table generated in HTML: {output_file}")
+        print(f"Periodic table generated in HTML: {os.path.basename(output_file)}")
     except Exception as e:
         print(f"Error processing file: {e}")
         import traceback
@@ -149,3 +149,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

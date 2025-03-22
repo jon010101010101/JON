@@ -28,6 +28,9 @@ def process_locations(input_string):
     if '' in expressions:
         return  # Salir de la función si hay expresiones vacías.
 
+    # Para manejar el espacio vacio entre dos comas
+    expressions = [expr.strip() for expr in input_string.split(',') if expr.strip()]
+
     # Iterar sobre cada expresión procesada.
     for expr in expressions:
         # Convertir la expresión a formato de título (primera letra mayúscula) para estandarizar la entrada.
@@ -52,5 +55,4 @@ if __name__ == '__main__':
 
 
 
-#py all_in.py "New jersey, Tren ton, NewJersey, Trenton, toto, Salem"
- 
+# py all_in.py "New jersey, Tren ton, NewJersey, Trenton, toto,      sAlem"

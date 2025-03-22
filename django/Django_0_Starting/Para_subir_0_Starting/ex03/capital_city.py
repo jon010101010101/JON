@@ -1,4 +1,4 @@
-import sys  # Import the sys module to access command-line arguments.
+import sys
 
 def get_capital_city(state):
     # Dictionary mapping state names to their abbreviations.

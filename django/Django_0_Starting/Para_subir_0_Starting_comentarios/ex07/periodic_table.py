@@ -133,8 +133,8 @@ def main():
     # Construir la ruta completa del archivo de salida
     output_file = os.path.join(script_dir, "periodic_table.html")
 
-    # Imprimir un mensaje indicando el intento de abrir el archivo
-    print(f"Attempting to open file: {input_file}")
+    # Imprimir un mensaje indicando el intento de abrir el archivo 
+    print(f"Attempting to open file: {os.path.basename(input_file)}")
 
     # Verificar si el archivo de entrada existe
     if not os.path.exists(input_file):
@@ -147,8 +147,8 @@ def main():
         elements = parse_periodic_table(input_file)
         # Generar el archivo HTML con la tabla periódica
         generate_html(elements, output_file)
-        # Imprimir un mensaje de éxito
-        print(f"Periodic table generated in HTML: {output_file}")
+        # Imprimir un mensaje de éxito (con {output_file}" ruta completa)
+        print(f"Periodic table generated in HTML: {os.path.basename(output_file)}")
     except Exception as e:
         # Si ocurre algún error, imprimir el mensaje de error
         print(f"Error processing file: {e}")

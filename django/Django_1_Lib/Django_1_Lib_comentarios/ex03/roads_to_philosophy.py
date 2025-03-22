@@ -1,13 +1,13 @@
-import sys
-import requests
-from bs4 import BeautifulSoup
+import sys  # Importa el módulo sys para manejar argumentos de la línea de comandos
+import requests  # Importa requests para realizar solicitudes HTTP
+from bs4 import BeautifulSoup  # Importa BeautifulSoup para analizar HTML
 
 def get_first_valid_link(soup):
     """
     Obtiene el primer enlace válido de una página de Wikipedia.
 
     Args:
-    - soup (BeautifulSoup): Objeto BeautifulSoup que contiene el contenido HTML de la página.
+    - soup (BeautifulSoup): Objeto BeautifulSoup con el contenido HTML de la página.
 
     Returns:
     - str: URL del primer enlace válido encontrado.
@@ -15,27 +15,27 @@ def get_first_valid_link(soup):
     """
     # Busca el contenido principal de la página
     content = soup.find(id="mw-content-text")
-    if not content:
+    if not content:  # Si no hay contenido principal, retorna None
         return None
 
-    # Itera sobre los párrafos del contenido principal
+    # Itera sobre los párrafos dentro del contenido principal
     for paragraph in content.select("p"):
-        for link in paragraph.find_all('a', recursive=False):
-            href = link.get('href', '')
-            # Verifica si el enlace es válido (no es un enlace a ayuda o páginas especiales)
+        for link in paragraph.find_all('a', recursive=False):  # Encuentra enlaces dentro del párrafo
+            href = link.get('href', '')  # Obtiene el atributo href del enlace
+            # Verifica si el enlace es válido (no enlaces especiales ni páginas de ayuda)
             if href.startswith('/wiki/') and ':' not in href and not href.startswith('/wiki/Help:') and not href.startswith('/wiki/Wikipedia:'):
-                return 'https://en.wikipedia.org' + href
-    return None
+                return 'https://en.wikipedia.org' + href  # Retorna la URL completa del enlace válido
+    return None  # Si no se encuentra ningún enlace válido, retorna None
 
 def roads_to_philosophy(start_term):
     """
-    Encuentra el camino desde un término inicial hasta la página de Wikipedia 'Philosophy'.
+    Encuentra el camino desde un término inicial hasta la página 'Philosophy' en Wikipedia.
 
     Args:
     - start_term (str): Término inicial desde donde comienza la búsqueda.
 
     Returns:
-    - None: Imprime el camino recorrido y el número de pasos al llegar a 'Philosophy',
+    - None: Imprime el camino recorrido y el número de pasos hasta llegar a 'Philosophy',
       o informa si se encuentra un callejón sin salida o un bucle infinito.
     """
     # Construye la URL inicial basada en el término proporcionado
@@ -45,7 +45,7 @@ def roads_to_philosophy(start_term):
     visited = []
 
     try:
-        while True:
+        while True:  # Bucle infinito para continuar navegando por los enlaces válidos
             try:
                 # Configura los encabezados para la solicitud HTTP
                 headers = {
@@ -55,52 +55,48 @@ def roads_to_philosophy(start_term):
                 response = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
                 response.raise_for_status()  # Lanza una excepción si ocurre un error HTTP
 
-                # Analiza el contenido HTML de la página
+                # Analiza el contenido HTML de la página con BeautifulSoup
                 soup = BeautifulSoup(response.text, 'html.parser')
                 
                 # Obtiene el título de la página actual
                 title = soup.find('h1', id='firstHeading').text.strip()
 
-                # Verifica si ya se ha visitado esta página (bucle infinito)
+                # Verifica si esta página ya fue visitada (para evitar bucles infinitos)
                 if title in visited:
-                    print("It leads to an infinite loop !")
-                    break
+                    print("It leads to an infinite loop !")  # Mensaje indicando bucle infinito
+                    return
 
-                # Imprime el título de la página actual y lo agrega a la lista de visitados
+                # Imprime el título de la página actual y lo agrega a la lista de páginas visitadas
                 print(title)
                 visited.append(title)
 
-                # Verifica si se ha llegado a la página "Philosophy"
+                # Verifica si hemos llegado a la página "Philosophy"
                 if title == "Philosophy":
-                    break
+                    print(f"{len(visited)} roads from {start_term} to philosophy !")  # Mensaje indicando éxito
+                    return
 
                 # Obtiene el siguiente enlace válido
                 next_link = get_first_valid_link(soup)
-                if not next_link:
-                    print("It leads to a dead end !")
-                    break
+                if not next_link:  # Si no hay un enlace válido, indica callejón sin salida
+                    print("It's a dead end !")
+                    return
 
                 # Actualiza la URL para continuar con el siguiente enlace
                 url = next_link
 
-            except requests.Timeout:
-                print("Error: The request timed out.")  # Error por tiempo de espera agotado
-                break
-            except requests.HTTPError as e:
-                print(f"HTTP Error occurred: {e}")  # Error HTTP específico
-                break
-            except requests.RequestException as e:
-                print(f"An error occurred during the request: {e}")  # Otro error relacionado con solicitudes HTTP
-                break
+            except requests.exceptions.HTTPError as e:  # Maneja errores HTTP específicos
+                if e.response.status_code == 404:  # Si ocurre un error 404, indica callejón sin salida
+                    print("It's a dead end !")
+                else:
+                    print(f"HTTP Error occurred: {e}")  # Mensaje indicando otro error HTTP
+                return
 
-    except KeyboardInterrupt:
-        print("\nProgram interrupted by user.")  # Manejo de interrupciones con Ctrl+C
-    finally:
-        # Imprime el número total de pasos recorridos al final del programa
-        if visited:
-            print(f"{len(visited)} roads from {start_term} to {'philosophy' if title == 'Philosophy' else 'error'} !")
-        else:
-            print("No pages were successfully visited.")
+            except (requests.Timeout, requests.RequestException) as e:  # Maneja otros errores de solicitud HTTP
+                print(f"An error occurred during the request: {e}")  # Mensaje indicando error general en la solicitud
+                return
+
+    except KeyboardInterrupt:  # Maneja interrupciones del usuario con Ctrl+C
+        print("\nProgram interrupted by user.")  # Mensaje indicando interrupción del programa
 
 if __name__ == "__main__":
     """
@@ -113,12 +109,16 @@ if __name__ == "__main__":
     Ejemplo:
       python3 roads_to_philosophy.py "42 (number)"
     """
-    # Verifica que se haya pasado exactamente un argumento al programa
-    if len(sys.argv) != 2:
-        print("Usage: python3 roads_to_philosophy.py \"search term\"")
-        sys.exit(1)
+    if len(sys.argv) != 2:  # Verifica que se haya pasado exactamente un argumento al programa
+        print("Usage: python3 roads_to_philosophy.py \"search term\"")  # Mensaje indicando uso correcto del programa
+        sys.exit(1)  # Finaliza el programa con código de salida 1 (error)
 
-    # Obtiene el término inicial desde los argumentos y llama a la función principal
-    roads_to_philosophy(sys.argv[1])
+    roads_to_philosophy(sys.argv[1])  # Llama a la función principal con el término inicial proporcionado
+
+
+
+
+# pip install -r requirement.txt
+# python3 roads_to_philosophy.py "42 (number)" 
 
 

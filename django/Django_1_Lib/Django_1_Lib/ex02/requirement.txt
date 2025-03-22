@@ -1,0 +1,8 @@
+requests==2.26.0
+dewiki==0.1.0
+numpy==2.2.4
+scipy==1.15.2
+pandas==2.2.3
+matplotlib==3.10.1
+wfdb==4.2.0
+

@@ -27,10 +27,11 @@ def create_dict_from_list():
     # Si varios músicos tienen el mismo año, se concatenarán con un espacio
     musician_dict = {}  # Crear un diccionario vacío para almacenar los músicos agrupados por año.
 
-    # Recorrer la lista de tuplas `d`, donde cada tupla contiene un nombre y un año.
+    # Recorrer iterando la lista de tuplas `d`, donde cada tupla contiene un nombre y un año.
     for name, year in d:
         if year in musician_dict:  # Si el año ya existe como clave en el diccionario...
-            musician_dict[year] += f" {name}"  # Concatenar el nombre actual al valor existente, separado por un espacio.
+            musician_dict[year] += f" {name}"  # Concatenar el nombre actual al valor existente, separado por 
+            # un espacio.f antes de name hace que se sustituya {name}" por el nombre de la tupla
         else:  # Si el año no está en el diccionario...
             musician_dict[year] = name  # Crear una nueva entrada con el año como clave y el nombre como valor.
 
