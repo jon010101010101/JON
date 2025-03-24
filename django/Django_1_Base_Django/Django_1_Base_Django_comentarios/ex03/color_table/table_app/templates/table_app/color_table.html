@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Título de la página -->
     <title>Color Table</title>
     <style>
+        /* Estilos para la tabla */
         table {
+            /* Elimina los bordes duplicados entre las celdas */
             border-collapse: collapse;
         }
+        /* Estilos para las celdas de la tabla */
         td {
+            /* Define el ancho de cada celda */
             width: 80px;
+            /* Define la altura de cada celda */
             height: 40px;
         }
     </style>
 </head>
 <body>
+    <!-- Tabla que mostrará los colores -->
     <table>
+        <!-- Fila de encabezado con los nombres de los colores -->
         <tr>
             {% for color in colors %}
+                <!-- Muestra cada color como encabezado de columna -->
                 <th>{{ color }}</th>
             {% endfor %}
         </tr>
+        <!-- Filas con las tonalidades de los colores -->
         {% for row in rows %}
             <tr>
                 {% for shade in row %}
+                    <!-- Cada celda tiene un fondo con el color correspondiente -->
                     <td style="background-color: {{ shade }};"></td>
                 {% endfor %}
             </tr>
@@ -29,4 +40,3 @@
     </table>
 </body>
 </html>
-

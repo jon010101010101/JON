@@ -1,3 +1,12 @@
+/*
+  Estilos generales para el cuerpo de la página.
+*/
 body {
+    /*
+      Define el color del texto principal como azul.
+      Esto afectará a todo el texto dentro del <body> a menos que
+      se especifique un color diferente para elementos específicos.
+    */
     color: blue;
-}
+  }
+  

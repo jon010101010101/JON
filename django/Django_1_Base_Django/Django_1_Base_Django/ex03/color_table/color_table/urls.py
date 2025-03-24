@@ -19,5 +19,5 @@ from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ex03/', include('table_app.urls')),  # Define la URL /ex03
+    path('ex03/', include('table_app.urls')),  # Define URL /ex03
 ]

@@ -1,16 +1,23 @@
 """
-ASGI config for ex01 project.
+Configuración de ASGI para el proyecto ex01.
 
-It exposes the ASGI callable as a module-level variable named ``application``.
+Expone el objeto invocable ASGI como una variable a nivel de módulo llamada `application`.
 
-For more information on this file, see
+Para obtener más información sobre este archivo, consulta
 https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
+
+# Importa el módulo 'os' para interactuar con el sistema operativo
 import os
 
+# Importa la función 'get_asgi_application' del módulo 'django.core.asgi'
 from django.core.asgi import get_asgi_application
 
+# Configura la variable de entorno 'DJANGO_SETTINGS_MODULE'
+# Esto le dice a Django dónde encontrar el archivo de configuración principal
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ex01.settings')
 
+# Crea una instancia de la aplicación ASGI de Django
+# Esta será la interfaz entre el servidor web y tu aplicación Django
 application = get_asgi_application()
