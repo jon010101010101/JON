@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ex02</title>
+</head>
+<body>
+    <h1>Ex02</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>History</h2>
+    <ul>
+        {% for log in logs %}
+            <li>{{ log.timestamp|date:"Y-m-d H:i:s" }}: {{ log.text }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

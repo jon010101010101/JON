@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ex01: Template engine{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Motor de Plantillas de Django</h1>
+
+<h2>Bloques</h2>
+<p>Los bloques permiten que las plantillas hijas sobrescriban partes específicas de las plantillas padre.</p>
+<pre>{% verbatim %}{% block content %}{% endblock %}{% endverbatim %}</pre>
+
+<h2>Bucles</h2>
+<p>Los bucles for permiten iterar sobre listas o diccionarios.</p>
+<pre>{% verbatim %}{% for item in items %}
+    {{ item }}
+{% endfor %}{% endverbatim %}</pre>
+
+<h2>Estructuras de Control if</h2>
+<p>Las estructuras if permiten la ejecución condicional de código en la plantilla.</p>
+<pre>{% verbatim %}{% if condition %}
+    Contenido si la condición es verdadera
+{% else %}
+    Contenido si la condición es falsa
+{% endif %}{% endverbatim %}</pre>
+
+<h2>Variables de Contexto</h2>
+<p>Las variables de contexto se muestran usando dobles llaves.</p>
+<pre>{% verbatim %}{{ variable_name }}{% endverbatim %}</pre>
+{% endblock %}

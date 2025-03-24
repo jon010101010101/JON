@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ex01: Display process of a static page{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style1.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Proceso de Visualización de una Página Estática</h1>
+<ol>
+    <li>El navegador envía una solicitud HTTP a la URL especificada.</li>
+    <li>Django recibe la solicitud y la pasa al URLconf para su procesamiento.</li>
+    <li>El URLconf mapea la URL a la vista correspondiente.</li>
+    <li>La vista procesa la solicitud y renderiza la plantilla.</li>
+    <li>La plantilla se combina con cualquier dato contextual proporcionado por la vista.</li>
+    <li>La vista devuelve una respuesta HTTP con el HTML generado.</li>
+    <li>El navegador recibe la respuesta y muestra la página al usuario.</li>
+</ol>
+{% endblock %}

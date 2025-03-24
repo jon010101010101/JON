@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ex01: Django, framework web{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style1.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Django: Framework Web</h1>
+<p>Django es un framework web de alto nivel escrito en Python que fomenta el desarrollo rápido y el diseño limpio y pragmático. Fue creado en 2003 por Adrian Holovaty y Simon Willison, y lanzado públicamente en 2005. Django sigue el patrón de diseño modelo-vista-template (MVT) y enfatiza la reutilización de código, el principio DRY (Don't Repeat Yourself) y la configuración automática.</p>
+{% endblock %}

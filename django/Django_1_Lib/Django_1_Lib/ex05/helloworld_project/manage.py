@@ -33,4 +33,4 @@ if __name__ == '__main__':
 
 # pkill -f "python manage.py runserver"
 # lsof -i :8000
-# kill -9 38140
+# kill -9 3814cd
