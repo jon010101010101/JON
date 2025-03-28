@@ -1,7 +1,9 @@
 import sys
 import os
-
 from path import Path
+
+# Add local_lib to PYTHONPATH. para que encuentre la ruta desde cualquier sitio
+sys.path.append(os.path.abspath("local_lib"))
 
 def main():
     # Crear una carpeta

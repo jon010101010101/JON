@@ -1,26 +1,22 @@
-# Ensure using Python from the conda environment
-export PATH="/home/jurrutia/miniforge3/envs/django_env/bin:$PATH"
+#!/bin/bash
 
 # Display pip version
 echo "Pip version:"
-python -m pip --version
+pip --version
 
-# Update pip
-echo "Updating pip..."
-python -m pip install --upgrade pip # Updates pip to the latest available version.
+# Install path.py development version from GitHub into local_lib
+echo "Installing path.py..."
+pip install --upgrade git+https://github.com/jaraco/path.py.git -t ./local_lib > path_install.log 2>&1
 
-# Install path.py globally in the environment
-echo "Installing path.py..." 
-python -m pip install path.py  # Installs the path.py package
-
-# Verify if the installation was successful
+# Verify installation
 if [ $? -eq 0 ]; then
-    echo "path.py installed successfully."
-    # Execute the Python program
-    python my_program.py
+    echo "path.py installed successfully. Logs saved in path_install.log"
+    # Execute the Python program with PYTHONPATH
+    PYTHONPATH=./local_lib python my_program.py
 else
-    echo "Error installing path.py."
+    echo "Error installing path.py. Check path_install.log for details."
 fi
+
 
 
 

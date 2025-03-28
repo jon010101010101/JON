@@ -1,7 +1,9 @@
 import sys
 import os
-
 from path import Path
+
+# Add local_lib to PYTHONPATH
+sys.path.append(os.path.abspath("local_lib"))
 
 def main():
     # Create a folder

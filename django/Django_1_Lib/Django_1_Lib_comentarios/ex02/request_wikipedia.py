@@ -92,7 +92,7 @@ if __name__ == "__main__":
         request_wikipedia(sys.argv[1])
 
 
-# pip install -r requirements.txt.
-#python3 request_wikipedia.py "Albert Einstein"
+# pip install -r requirements.txt
+# python3 request_wikipedia.py "Albert Einstein"
 
 

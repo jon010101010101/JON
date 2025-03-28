@@ -9,13 +9,11 @@ source django_venv/bin/activate
 # Instalar los requisitos del archivo requirement.txt
 pip install -r requirement.txt
 
-# Mensaje final
-echo "✅ Entorno configurado. Ejecuta para activar:"
-echo "source django_venv/bin/activate"
+echo "✅ Entorno configurado y activado."
 
 
 
 
 # chmod +x my_script.sh
-# ./my_script.sh
+# source ./my_script.sh
 

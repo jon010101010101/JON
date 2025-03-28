@@ -52,6 +52,7 @@ def roads_to_philosophy(start_term):
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
                 }
                 # Realiza una solicitud GET a la URL actual
+                # la url, envia encabezado, True es si admite redirección, 10 tiempo espera
                 response = requests.get(url, headers=headers, allow_redirects=True, timeout=10)
                 response.raise_for_status()  # Lanza una excepción si ocurre un error HTTP
 
@@ -59,6 +60,9 @@ def roads_to_philosophy(start_term):
                 soup = BeautifulSoup(response.text, 'html.parser')
                 
                 # Obtiene el título de la página actual
+                # soup, instancia (BeautifulSoup) de de una pagina hTML pasada, busca etiqueta h1 que es 
+                # para titulo principal, id filtra mas todavia por que es un indentificar unico de HTML
+                # .text atributo acceder solo al texto, strip, eliminar espacio en blanco ppio y fin
                 title = soup.find('h1', id='firstHeading').text.strip()
 
                 # Verifica si esta página ya fue visitada (para evitar bucles infinitos)

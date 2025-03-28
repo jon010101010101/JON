@@ -28,3 +28,15 @@ def main():
 # Verifica si este script se está ejecutando como programa principal
 if __name__ == '__main__':
     main()  # Llama a la función principal
+
+
+
+# en helloworld_project
+# python manage.py makemigrations
+# python manage.py migrate
+# python manage.py runserver 8080
+# http://localhost:8080
+
+# pkill -f "python manage.py runserver"
+# lsof -i :8080
+# kill -9 38145

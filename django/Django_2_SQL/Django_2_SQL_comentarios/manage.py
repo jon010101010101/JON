@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
 import os
 import sys
 
-
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'color_table.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'exx00.d00_proyect.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -17,21 +15,23 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-
 if __name__ == '__main__':
     main()
 
 
 
-# python manage.py makemigrations
-# python manage.py migrations
 
-# python manage.py runserver
-# http://localhost:8000/ex03/
+# docker-compose up --build
+# docker-compose ps
 
-# chrome://settings/clearBrowserData
+
+# docker-compose exec web python manage.py makemigrations
+# docker-compose exec web python manage.py migrate
+# docker-compose exec web python manage.py runserver 0.0.0.0:8080
+
+# http://127.0.0.1:8080
 
 
 # pkill -f "python manage.py runserver"
-# lsof -i :8000
-# kill -9 38140
+# lsof -i :8080
+# kill -9 38145cd ..

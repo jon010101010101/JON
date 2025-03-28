@@ -26,11 +26,16 @@ def main():
 if __name__ == '__main__':
     main()
 
+
+
+
+
 # en helloworld_project
+# python manage.py makemigrations
 # python manage.py migrate
 # python manage.py runserver 8080
 # http://localhost:8080
 
 # pkill -f "python manage.py runserver"
-# lsof -i :8000
-# kill -9 3814cd
+# lsof -i :8080
+# kill -9 38145
