@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load article_extras %}
+{% load i18n %}
+
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<!-- Custom styles for the table -->
+<style>
+    .table th {
+        background-color: #ffffff;  /* White background for header */
+        border-bottom: 2px solid #dee2e6;  /* Slightly darker bottom border */
+    }
+    .table td {
+        border-top: 1px solid #dee2e6;  /* Light border between rows */
+    }
+</style>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Synopsis" %}</th>
+            <th>{% trans "Writer" %}</th>
+            <th>{% trans "Created" %}</th>
+            <th>{% trans "When" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.synopsis|truncate_chars:20 }}</td>
+            <td>{{ article.author.username }}</td>
+            <td>{{ article.created }}</td>
+            <td>{{ article.created|time_since }}</td>
+            <td><a href="{% url 'article_detail' article.pk %}" class="btn btn-primary btn-sm">Read</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

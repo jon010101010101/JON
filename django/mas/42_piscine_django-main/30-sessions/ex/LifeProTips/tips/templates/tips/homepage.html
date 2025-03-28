@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Homepage | Life Pro Tips{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Life Pro Tips</h1>
+    {% if user.is_authenticated %}
+        <h2>Share your tip!</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary mt-2">Submit tip</button>
+        </form>
+    {% endif %}
+
+    <h2 class="mt-4">Tips list</h2>
+    <ul class="list-group">
+        {% for tip in tips %}
+            <li class="list-group-item">
+                <strong>{{ tip.author.username }} ({{ tip.author.reputation }})</strong> said:
+                <p>{{ tip.content }}</p>
+                <small class="text-muted">Posted on {{ tip.date }}</small>
+
+                {% if user.is_authenticated %}
+                    <div class="mt-2">
+                        <!-- Always show upvote and downvote counts, even if buttons are hidden -->
+                        <span class="badge badge-success">Upvotes: {{ tip.upvotes_count }}</span>
+                        <span class="badge badge-danger">Downvotes: {{ tip.downvotes_count }}</span>
+
+                        <!-- Upvote button: always shown to authenticated users -->
+                        <form action="{% url 'upvote_tip' tip.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Upvote</button>
+                        </form>
+
+                        <!-- Downvote button: only shown if user has permission -->
+                        {% if tip.author == user or user.can_downvote_permission %}
+                            <form action="{% url 'downvote_tip' tip.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Downvote</button>
+                            </form>
+                        {% endif %}
+
+                        <!-- Delete button: only shown if user has permission -->
+                        {% if tip.author == user or user.can_delete_permission %}
+                            <form action="{% url 'delete_tip' tip.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary">Delete</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">No tips available yet.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
