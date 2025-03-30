@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movies</title>
+</head>
+<body>
+    <h1>Movies</h1>
+    {% if movies %}
+        <table border="1">
+            <tr>
+                <th>Episode</th>
+                <th>Title</th>
+                <th>Director</th>
+                <th>Producer</th>
+                <th>Release Date</th>
+            </tr>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ movie.episode_nb }}</td>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.director }}</td>
+                <td>{{ movie.producer }}</td>
+                <td>{{ movie.release_date }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data available</p>
+    {% endif %}
+</body>
+</html>

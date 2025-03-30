@@ -118,3 +118,8 @@ docker-compose up --build
 
 docker-compose down  # Detener y eliminar los contenedores existentes
 docker-compose up --build  # Reconstruir y levantar los contenedores
+
+
+
+find . -name \*.pyc -delete
+find . -name __pycache__ -delete
