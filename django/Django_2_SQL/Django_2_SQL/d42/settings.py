@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'd42.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd42',  # Nombre de la base de datos
-        'USER': 'djangouser',  # Usuario configurado
-        'PASSWORD': 'secret',  # Contraseña configurada en docker-compose.yml
-        'HOST': 'db',  # Nombre del servicio PostgreSQL en docker-compose.yml
-        'PORT': '5432',
+        'NAME': os.environ.get('POSTGRES_DB', 'd42'),  # Nombre de la base de datos
+        'USER': os.environ.get('POSTGRES_USER', 'djangouser'),  # Usuario configurado
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'secret'),  # Contraseña configurada en docker-compose.yml
+        'HOST': os.environ.get('POSTGRES_HOST', 'db'),  # Nombre del servicio PostgreSQL en docker-compose.yml
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),  # Puerto
     }
 }
 

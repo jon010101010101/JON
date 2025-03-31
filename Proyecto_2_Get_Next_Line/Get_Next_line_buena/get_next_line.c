@@ -99,7 +99,7 @@ char	*get_next_line(int fd)
 	new_box = clean_box(new_box);
 	return (line);
 }
-/* 
+/*
 #define GREEN "\033[0;32m"
 #define YELLOW "\033[0;33m"
 #define YELLOW_BRIGHT "\033[0;93m"
@@ -139,8 +139,8 @@ int	main(int argc, char **argv)
 	
 	close(fd);
 	return (0);
-} */
-/* 
+}*/
+
 #define GREEN "\033[0;32m"
 #define YELLOW "\033[0;33m"
 #define YELLOW_BRIGHT "\033[0;93m"
@@ -182,4 +182,4 @@ int main(int argc, char *argv[])
 	   	if (argc == 2)
 		close(fd);
 	return (0);
-} */
+}

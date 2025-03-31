@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import People
 
-def init(request):
-    return HttpResponse(f"Vista 'init' de {__name__} funcionando correctamente.")
+def display(request):
+    people = People.objects.filter(homeworld__climate__in=['windy', 'moder

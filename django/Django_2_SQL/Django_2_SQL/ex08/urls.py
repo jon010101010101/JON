@@ -1,6 +1,8 @@
 from django.urls import path
-from . import views
+from .views import init, populate, display
 
 urlpatterns = [
-    path('init/', views.init, name='init'),
+    path('init/', init, name='init'),
+    path('populate/', populate, name='populate'),
+    path('display/', display, name='display'),
 ]

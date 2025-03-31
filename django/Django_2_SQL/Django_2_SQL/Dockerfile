@@ -1,4 +1,4 @@
-# Usa la imagen base de Python
+# Usa la imagen base de Python 3.10
 FROM python:3.10
 
 # Establece el directorio de trabajo en /code
@@ -7,14 +7,21 @@ WORKDIR /code
 # Copia los archivos de requisitos a /code
 COPY requirements.txt /code/
 
-# Instala las dependencias
-RUN pip install --no-cache-dir -r requirements.txt
+# Instala dependencias y netcat-openbsd
+RUN apt-get update && \
+    apt-get install -y netcat-openbsd && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Instala PostgreSQL Client
-RUN apt-get update && apt-get install -y postgresql-client
+# Copia el script de espera al contenedor
+COPY wait_for_db.sh /code/
 
 # Copia el contenido del proyecto al directorio de trabajo
 COPY . /code/
 
-# Comando por defecto para ejecutar el servidor de Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Hacer el script ejecutable
+RUN chmod +x wait_for_db.sh
+
+# Comando por defecto para ejecutar el script de espera y luego el servidor de Django
+CMD ["./wait_for_db.sh", "python", "manage.py", "runserver", "0.0.0.0:8000"]

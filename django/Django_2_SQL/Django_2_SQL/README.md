@@ -1,123 +1,70 @@
+Construir la Imagen Docker
+Para construir la imagen Docker del proyecto, sigue estos pasos:
 
-Dentro de cada directorio a entregar (ex00 a ex10)
+Abre una terminal y navega a la raíz del proyecto donde se encuentra el archivo docker-compose.yml.
 
-* para crear la estructura del proyecto *
-Este comando se utiliza para crear la estructura básica de un proyecto Django. Genera archivos como manage.py, settings.py, urls.py, etc., que son necesarios para configurar y gestionar el proyecto. Este comando debe ejecutarse una vez por proyecto, en el directorio donde quieres que se cree el proyecto.
+Ejecuta el siguiente comando para construir la imagen Docker:
 
-django-admin startproject d00 .   
-(el punto al final es importante para que no cree otra subcarpeta)
-
-
-*Para crear la estructura de la app*
-Este comando se utiliza para crear la estructura básica de una aplicación Django dentro del proyecto. Genera archivos como apps.py, views.py, models.py, etc., que son necesarios para desarrollar funcionalidades específicas dentro del proyecto. Este comando debe ejecutarse cada vez que quieras crear una nueva aplicación o funcionalidad.
-
-python manage.py startapp ex00_app
-
-estructura que se crea:
-
-ex00/
-├── manage.py                 # Archivo principal para comandos Django
-├── d00_project/              # Configuración global del proyecto
-│   ├── __init__.py
-│   ├── settings.py           # Configuración global del proyecto
-│   ├── urls.py               # URLs principales del proyecto
-│   ├── wsgi.py
-│   ├── asgi.py
-├── ex00_app/                 # Aplicación específica para el ejercicio ex00
-│   ├── __init__.py           # Archivo que define este módulo como paquete Python.
-│   ├── admin.py              # Configuración del panel de administración (opcional).
-│   ├── apps.py               # Configuración de la aplicación ex00_app.
-│   ├── models.py             # Definición de modelos (opcional).
-│   ├── tests.py              # Pruebas unitarias (opcional).
-│   ├── views.py              # Lógica para las vistas del ejercicio ex00.
-
-En d00/settings.py
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'ex00_app',  # Registrar la aplicación ex00_app.
-]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd00_project',  # Debe coincidir con POSTGRES_DB en docker-compose.yml
-        'USER': 'djangouser',   # Debe coincidir con POSTGRES_USER en docker-compose.yml
-        'PASSWORD': 'secret',   # Debe coincidir con POSTGRES_PASSWORD en docker-compose.yml
-        'HOST': 'db',           # Nombre del servicio definido en docker-compose.yml
-        'PORT': '5432',
-    }
-}
+docker-compose build
+Este comando lee el archivo Dockerfile y crea una imagen Docker que contiene todas las dependencias necesarias para ejecutar tu aplicación Django.
+Durante este proceso, Docker descargará las imágenes base necesarias y ejecutará los comandos especificados en el Dockerfile.
 
 
-d00/urls.py
-from django.contrib import admin
-from django.urls import path, include
+2. Iniciar los Contenedores
+Una vez que la imagen Docker se ha construido correctamente, puedes iniciar los contenedores:
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('ex00_app.urls')),  # Conectar las URLs de ex00_app.
-]
+En la misma terminal, ejecuta el siguiente comando:
 
-Crear archivo ex00_app/urls.py
+docker-compose up
+Este comando inicia todos los servicios definidos en el archivo docker-compose.yml.
+Verás la salida de los registros de los contenedores en la terminal. Esto incluye los registros del servidor Django y cualquier otro servicio que hayas configurado (como la base de datos).
+Para detener los contenedores, puedes presionar Ctrl + C en la terminal.
+Nota: Si deseas ejecutar los contenedores en segundo plano (modo "detached"), puedes usar el siguiente comando:
 
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('init/', views.init, name='init'),
-]
-
-ex00_app/views.py
-
-from django.http import HttpResponse
-import psycopg2
-
-def init(request):
-    try:
-        # Conexión a la base de datos PostgreSQL
-        conn = psycopg2.connect(
-            dbname="d00_project",  # Nombre de la base de datos
-            user="djangouser",     # Usuario de la base de datos
-            password="secret",     # Contraseña del usuario
-            host="db",             # Nombre del servicio definido en docker-compose.yml
-            port="5432"            # Puerto de PostgreSQL
-        )
-        cursor = conn.cursor()
-
-        # Crear una tabla si no existe
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS ex00_movies (
-            episode_nb SERIAL PRIMARY KEY,
-            title VARCHAR(64) UNIQUE NOT NULL,
-            opening_crawl TEXT,
-            director VARCHAR(32) NOT NULL,
-            producer VARCHAR(128) NOT NULL,
-            release_date DATE NOT NULL
-        );
-        """
-        cursor.execute(create_table_query)
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        return HttpResponse("OK")  # Respuesta exitosa
-
-    except Exception as e:
-        return HttpResponse(f"Error: {str(e)}", status=500)  # Respuesta con error
+docker-compose up -d
+Esto iniciará los contenedores en segundo plano y podrás seguir usando la terminal.
 
 
-Desde la raiz, para levantar el docker
-docker-compose up --build
+3. Ejecutar Migraciones
+Una vez que los contenedores estén en funcionamiento, necesitarás aplicar las migraciones para crear las tablas en la base de datos:
+
+Abre una nueva terminal (sin cerrar la terminal donde están los contenedores en ejecución).
+
+Ejecuta el siguiente comando para acceder al contenedor de Django y aplicar las migraciones:
+
+docker-compose exec web python manage.py migrate
+Aquí, web es el nombre del servicio definido en tu archivo docker-compose.yml que ejecuta la aplicación Django.
+Este comando ejecuta las migraciones de la base de datos, creando las tablas necesarias según los modelos definidos en tus aplicaciones.
+Nota: Si es la primera vez que ejecutas las migraciones, puede que veas mensajes indicando que se han creado nuevas tablas.
+
+4. Cargar Datos Iniciales
+Si tienes datos iniciales en los archivos JSON que deseas cargar en la base de datos, puedes hacerlo con los siguientes pasos:
+
+Aún en la nueva terminal, ejecuta el siguiente comando para cargar los datos desde el archivo ex09_initial_data.json:
+
+docker-compose exec web python manage.py loaddata d42/data/ex09_initial_data.json
+Este comando carga los datos definidos en el archivo JSON en las tablas correspondientes de la base de datos.
+Luego, carga los datos desde el archivo ex10_initial_data.json ejecutando:
+
+docker-compose exec web python manage.py loaddata d42/data/ex10_initial_data.json
+Esto asegurará que todos los datos iniciales necesarios para tu aplicación estén disponibles en la base de datos.
+Verificación
+Para verificar que todo esté funcionando correctamente:
+
+Abre tu navegador web y dirígete a http://127.0.0.1:8000/ (o la dirección que hayas configurado en tu archivo docker-compose.yml).
+
+Accede a las diferentes rutas de tu aplicación para asegurarte de que todo esté funcionando como se espera.
+
+Detener los Contenedores
+Cuando hayas terminado de trabajar con tu aplicación, puedes detener los contenedores ejecutando:
+
+docker-compose down
+Este comando detiene y elimina todos los contenedores, redes y volúmenes definidos en el archivo docker-compose.yml.
 
 
-docker-compose down  # Detener y eliminar los contenedores existentes
-docker-compose up --build  # Reconstruir y levantar los contenedores
+
+
+
 
 
 
