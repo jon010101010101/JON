@@ -3,6 +3,11 @@
 import os
 import sys
 
+import d42.settings as s
+print("os.environ.get('POSTGRES_PASSWORD', 'secret')")
+print(os.environ.get('POSTGRES_PASSWORD', 'secret'))
+print(s.DATABASES)
+# print(os.environ.get('POSTGRES_PASSWORD', 'secret'))
 
 def main():
     """Run administrative tasks."""
