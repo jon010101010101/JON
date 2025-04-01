@@ -7,9 +7,9 @@ WORKDIR /code
 # Copia los archivos de requisitos a /code
 COPY requirements.txt /code/
 
-# Instala dependencias y netcat-openbsd
+# Instala dependencias necesarias para Django y PostgreSQL
 RUN apt-get update && \
-    apt-get install -y netcat-openbsd && \
+    apt-get install -y netcat-openbsd postgresql-client && \
     pip install --no-cache-dir -r requirements.txt && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -24,4 +24,4 @@ COPY . /code/
 RUN chmod +x wait_for_db.sh
 
 # Comando por defecto para ejecutar el script de espera y luego el servidor de Django
-CMD ["./wait_for_db.sh", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ./wait_for_db.sh && python manage.py runserver 0.0.0.0:8000

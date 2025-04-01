@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Movie
 from django.db import IntegrityError
+from .models import Planet, Person 
 
 def populate(request):
     data = [
