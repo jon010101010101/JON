@@ -45,6 +45,9 @@ def populate(request):
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")
 
+from django.http import HttpResponse
+from django.db import connection
+
 def display(request):
     try:
         with connection.cursor() as cursor:
@@ -52,15 +55,37 @@ def display(request):
             rows = cursor.fetchall()
             if not rows:
                 return HttpResponse("No data available")
-            
-            html = "<table border='1'>"
-            html += "<tr><th>Episode</th><th>Title</th><th>Director</th><th>Producer</th><th>Release Date</th></tr>"
+
+            # Aplica estilos CSS en línea directamente a la cadena HTML
+            html = "<table style='width: 100%; border-collapse: collapse; margin: 20px 0; font-family: Arial, sans-serif;'>"  # General table styles
+            html += "<thead style='background-color: #ADD8E6;'>"  # Light blue background for header
+            html += "<tr>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Title</th>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Episode_Nb</th>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Opening_Crawl</th>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Director</th>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Producer</th>"
+            html += "<th style='padding: 8px; text-align: left; text-transform: uppercase;'>Release_Date</th>"
+            html += "</tr>"
+            html += "</thead><tbody>"
             for row in rows:
-                html += f"<tr><td>{row[1]}</td><td>{row[0]}</td><td>{row[3]}</td><td>{row[4]}</td><td>{row[5]}</td></tr>"
-            html += "</table>"
+                # Aplica el color azul muy clarito a las filas alternas
+                if rows.index(row) % 2 == 0:
+                    html += f"<tr style='background-color: #E0FFFF;'>"  # Azul muy clarito (Aqua)
+                else:
+                    html += "<tr>"
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[0]}</td>"  # Title
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[1]}</td>"  # Episode_Nb
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[2]}</td>"  # Opening_Crawl
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[3]}</td>"  # Director
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[4]}</td>"  # Producer
+                html += f"<td style='padding: 8px; border-bottom: 1px solid #ddd;'>{row[5]}</td>"  # Release_Date
+                html += "</tr>"
+            html += "</tbody></table>"
             return HttpResponse(html)
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")
+
 
 def remove(request):
     try:

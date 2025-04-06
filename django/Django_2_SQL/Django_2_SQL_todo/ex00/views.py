@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse
 import psycopg2
 
@@ -8,7 +9,7 @@ def init(request):
             dbname="d42",  # Nombre de la base de datos
             user="djangouser",  # Usuario configurado en docker-compose.yml
             password="secret",  # Contraseña configurada en docker-compose.yml
-            host="db",  # Nombre del servicio definido en docker-compose.yml
+            host="localhost",  # Nombre del servicio definido en docker-compose.yml
             port="5432"
         )
         cursor = conn.cursor()

@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from . import views 
 
 urlpatterns = [
-    path('init/', views.init, name='init'),
+    path('init/', views.init, name='ex00-init'),  # Define la ruta para la vista 'init'
 ]

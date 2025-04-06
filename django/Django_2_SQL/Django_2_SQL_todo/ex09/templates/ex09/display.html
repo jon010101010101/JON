@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characters Display</title>
+</head>
+<body>
+    <h1>Characters</h1>
+    {% if people %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Homeworld</th>
+                <th>Climate</th>
+            </tr>
+            {% for person in people %}
+                <tr>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.homeworld.name }}</td>
+                    <td>{{ person.homeworld.climate }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</body>
+</html>

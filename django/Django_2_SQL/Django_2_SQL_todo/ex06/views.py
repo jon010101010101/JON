@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.db import connection
 from django.shortcuts import render
 from .models import Movies
+import json
 
 def init(request):
     try:
@@ -82,3 +83,24 @@ def update(request):
         return render(request, 'ex06/update.html', {'movies': None})
 
     return render(request, 'ex06/update.html', {'movies': movies})
+
+def load_opening_crawl(request):
+    try:
+        # Ruta al archivo JSON
+        file_path = 'ex06/data/opening_crawl.json'
+
+        # Abrir y cargar el contenido del archivo JSON
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        # Actualizar la base de datos con los datos del JSON
+        for title, opening_crawl in data.items():
+            Movies.objects.filter(title=title).update(opening_crawl=opening_crawl)
+
+        return HttpResponse("Opening crawl data loaded successfully.")
+    except FileNotFoundError:
+        return HttpResponse("Error: File not found.")
+    except json.JSONDecodeError:
+        return HttpResponse("Error: Invalid JSON format.")
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")

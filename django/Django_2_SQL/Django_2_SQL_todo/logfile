@@ -1,0 +1,761 @@
+2025-04-03 16:56:40.451 CEST [2537821] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-03 16:56:40.451 CEST [2537821] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-03 16:56:40.492 CEST [2537821] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-03 16:56:40.498 CEST [2537824] LOG:  database system was shut down at 2025-04-03 16:55:30 CEST
+2025-04-03 16:56:40.503 CEST [2537821] LOG:  database system is ready to accept connections
+2025-04-03 16:58:33.919 CEST [2537969] FATAL:  role "djangouser" does not exist
+2025-04-03 16:59:19.571 CEST [2538027] FATAL:  role "postgres" does not exist
+2025-04-03 17:01:40.597 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 17:01:44.927 CEST [2537822] LOG:  checkpoint complete: wrote 46 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.314 s, sync=0.007 s, total=4.330 s; sync files=11, longest=0.004 s, average=0.001 s; distance=269 kB, estimate=269 kB; lsn=0/152E998, redo lsn=0/152E908
+2025-04-03 17:06:41.027 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 17:08:20.465 CEST [2537822] LOG:  checkpoint complete: wrote 991 buffers (6.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=99.426 s, sync=0.004 s, total=99.439 s; sync files=407, longest=0.003 s, average=0.001 s; distance=4756 kB, estimate=4756 kB; lsn=0/19D3C58, redo lsn=0/19D3BC8
+2025-04-03 18:05:21.318 CEST [2548804] ERROR:  column ex08_people.homeworld_id does not exist at character 291
+2025-04-03 18:05:21.318 CEST [2548804] HINT:  Perhaps you meant to reference the column "ex08_people.homeworld".
+2025-04-03 18:05:21.318 CEST [2548804] STATEMENT:  
+	            SELECT
+	                ex08_people.name,
+	                ex08_planets.name AS homeworld,  -- Cambiado para seleccionar el nombre del planeta
+	                ex08_planets.climate
+	            FROM
+	                ex08_people
+	            LEFT JOIN ex08_planets
+	                ON ex08_people.homeworld_id = ex08_planets.id  -- Cambiado a homeworld_id
+	            WHERE ex08_planets.climate LIKE '%windy%'
+	            ORDER BY ex08_people.name;
+	        
+2025-04-03 18:06:42.532 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:06:43.857 CEST [2537822] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.008 s, total=1.326 s; sync files=20, longest=0.004 s, average=0.001 s; distance=43 kB, estimate=4285 kB; lsn=0/19DEA00, redo lsn=0/19DE970
+2025-04-03 18:11:42.957 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:11:43.972 CEST [2537822] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.002 s, sync=0.005 s, total=1.016 s; sync files=16, longest=0.004 s, average=0.001 s; distance=52 kB, estimate=3862 kB; lsn=0/19EBBA0, redo lsn=0/19EBB48
+2025-04-03 18:16:43.072 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:16:44.190 CEST [2537822] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.105 s, sync=0.005 s, total=1.118 s; sync files=23, longest=0.002 s, average=0.001 s; distance=49 kB, estimate=3480 kB; lsn=0/19F82F8, redo lsn=0/19F8268
+2025-04-03 18:21:43.290 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:21:44.106 CEST [2537822] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.802 s, sync=0.006 s, total=0.817 s; sync files=14, longest=0.004 s, average=0.001 s; distance=45 kB, estimate=3137 kB; lsn=0/1A03948, redo lsn=0/1A038F0
+2025-04-03 18:26:43.206 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:26:44.124 CEST [2537822] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.902 s, sync=0.006 s, total=0.919 s; sync files=24, longest=0.005 s, average=0.001 s; distance=46 kB, estimate=2828 kB; lsn=0/1A0F238, redo lsn=0/1A0F1E0
+2025-04-03 18:31:43.215 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:31:43.931 CEST [2537822] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.702 s, sync=0.006 s, total=0.717 s; sync files=14, longest=0.004 s, average=0.001 s; distance=34 kB, estimate=2548 kB; lsn=0/1A17E00, redo lsn=0/1A17DA8
+2025-04-03 18:36:44.031 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 18:36:47.458 CEST [2537822] LOG:  checkpoint complete: wrote 35 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.414 s, sync=0.005 s, total=3.427 s; sync files=21, longest=0.003 s, average=0.001 s; distance=138 kB, estimate=2307 kB; lsn=0/1A3A880, redo lsn=0/1A3A828
+2025-04-03 18:48:06.342 CEST [2559051] ERROR:  column "climate" does not exist at character 33
+2025-04-03 18:48:06.342 CEST [2559051] STATEMENT:  SELECT * FROM ex08_people WHERE climate = 'windy';
+2025-04-03 19:21:18.654 CEST [2565346] ERROR:  relation "ex09_planets" does not exist at character 8
+2025-04-03 19:21:18.654 CEST [2565346] STATEMENT:  UPDATE "ex09_planets" SET "name" = 'Alderaan', "climate" = 'temperate', "diameter" = 12500, "orbital_period" = 364, "population" = 2000000000, "rotation_period" = 24, "surface_water" = 40.0, "terrain" = 'grasslands, mountains', "created" = '2016-06-23T14:46:55.742000+00:00'::timestamptz, "updated" = '2016-06-23T14:46:55.742000+00:00'::timestamptz WHERE "ex09_planets"."id" = 200
+2025-04-03 19:25:06.810 CEST [2565482] ERROR:  null value in column "population" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:25:06.810 CEST [2565482] DETAIL:  Failing row contains (384, Hoth, frozen, 7200, 549, null, 23, 100, tundra, ice caves, mountain ranges, 2016-06-23 15:00:59.693+00, 2016-06-23 15:00:59.693+00).
+2025-04-03 19:25:06.810 CEST [2565482] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (384, 'Hoth', 'frozen', 7200, 549, NULL, 23, 100.0, 'tundra, ice caves, mountain ranges', '2016-06-23T15:00:59.693000+00:00'::timestamptz, '2016-06-23T15:00:59.693000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:26:43.089 CEST [2565614] ERROR:  null value in column "surface_water" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:26:43.089 CEST [2565614] DETAIL:  Failing row contains (393, Mygeeto, frigid, 10088, 167, 19000000, 12, null, glaciers, mountains, ice canyons, 2016-06-23 15:00:59.755+00, 2016-06-23 15:00:59.755+00).
+2025-04-03 19:26:43.089 CEST [2565614] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (393, 'Mygeeto', 'frigid', 10088, 167, 19000000, 12, NULL, 'glaciers, mountains, ice canyons', '2016-06-23T15:00:59.755000+00:00'::timestamptz, '2016-06-23T15:00:59.755000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:26:45.174 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:26:52.525 CEST [2537822] LOG:  checkpoint complete: wrote 74 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.336 s, sync=0.007 s, total=7.352 s; sync files=58, longest=0.004 s, average=0.001 s; distance=246 kB, estimate=2101 kB; lsn=0/1A782D0, redo lsn=0/1A78278
+2025-04-03 19:27:45.073 CEST [2565661] ERROR:  null value in column "surface_water" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:27:45.073 CEST [2565661] DETAIL:  Failing row contains (393, Mygeeto, frigid, 10088, 167, 19000000, 12, null, glaciers, mountains, ice canyons, 2016-06-23 15:00:59.755+00, 2016-06-23 15:00:59.755+00).
+2025-04-03 19:27:45.073 CEST [2565661] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (393, 'Mygeeto', 'frigid', 10088, 167, 19000000, 12, NULL, 'glaciers, mountains, ice canyons', '2016-06-23T15:00:59.755000+00:00'::timestamptz, '2016-06-23T15:00:59.755000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:31:45.124 CEST [2566002] ERROR:  null value in column "orbital_period" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:31:45.124 CEST [2566002] DETAIL:  Failing row contains (397, Stewjon, temperate, 0, null, null, null, null, grass, 2016-06-23 15:00:59.793+00, 2016-06-23 15:00:59.793+00).
+2025-04-03 19:31:45.124 CEST [2566002] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (397, 'Stewjon', 'temperate', 0, NULL, NULL, NULL, NULL, 'grass', '2016-06-23T15:00:59.793000+00:00'::timestamptz, '2016-06-23T15:00:59.793000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:31:45.600 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:31:46.924 CEST [2537822] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.011 s, total=1.325 s; sync files=12, longest=0.008 s, average=0.001 s; distance=47 kB, estimate=1896 kB; lsn=0/1A84200, redo lsn=0/1A841A8
+2025-04-03 19:33:40.151 CEST [2566121] ERROR:  null value in column "rotation_period" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:33:40.151 CEST [2566121] DETAIL:  Failing row contains (397, Stewjon, temperate, 0, null, null, null, null, grass, 2016-06-23 15:00:59.793+00, 2016-06-23 15:00:59.793+00).
+2025-04-03 19:33:40.151 CEST [2566121] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (397, 'Stewjon', 'temperate', 0, NULL, NULL, NULL, NULL, 'grass', '2016-06-23T15:00:59.793000+00:00'::timestamptz, '2016-06-23T15:00:59.793000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:36:46.024 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:36:47.148 CEST [2537822] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.003 s, total=1.124 s; sync files=12, longest=0.002 s, average=0.001 s; distance=36 kB, estimate=1710 kB; lsn=0/1A8D360, redo lsn=0/1A8D308
+2025-04-03 19:39:04.994 CEST [2567447] ERROR:  null value in column "rotation_period" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:39:04.994 CEST [2567447] DETAIL:  Failing row contains (397, Stewjon, temperate, 0, null, null, null, null, grass, 2016-06-23 15:00:59.793+00, 2016-06-23 15:00:59.793+00).
+2025-04-03 19:39:04.994 CEST [2567447] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (397, 'Stewjon', 'temperate', 0, NULL, NULL, NULL, NULL, 'grass', '2016-06-23T15:00:59.793000+00:00'::timestamptz, '2016-06-23T15:00:59.793000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:40:18.292 CEST [2567597] ERROR:  null value in column "climate" of relation "ex09_planets" violates not-null constraint
+2025-04-03 19:40:18.292 CEST [2567597] DETAIL:  Failing row contains (408, Aleen Minor, null, null, null, null, null, null, null, 2016-06-23 15:00:59.872+00, 2016-06-23 15:00:59.872+00).
+2025-04-03 19:40:18.292 CEST [2567597] STATEMENT:  INSERT INTO "ex09_planets" ("id", "name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES (408, 'Aleen Minor', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-06-23T15:00:59.872000+00:00'::timestamptz, '2016-06-23T15:00:59.872000+00:00'::timestamptz) RETURNING "ex09_planets"."id"
+2025-04-03 19:41:07.009 CEST [2567703] ERROR:  null value in column "homeworld_id" of relation "ex09_people" violates not-null constraint
+2025-04-03 19:41:07.009 CEST [2567703] DETAIL:  Failing row contains (527, Yoda, 896BBY, male, brown, white, 66, 17, 2016-06-23 15:11:36.626+00, 2016-06-23 15:11:36.626+00, null).
+2025-04-03 19:41:07.009 CEST [2567703] STATEMENT:  INSERT INTO "ex09_people" ("id", "name", "birth_year", "gender", "eye_color", "hair_color", "height", "mass", "homeworld_id", "created", "updated") VALUES (527, 'Yoda', '896BBY', 'male', 'brown', 'white', 66, 17.0, NULL, '2016-06-23T15:11:36.626000+00:00'::timestamptz, '2016-06-23T15:11:36.626000+00:00'::timestamptz) RETURNING "ex09_people"."id"
+2025-04-03 19:41:46.176 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:41:49.303 CEST [2537822] LOG:  checkpoint complete: wrote 32 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.113 s, sync=0.006 s, total=3.127 s; sync files=23, longest=0.002 s, average=0.001 s; distance=138 kB, estimate=1553 kB; lsn=0/1AAFDD0, redo lsn=0/1AAFD78
+2025-04-03 19:42:00.178 CEST [2567994] ERROR:  null value in column "birth_year" of relation "ex09_people" violates not-null constraint
+2025-04-03 19:42:00.178 CEST [2567994] DETAIL:  Failing row contains (691, R5-D4, null, n/a, red, n/a, 97, 32, 2016-06-23 15:13:56.783+00, 2016-06-23 15:13:56.783+00, 214).
+2025-04-03 19:42:00.178 CEST [2567994] STATEMENT:  INSERT INTO "ex09_people" ("id", "name", "birth_year", "gender", "eye_color", "hair_color", "height", "mass", "homeworld_id", "created", "updated") VALUES (691, 'R5-D4', NULL, 'n/a', 'red', 'n/a', 97, 32.0, 214, '2016-06-23T15:13:56.783000+00:00'::timestamptz, '2016-06-23T15:13:56.783000+00:00'::timestamptz) RETURNING "ex09_people"."id"
+2025-04-03 19:42:51.035 CEST [2568305] ERROR:  null value in column "eye_color" of relation "ex09_people" violates not-null constraint
+2025-04-03 19:42:51.035 CEST [2568305] DETAIL:  Failing row contains (728, Ratts Tyerel, null, male, null, none, 79, 15, 2016-06-23 15:13:57.012+00, 2016-06-23 15:13:57.012+00, 408).
+2025-04-03 19:42:51.035 CEST [2568305] STATEMENT:  INSERT INTO "ex09_people" ("id", "name", "birth_year", "gender", "eye_color", "hair_color", "height", "mass", "homeworld_id", "created", "updated") VALUES (728, 'Ratts Tyerel', NULL, 'male', NULL, 'none', 79, 15.0, 408, '2016-06-23T15:13:57.012000+00:00'::timestamptz, '2016-06-23T15:13:57.012000+00:00'::timestamptz) RETURNING "ex09_people"."id"
+2025-04-03 19:43:55.921 CEST [2568412] ERROR:  null value in column "hair_color" of relation "ex09_people" violates not-null constraint
+2025-04-03 19:43:55.921 CEST [2568412] DETAIL:  Failing row contains (769, Captain Phasma, null, female, null, null, null, null, 2016-06-23 15:13:57.487+00, 2016-06-23 15:13:57.487+00, null).
+2025-04-03 19:43:55.921 CEST [2568412] STATEMENT:  INSERT INTO "ex09_people" ("id", "name", "birth_year", "gender", "eye_color", "hair_color", "height", "mass", "homeworld_id", "created", "updated") VALUES (769, 'Captain Phasma', NULL, 'female', NULL, NULL, NULL, NULL, NULL, '2016-06-23T15:13:57.487000+00:00'::timestamptz, '2016-06-23T15:13:57.487000+00:00'::timestamptz) RETURNING "ex09_people"."id"
+2025-04-03 19:46:46.370 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:46:53.726 CEST [2537822] LOG:  checkpoint complete: wrote 74 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.336 s, sync=0.011 s, total=7.357 s; sync files=55, longest=0.006 s, average=0.001 s; distance=508 kB, estimate=1448 kB; lsn=0/1B2F150, redo lsn=0/1B2F0F8
+2025-04-03 19:51:46.728 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 19:51:49.461 CEST [2537822] LOG:  checkpoint complete: wrote 28 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.719 s, sync=0.005 s, total=2.733 s; sync files=17, longest=0.002 s, average=0.001 s; distance=153 kB, estimate=1319 kB; lsn=0/1B55598, redo lsn=0/1B55540
+2025-04-03 20:01:46.661 CEST [2537822] LOG:  checkpoint starting: time
+2025-04-03 20:01:47.082 CEST [2537822] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.401 s, sync=0.005 s, total=0.422 s; sync files=2, longest=0.005 s, average=0.003 s; distance=8 kB, estimate=1188 kB; lsn=0/1B577C0, redo lsn=0/1B57768
+2025-04-04 10:52:44.057 CEST [2649693] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-04 10:52:44.058 CEST [2649693] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-04 10:52:44.125 CEST [2649693] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-04 10:52:44.145 CEST [2649696] LOG:  database system was interrupted; last known up at 2025-04-03 20:01:47 CEST
+2025-04-04 10:52:44.214 CEST [2649696] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-04 10:52:44.478 CEST [2649696] LOG:  redo starts at 0/1B57768
+2025-04-04 10:52:44.478 CEST [2649696] LOG:  invalid record length at 0/1B57870: expected at least 24, got 0
+2025-04-04 10:52:44.478 CEST [2649696] LOG:  redo done at 0/1B57838 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-04 10:52:44.484 CEST [2649694] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-04 10:52:44.494 CEST [2649694] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.012 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1B57870, redo lsn=0/1B57870
+2025-04-04 10:52:44.499 CEST [2649693] LOG:  database system is ready to accept connections
+2025-04-04 10:57:44.595 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 10:57:51.738 CEST [2649694] LOG:  checkpoint complete: wrote 71 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.039 s, sync=0.051 s, total=7.143 s; sync files=62, longest=0.049 s, average=0.001 s; distance=262 kB, estimate=262 kB; lsn=0/1B992F0, redo lsn=0/1B99260
+2025-04-04 11:47:45.549 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 11:47:51.794 CEST [2649694] LOG:  checkpoint complete: wrote 63 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.232 s, sync=0.005 s, total=6.246 s; sync files=61, longest=0.003 s, average=0.001 s; distance=283 kB, estimate=283 kB; lsn=0/1BE4260, redo lsn=0/1BE01D8
+2025-04-04 12:02:45.994 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:02:48.519 CEST [2649694] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.512 s, sync=0.004 s, total=2.526 s; sync files=16, longest=0.003 s, average=0.001 s; distance=61 kB, estimate=261 kB; lsn=0/1BF3398, redo lsn=0/1BEF940
+2025-04-04 12:03:15.457 CEST [2659319] ERROR:  duplicate key value violates unique constraint "ex10_planets_name_0b4625aa_uniq"
+2025-04-04 12:03:15.457 CEST [2659319] DETAIL:  Key (name)=(Alderaan) already exists.
+2025-04-04 12:03:15.457 CEST [2659319] STATEMENT:  INSERT INTO "ex10_planets" ("name", "climate", "diameter", "orbital_period", "population", "rotation_period", "surface_water", "terrain", "created", "updated") VALUES ('Alderaan', 'temperate', 12500, 364, 2000000000, 24, 40.0, 'grasslands, mountains', '2025-04-04T10:03:15.456865+00:00'::timestamptz, '2025-04-04T10:03:15.456876+00:00'::timestamptz) RETURNING "ex10_planets"."id"
+2025-04-04 12:07:45.619 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:07:46.334 CEST [2649694] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.702 s, sync=0.006 s, total=0.716 s; sync files=7, longest=0.005 s, average=0.001 s; distance=23 kB, estimate=237 kB; lsn=0/1BF58B0, redo lsn=0/1BF5858
+2025-04-04 12:10:04.396 CEST [2660822] ERROR:  null value in column "created" of relation "ex10_planets" violates not-null constraint
+2025-04-04 12:10:04.396 CEST [2660822] DETAIL:  Failing row contains (1, Alderaan, 12500, null, null, temperate, 364, 2000000000, 24, 40, grasslands, mountains).
+2025-04-04 12:10:04.396 CEST [2660822] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Alderaan', "climate" = 'temperate', "diameter" = 12500, "orbital_period" = 364, "population" = 2000000000, "rotation_period" = 24, "surface_water" = 40.0, "terrain" = 'grasslands, mountains', "created" = NULL, "updated" = NULL WHERE "ex10_planets"."id" = 1
+2025-04-04 12:17:45.494 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:17:49.340 CEST [2649694] LOG:  checkpoint complete: wrote 37 buffers (0.2%); 1 WAL file(s) added, 0 removed, 0 recycled; write=3.620 s, sync=0.005 s, total=3.846 s; sync files=45, longest=0.004 s, average=0.001 s; distance=244 kB, estimate=244 kB; lsn=0/1C32C80, redo lsn=0/1C32C28
+2025-04-04 12:19:52.939 CEST [2661485] ERROR:  relation "yourapp_planets" does not exist at character 15
+2025-04-04 12:19:52.939 CEST [2661485] STATEMENT:  SELECT * FROM yourapp_planets WHERE diameter = 'unknown';
+2025-04-04 12:20:55.024 CEST [2661485] ERROR:  invalid input syntax for type integer: "unknown" at character 45
+2025-04-04 12:20:55.024 CEST [2661485] STATEMENT:  SELECT * FROM ex10_planets WHERE diameter = 'unknown';
+2025-04-04 12:21:03.189 CEST [2661485] ERROR:  invalid input syntax for type integer: "unknown" at character 55
+2025-04-04 12:21:03.189 CEST [2661485] STATEMENT:  UPDATE ex10_planets SET diameter = 0 WHERE diameter = 'unknown';
+2025-04-04 12:27:45.503 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:27:51.044 CEST [2649694] LOG:  checkpoint complete: wrote 56 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.527 s, sync=0.004 s, total=5.541 s; sync files=38, longest=0.003 s, average=0.001 s; distance=236 kB, estimate=244 kB; lsn=0/1C6DF98, redo lsn=0/1C6DF40
+2025-04-04 12:36:39.296 CEST [2663223] ERROR:  relation "planets_planet" does not exist at character 15
+2025-04-04 12:36:39.296 CEST [2663223] STATEMENT:  SELECT * FROM planets_planet WHERE diameter = 'unknown';
+2025-04-04 12:37:45.244 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:37:49.478 CEST [2649694] LOG:  checkpoint complete: wrote 43 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.219 s, sync=0.005 s, total=4.234 s; sync files=36, longest=0.004 s, average=0.001 s; distance=210 kB, estimate=240 kB; lsn=0/1CA2840, redo lsn=0/1CA27E8
+2025-04-04 12:45:28.901 CEST [2664836] ERROR:  invalid input syntax for type integer: "unknown" at character 55
+2025-04-04 12:45:28.901 CEST [2664836] STATEMENT:  UPDATE ex10_planets SET diameter = 0 WHERE diameter = 'unknown';
+2025-04-04 12:47:15.137 CEST [2664836] ERROR:  operator does not exist: integer !~ text at character 63
+2025-04-04 12:47:15.137 CEST [2664836] HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+2025-04-04 12:47:15.137 CEST [2664836] STATEMENT:  SELECT * FROM ex10_planets WHERE diameter IS NULL OR diameter NOT SIMILAR TO '[0-9]+';
+2025-04-04 12:47:45.588 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:47:48.916 CEST [2649694] LOG:  checkpoint complete: wrote 34 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.314 s, sync=0.005 s, total=3.329 s; sync files=30, longest=0.003 s, average=0.001 s; distance=201 kB, estimate=236 kB; lsn=0/1CD4E80, redo lsn=0/1CD4DF0
+2025-04-04 12:52:46.016 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:52:55.782 CEST [2649694] LOG:  checkpoint complete: wrote 98 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=9.753 s, sync=0.004 s, total=9.767 s; sync files=85, longest=0.003 s, average=0.001 s; distance=660 kB, estimate=660 kB; lsn=0/1D79FC0, redo lsn=0/1D79F30
+2025-04-04 12:57:46.871 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 12:57:52.907 CEST [2649694] LOG:  checkpoint complete: wrote 61 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=6.020 s, sync=0.009 s, total=6.037 s; sync files=46, longest=0.004 s, average=0.001 s; distance=406 kB, estimate=634 kB; lsn=0/1DF5D00, redo lsn=0/1DDF948
+2025-04-04 13:02:47.007 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 13:02:49.534 CEST [2649694] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.513 s, sync=0.006 s, total=2.528 s; sync files=14, longest=0.004 s, average=0.001 s; distance=89 kB, estimate=580 kB; lsn=0/1DF5F80, redo lsn=0/1DF5F28
+2025-04-04 13:07:47.627 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 13:07:47.748 CEST [2649694] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.007 s, total=0.122 s; sync files=2, longest=0.007 s, average=0.004 s; distance=3 kB, estimate=522 kB; lsn=0/1DF6F28, redo lsn=0/1DF6ED0
+2025-04-04 13:17:47.948 CEST [2649694] LOG:  checkpoint starting: time
+2025-04-04 13:17:48.167 CEST [2649694] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.007 s, total=0.220 s; sync files=2, longest=0.007 s, average=0.004 s; distance=6 kB, estimate=471 kB; lsn=0/1DF8818, redo lsn=0/1DF87C0
+2025-04-04 16:41:24.677 CEST [2696128] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-04 16:41:24.677 CEST [2696128] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-04 16:41:24.743 CEST [2696128] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-04 16:41:24.753 CEST [2696131] LOG:  database system was interrupted; last known up at 2025-04-04 13:17:48 CEST
+2025-04-04 16:41:24.811 CEST [2696131] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-04 16:41:24.816 CEST [2696131] LOG:  redo starts at 0/1DF87C0
+2025-04-04 16:41:24.816 CEST [2696131] LOG:  invalid record length at 0/1DF88C8: expected at least 24, got 0
+2025-04-04 16:41:24.816 CEST [2696131] LOG:  redo done at 0/1DF8890 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-04 16:41:24.823 CEST [2696129] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-04 16:41:24.832 CEST [2696129] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.012 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1DF88C8, redo lsn=0/1DF88C8
+2025-04-04 16:41:24.836 CEST [2696128] LOG:  database system is ready to accept connections
+2025-04-04 16:56:25.084 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 16:56:25.200 CEST [2696129] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.117 s; sync files=2, longest=0.004 s, average=0.002 s; distance=3 kB, estimate=3 kB; lsn=0/1DF9610, redo lsn=0/1DF95B8
+2025-04-04 17:03:11.713 CEST [2700095] FATAL:  lock file "postmaster.pid" already exists
+2025-04-04 17:03:11.713 CEST [2700095] HINT:  Is another postmaster (PID 2696128) running in data directory "/home/jurrutia/postgresql_data"?
+2025-04-04 17:36:25.937 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 17:36:26.151 CEST [2696129] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.003 s, total=0.214 s; sync files=2, longest=0.003 s, average=0.002 s; distance=8 kB, estimate=8 kB; lsn=0/1DFB678, redo lsn=0/1DFB620
+2025-04-04 17:41:25.191 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 17:41:26.926 CEST [2696129] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.711 s, sync=0.011 s, total=1.736 s; sync files=12, longest=0.005 s, average=0.001 s; distance=2 kB, estimate=7 kB; lsn=0/1DFC110, redo lsn=0/1DFC0B8
+2025-04-04 17:51:26.057 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 17:51:30.390 CEST [2696129] LOG:  checkpoint complete: wrote 44 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.315 s, sync=0.009 s, total=4.334 s; sync files=34, longest=0.006 s, average=0.001 s; distance=225 kB, estimate=225 kB; lsn=0/1E34588, redo lsn=0/1E344F8
+2025-04-04 17:56:26.491 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 17:56:26.711 CEST [2696129] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.004 s, total=0.221 s; sync files=1, longest=0.004 s, average=0.004 s; distance=12 kB, estimate=203 kB; lsn=0/1E37670, redo lsn=0/1E37618
+2025-04-04 17:57:21.563 CEST [2707523] FATAL:  role "postgres" does not exist
+2025-04-04 18:01:26.792 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 18:01:27.106 CEST [2696129] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.004 s, total=0.315 s; sync files=4, longest=0.004 s, average=0.001 s; distance=4 kB, estimate=183 kB; lsn=0/1E38A38, redo lsn=0/1E389E0
+2025-04-04 19:51:28.019 CEST [2696129] LOG:  checkpoint starting: time
+2025-04-04 19:51:28.133 CEST [2696129] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.115 s; sync files=2, longest=0.004 s, average=0.002 s; distance=4 kB, estimate=165 kB; lsn=0/1E39A88, redo lsn=0/1E39A30
+2025-04-05 09:06:38.205 CEST [2802420] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-05 09:06:38.205 CEST [2802420] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-05 09:06:38.270 CEST [2802420] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-05 09:06:38.291 CEST [2802423] LOG:  database system was interrupted; last known up at 2025-04-04 19:51:28 CEST
+2025-04-05 09:06:38.381 CEST [2802423] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-05 09:06:38.386 CEST [2802423] LOG:  redo starts at 0/1E39A30
+2025-04-05 09:06:38.386 CEST [2802423] LOG:  invalid record length at 0/1E39B38: expected at least 24, got 0
+2025-04-05 09:06:38.386 CEST [2802423] LOG:  redo done at 0/1E39B00 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-05 09:06:38.394 CEST [2802421] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-05 09:06:38.405 CEST [2802421] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.015 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1E39B38, redo lsn=0/1E39B38
+2025-04-05 09:06:38.409 CEST [2802420] LOG:  database system is ready to accept connections
+2025-04-05 09:11:38.505 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 09:11:38.618 CEST [2802421] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.113 s; sync files=2, longest=0.004 s, average=0.002 s; distance=4 kB, estimate=4 kB; lsn=0/1E3ACA8, redo lsn=0/1E3AC50
+2025-04-05 09:21:38.751 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 09:21:43.388 CEST [2802421] LOG:  checkpoint complete: wrote 47 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.623 s, sync=0.005 s, total=4.638 s; sync files=48, longest=0.004 s, average=0.001 s; distance=197 kB, estimate=197 kB; lsn=0/1E6C180, redo lsn=0/1E6C128
+2025-04-05 09:26:38.488 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 09:26:39.607 CEST [2802421] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.005 s, total=1.120 s; sync files=12, longest=0.003 s, average=0.001 s; distance=45 kB, estimate=182 kB; lsn=0/1E77668, redo lsn=0/1E77610
+2025-04-05 09:41:38.743 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 09:41:38.859 CEST [2802421] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.116 s; sync files=1, longest=0.004 s, average=0.004 s; distance=6 kB, estimate=164 kB; lsn=0/1E791F0, redo lsn=0/1E79198
+2025-04-05 09:58:29.833 CEST [2809495] FATAL:  lock file "postmaster.pid" already exists
+2025-04-05 09:58:29.833 CEST [2809495] HINT:  Is another postmaster (PID 2802420) running in data directory "/home/jurrutia/postgresql_data"?
+2025-04-05 10:01:39.162 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:01:39.278 CEST [2802421] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.117 s; sync files=1, longest=0.004 s, average=0.004 s; distance=4 kB, estimate=148 kB; lsn=0/1E7A488, redo lsn=0/1E7A430
+2025-04-05 10:06:39.296 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:06:43.129 CEST [2802421] LOG:  checkpoint complete: wrote 39 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.816 s, sync=0.008 s, total=3.834 s; sync files=37, longest=0.005 s, average=0.001 s; distance=178 kB, estimate=178 kB; lsn=0/1EA6F60, redo lsn=0/1EA6ED0
+2025-04-05 10:11:39.229 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:11:40.246 CEST [2802421] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.003 s, sync=0.005 s, total=1.018 s; sync files=4, longest=0.005 s, average=0.002 s; distance=28 kB, estimate=163 kB; lsn=0/1EAE0E0, redo lsn=0/1EAE088
+2025-04-05 10:16:39.346 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:16:43.075 CEST [2802421] LOG:  checkpoint complete: wrote 38 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.716 s, sync=0.006 s, total=3.730 s; sync files=32, longest=0.003 s, average=0.001 s; distance=168 kB, estimate=168 kB; lsn=0/1ED83B0, redo lsn=0/1ED8320
+2025-04-05 10:21:39.175 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:21:39.891 CEST [2802421] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.702 s, sync=0.006 s, total=0.717 s; sync files=5, longest=0.003 s, average=0.002 s; distance=3 kB, estimate=152 kB; lsn=0/1ED90B8, redo lsn=0/1ED9060
+2025-04-05 10:36:40.165 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 10:36:40.275 CEST [2802421] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.003 s, total=0.111 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1 kB, estimate=137 kB; lsn=0/1ED97F8, redo lsn=0/1ED97A0
+2025-04-05 12:51:42.497 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 12:51:42.608 CEST [2802421] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.003 s, total=0.112 s; sync files=2, longest=0.003 s, average=0.002 s; distance=3 kB, estimate=123 kB; lsn=0/1EDA588, redo lsn=0/1EDA530
+2025-04-05 13:01:42.796 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:01:46.631 CEST [2802421] LOG:  checkpoint complete: wrote 39 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.820 s, sync=0.007 s, total=3.836 s; sync files=31, longest=0.004 s, average=0.001 s; distance=173 kB, estimate=173 kB; lsn=0/1F05CA8, redo lsn=0/1F05C50
+2025-04-05 13:06:08.045 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.045 CEST [2832141] DETAIL:  Key (episode_nb)=(1) already exists.
+2025-04-05 13:06:08.045 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (1, 'The Phantom Menace', 'George Lucas', 'Rick McCallum', '1999-05-19');
+	                    
+2025-04-05 13:06:08.067 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.067 CEST [2832141] DETAIL:  Key (episode_nb)=(2) already exists.
+2025-04-05 13:06:08.067 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (2, 'Attack of the Clones', 'George Lucas', 'Rick McCallum', '2002-05-16');
+	                    
+2025-04-05 13:06:08.068 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.068 CEST [2832141] DETAIL:  Key (episode_nb)=(3) already exists.
+2025-04-05 13:06:08.068 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (3, 'Revenge of the Sith', 'George Lucas', 'Rick McCallum', '2005-05-19');
+	                    
+2025-04-05 13:06:08.069 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.069 CEST [2832141] DETAIL:  Key (episode_nb)=(4) already exists.
+2025-04-05 13:06:08.069 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (4, 'A New Hope', 'George Lucas', 'Gary Kurtz, Rick McCallum', '1977-05-25');
+	                    
+2025-04-05 13:06:08.069 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.069 CEST [2832141] DETAIL:  Key (episode_nb)=(5) already exists.
+2025-04-05 13:06:08.069 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (5, 'The Empire Strikes Back', 'Irvin Kershner', 'Gary Kurtz, Rick McCallum', '1980-05-17');
+	                    
+2025-04-05 13:06:08.070 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.070 CEST [2832141] DETAIL:  Key (episode_nb)=(6) already exists.
+2025-04-05 13:06:08.070 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (6, 'Return of the Jedi', 'Richard Marquand', 'Howard G. Kazanjian, George Lucas, Rick McCallum', '1983-05-25');
+	                    
+2025-04-05 13:06:08.070 CEST [2832141] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-05 13:06:08.070 CEST [2832141] DETAIL:  Key (episode_nb)=(7) already exists.
+2025-04-05 13:06:08.070 CEST [2832141] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (7, 'The Force Awakens', 'J. J. Abrams', 'Kathleen Kennedy, J. J. Abrams, Bryan Burk', '2015-12-11');
+	                    
+2025-04-05 13:06:42.712 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:06:42.826 CEST [2802421] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.115 s; sync files=2, longest=0.004 s, average=0.003 s; distance=2 kB, estimate=156 kB; lsn=0/1F06588, redo lsn=0/1F06530
+2025-04-05 13:11:42.926 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:11:43.646 CEST [2802421] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.007 s, total=0.720 s; sync files=5, longest=0.004 s, average=0.002 s; distance=3 kB, estimate=141 kB; lsn=0/1F07290, redo lsn=0/1F07238
+2025-04-05 13:16:42.746 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:16:45.273 CEST [2802421] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.515 s, sync=0.003 s, total=2.527 s; sync files=20, longest=0.002 s, average=0.001 s; distance=73 kB, estimate=134 kB; lsn=0/1F19A28, redo lsn=0/1F199D0
+2025-04-05 13:21:42.372 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:21:42.587 CEST [2802421] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.004 s, total=0.215 s; sync files=3, longest=0.003 s, average=0.002 s; distance=1 kB, estimate=121 kB; lsn=0/1F19F88, redo lsn=0/1F19F30
+2025-04-05 13:26:42.631 CEST [2802421] LOG:  checkpoint starting: time
+2025-04-05 13:26:42.749 CEST [2802421] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.007 s, total=0.118 s; sync files=2, longest=0.007 s, average=0.004 s; distance=6 kB, estimate=109 kB; lsn=0/1F1B850, redo lsn=0/1F1B7F8
+2025-04-05 15:54:02.579 CEST [2854342] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-05 15:54:02.579 CEST [2854342] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-05 15:54:02.674 CEST [2854342] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-05 15:54:02.695 CEST [2854345] LOG:  database system was interrupted; last known up at 2025-04-05 13:26:42 CEST
+2025-04-05 15:54:02.801 CEST [2854345] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-05 15:54:02.806 CEST [2854345] LOG:  redo starts at 0/1F1B7F8
+2025-04-05 15:54:02.806 CEST [2854345] LOG:  invalid record length at 0/1F1B900: expected at least 24, got 0
+2025-04-05 15:54:02.806 CEST [2854345] LOG:  redo done at 0/1F1B8C8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-05 15:54:02.813 CEST [2854343] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-05 15:54:02.825 CEST [2854343] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.015 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1F1B900, redo lsn=0/1F1B900
+2025-04-05 15:54:02.829 CEST [2854342] LOG:  database system is ready to accept connections
+2025-04-05 16:04:03.012 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:04:03.128 CEST [2854343] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.117 s; sync files=2, longest=0.005 s, average=0.003 s; distance=5 kB, estimate=5 kB; lsn=0/1F1CFC8, redo lsn=0/1F1CF70
+2025-04-05 16:09:03.228 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:09:03.344 CEST [2854343] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.117 s; sync files=2, longest=0.005 s, average=0.003 s; distance=5 kB, estimate=5 kB; lsn=0/1F1E798, redo lsn=0/1F1E740
+2025-04-05 16:19:03.488 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:19:03.810 CEST [2854343] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.010 s, total=0.323 s; sync files=3, longest=0.007 s, average=0.004 s; distance=2 kB, estimate=5 kB; lsn=0/1F1EFF8, redo lsn=0/1F1EFA0
+2025-04-05 16:24:03.910 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:24:04.028 CEST [2854343] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.007 s, total=0.119 s; sync files=2, longest=0.005 s, average=0.004 s; distance=1 kB, estimate=5 kB; lsn=0/1F1F798, redo lsn=0/1F1F740
+2025-04-05 16:34:03.216 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:34:06.851 CEST [2854343] LOG:  checkpoint complete: wrote 37 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.616 s, sync=0.011 s, total=3.636 s; sync files=20, longest=0.010 s, average=0.001 s; distance=161 kB, estimate=161 kB; lsn=0/1F47EE0, redo lsn=0/1F47E88
+2025-04-05 16:39:03.951 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:39:04.267 CEST [2854343] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.004 s, total=0.316 s; sync files=2, longest=0.004 s, average=0.002 s; distance=5 kB, estimate=146 kB; lsn=0/1F49498, redo lsn=0/1F49440
+2025-04-05 16:45:03.441 CEST [2860352] ERROR:  duplicate key value violates unique constraint "ex08_people_name_key"
+2025-04-05 16:45:03.441 CEST [2860352] DETAIL:  Key (name)=(Luke Skywalker) already exists.
+2025-04-05 16:45:03.441 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Luke Skywalker', '19BBY', 'male', 'blue', 'blond', 172, 77.0, 'Tatooine')
+2025-04-05 16:45:03.446 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.446 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('C-3PO', '112BBY', 'n/a', 'yellow', 'n/a', 167, 75.0, 'Tatooine')
+2025-04-05 16:45:03.446 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.446 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('R2-D2', '33BBY', 'n/a', 'red', 'n/a', 96, 32.0, 'Naboo')
+2025-04-05 16:45:03.447 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.447 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Darth Vader', '41.9BBY', 'male', 'yellow', 'none', 202, 136.0, 'Tatooine')
+2025-04-05 16:45:03.447 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.447 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Leia Organa', '19BBY', 'female', 'brown', 'brown', 150, 49.0, 'Alderaan')
+2025-04-05 16:45:03.448 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.448 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Owen Lars', '52BBY', 'male', 'blue', 'brown, grey', 178, 120.0, 'Tatooine')
+2025-04-05 16:45:03.448 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.448 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Beru Whitesun lars', '47BBY', 'female', 'blue', 'brown', 165, 75.0, 'Tatooine')
+2025-04-05 16:45:03.448 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.448 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('R5-D4', 'NULL', 'n/a', 'red', 'n/a', 97, 32.0, 'Tatooine')
+2025-04-05 16:45:03.449 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.449 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Biggs Darklighter', '24BBY', 'male', 'brown', 'black', 183, 84.0, 'Tatooine')
+2025-04-05 16:45:03.450 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.450 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Obi-Wan Kenobi', '57BBY', 'male', 'blue-gray', 'auburn, white', 182, 77.0, 'Stewjon')
+2025-04-05 16:45:03.450 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.450 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Anakin Skywalker', '41.9BBY', 'male', 'blue', 'blond', 188, 84.0, 'Tatooine')
+2025-04-05 16:45:03.451 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.451 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Wilhuff Tarkin', '64BBY', 'male', 'blue', 'auburn, grey', 180, NULL, 'Eriadu')
+2025-04-05 16:45:03.451 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.451 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Chewbacca', '200BBY', 'male', 'blue', 'brown', 228, 112.0, 'Kashyyyk')
+2025-04-05 16:45:03.451 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.451 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Han Solo', '29BBY', 'male', 'brown', 'brown', 180, 80.0, 'Corellia')
+2025-04-05 16:45:03.452 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.452 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Greedo', '44BBY', 'male', 'black', 'n/a', 173, 74.0, 'Rodia')
+2025-04-05 16:45:03.452 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.452 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Jabba Desilijic Tiure', '600BBY', 'hermaphrodite', 'orange', 'n/a', 175, 1.358, 'Nal Hutta')
+2025-04-05 16:45:03.453 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.453 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Wedge Antilles', '21BBY', 'male', 'hazel', 'brown', 170, 77.0, 'Corellia')
+2025-04-05 16:45:03.453 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.453 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Jek Tono Porkins', 'NULL', 'male', 'blue', 'brown', 180, 110.0, 'Bestine IV')
+2025-04-05 16:45:03.454 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.454 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Yoda', '896BBY', 'male', 'brown', 'white', 66, 17.0, 'NULL')
+2025-04-05 16:45:03.454 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.454 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Palpatine', '82BBY', 'male', 'yellow', 'grey', 170, 75.0, 'Naboo')
+2025-04-05 16:45:03.455 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.455 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Boba Fett', '31.5BBY', 'male', 'brown', 'black', 183, 78.2, 'Kamino')
+2025-04-05 16:45:03.455 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.455 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('IG-88', '15BBY', 'none', 'red', 'none', 200, 140.0, 'NULL')
+2025-04-05 16:45:03.456 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.456 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Bossk', '53BBY', 'male', 'red', 'none', 190, 113.0, 'Trandosha')
+2025-04-05 16:45:03.456 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.456 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Lando Calrissian', '31BBY', 'male', 'brown', 'black', 177, 79.0, 'Socorro')
+2025-04-05 16:45:03.456 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.456 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Lobot', '37BBY', 'male', 'blue', 'none', 175, 79.0, 'Bespin')
+2025-04-05 16:45:03.457 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.457 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ackbar', '41BBY', 'male', 'orange', 'none', 180, 83.0, 'Mon Cala')
+2025-04-05 16:45:03.457 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.457 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Mon Mothma', '48BBY', 'female', 'blue', 'auburn', 150, NULL, 'Chandrila')
+2025-04-05 16:45:03.458 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.458 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Arvel Crynyd', 'NULL', 'male', 'brown', 'brown', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.458 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.458 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Wicket Systri Warrick', '8BBY', 'male', 'brown', 'brown', 88, 20.0, 'Endor')
+2025-04-05 16:45:03.459 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.459 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Nien Nunb', 'NULL', 'male', 'black', 'none', 160, 68.0, 'Sullust')
+2025-04-05 16:45:03.459 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.459 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Qui-Gon Jinn', '92BBY', 'male', 'blue', 'brown', 193, 89.0, 'NULL')
+2025-04-05 16:45:03.459 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.459 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Nute Gunray', 'NULL', 'male', 'red', 'none', 191, 90.0, 'Cato Neimoidia')
+2025-04-05 16:45:03.460 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.460 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Finis Valorum', '91BBY', 'male', 'blue', 'blond', 170, NULL, 'Coruscant')
+2025-04-05 16:45:03.460 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.460 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Jar Jar Binks', '52BBY', 'male', 'orange', 'none', 196, 66.0, 'Naboo')
+2025-04-05 16:45:03.461 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.461 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Roos Tarpals', 'NULL', 'male', 'orange', 'none', 224, 82.0, 'Naboo')
+2025-04-05 16:45:03.461 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.461 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Rugor Nass', 'NULL', 'male', 'orange', 'none', 206, NULL, 'Naboo')
+2025-04-05 16:45:03.462 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.462 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ric Olié', 'NULL', 'male', 'blue', 'brown', 183, NULL, 'Naboo')
+2025-04-05 16:45:03.462 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.462 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Watto', 'NULL', 'male', 'yellow', 'black', 137, NULL, 'Toydaria')
+2025-04-05 16:45:03.463 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.463 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Sebulba', 'NULL', 'male', 'orange', 'none', 112, 40.0, 'Malastare')
+2025-04-05 16:45:03.463 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.463 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Quarsh Panaka', '62BBY', 'male', 'brown', 'black', 183, NULL, 'Naboo')
+2025-04-05 16:45:03.464 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.464 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Shmi Skywalker', '72BBY', 'female', 'brown', 'black', 163, NULL, 'Tatooine')
+2025-04-05 16:45:03.464 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.464 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Darth Maul', '54BBY', 'male', 'yellow', 'none', 175, 80.0, 'Dathomir')
+2025-04-05 16:45:03.465 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.465 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Bib Fortuna', 'NULL', 'male', 'pink', 'none', 180, NULL, 'Ryloth')
+2025-04-05 16:45:03.465 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.465 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ayla Secura', '48BBY', 'female', 'hazel', 'none', 178, 55.0, 'Ryloth')
+2025-04-05 16:45:03.466 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.466 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ratts Tyerel', 'NULL', 'male', 'NULL', 'none', 79, 15.0, 'Aleen Minor')
+2025-04-05 16:45:03.466 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.466 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Dud Bolt', 'NULL', 'male', 'yellow', 'none', 94, 45.0, 'Vulpter')
+2025-04-05 16:45:03.466 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.466 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Gasgano', 'NULL', 'male', 'black', 'none', 122, NULL, 'Troiken')
+2025-04-05 16:45:03.467 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.467 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ben Quadinaros', 'NULL', 'male', 'orange', 'none', 163, 65.0, 'Tund')
+2025-04-05 16:45:03.467 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.467 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Mace Windu', '72BBY', 'male', 'brown', 'none', 188, 84.0, 'Haruun Kal')
+2025-04-05 16:45:03.468 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.468 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Ki-Adi-Mundi', '92BBY', 'male', 'yellow', 'white', 198, 82.0, 'Cerea')
+2025-04-05 16:45:03.468 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.468 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Kit Fisto', 'NULL', 'male', 'black', 'none', 196, 87.0, 'Glee Anselm')
+2025-04-05 16:45:03.468 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.468 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Eeth Koth', 'NULL', 'male', 'brown', 'black', 171, NULL, 'Iridonia')
+2025-04-05 16:45:03.469 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.469 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Adi Gallia', 'NULL', 'female', 'blue', 'none', 184, 50.0, 'Coruscant')
+2025-04-05 16:45:03.469 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.469 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Saesee Tiin', 'NULL', 'male', 'orange', 'none', 188, NULL, 'Iktotch')
+2025-04-05 16:45:03.469 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.469 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Yarael Poof', 'NULL', 'male', 'yellow', 'none', 264, NULL, 'Quermia')
+2025-04-05 16:45:03.470 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.470 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Plo Koon', '22BBY', 'male', 'black', 'none', 188, 80.0, 'Dorin')
+2025-04-05 16:45:03.470 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.470 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Mas Amedda', 'NULL', 'male', 'blue', 'none', 196, NULL, 'Champala')
+2025-04-05 16:45:03.471 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.471 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Gregar Typho', 'NULL', 'male', 'brown', 'black', 185, 85.0, 'Naboo')
+2025-04-05 16:45:03.471 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.471 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Cordé', 'NULL', 'female', 'brown', 'brown', 157, NULL, 'Naboo')
+2025-04-05 16:45:03.472 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.472 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Cliegg Lars', '82BBY', 'male', 'blue', 'brown', 183, NULL, 'Tatooine')
+2025-04-05 16:45:03.472 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.472 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Poggle the Lesser', 'NULL', 'male', 'yellow', 'none', 183, 80.0, 'Geonosis')
+2025-04-05 16:45:03.473 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.473 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Luminara Unduli', '58BBY', 'female', 'blue', 'black', 170, 56.2, 'Mirial')
+2025-04-05 16:45:03.473 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.473 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Barriss Offee', '40BBY', 'female', 'blue', 'black', 166, 50.0, 'Mirial')
+2025-04-05 16:45:03.473 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.473 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Dormé', 'NULL', 'female', 'brown', 'brown', 165, NULL, 'Naboo')
+2025-04-05 16:45:03.474 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.474 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Dooku', '102BBY', 'male', 'brown', 'white', 193, 80.0, 'Serenno')
+2025-04-05 16:45:03.474 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.474 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Bail Prestor Organa', '67BBY', 'male', 'brown', 'black', 191, NULL, 'Alderaan')
+2025-04-05 16:45:03.475 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.475 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Jango Fett', '66BBY', 'male', 'brown', 'black', 183, 79.0, 'Concord Dawn')
+2025-04-05 16:45:03.475 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.475 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Zam Wesell', 'NULL', 'female', 'yellow', 'blonde', 168, 55.0, 'Zolan')
+2025-04-05 16:45:03.475 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.475 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Dexter Jettster', 'NULL', 'male', 'yellow', 'none', 198, 102.0, 'Ojom')
+2025-04-05 16:45:03.476 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.476 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Lama Su', 'NULL', 'male', 'black', 'none', 229, 88.0, 'Kamino')
+2025-04-05 16:45:03.476 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.476 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Taun We', 'NULL', 'female', 'black', 'none', 213, NULL, 'Kamino')
+2025-04-05 16:45:03.477 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.477 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Jocasta Nu', 'NULL', 'female', 'blue', 'white', 167, NULL, 'Coruscant')
+2025-04-05 16:45:03.477 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.477 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('R4-P17', 'NULL', 'female', 'red, blue', 'none', 96, NULL, 'NULL')
+2025-04-05 16:45:03.477 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.477 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Wat Tambor', 'NULL', 'male', 'NULL', 'none', 193, 48.0, 'Skako')
+2025-04-05 16:45:03.478 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.478 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('San Hill', 'NULL', 'male', 'gold', 'none', 191, NULL, 'Muunilinst')
+2025-04-05 16:45:03.478 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.478 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Shaak Ti', 'NULL', 'female', 'black', 'none', 178, 57.0, 'Shili')
+2025-04-05 16:45:03.479 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.479 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Grievous', 'NULL', 'male', 'green, yellow', 'none', 216, 159.0, 'Kalee')
+2025-04-05 16:45:03.479 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.479 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Tarfful', 'NULL', 'male', 'blue', 'brown', 234, 136.0, 'Kashyyyk')
+2025-04-05 16:45:03.479 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.479 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Raymus Antilles', 'NULL', 'male', 'brown', 'brown', 188, 79.0, 'Alderaan')
+2025-04-05 16:45:03.480 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.480 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Sly Moore', 'NULL', 'female', 'white', 'none', 178, 48.0, 'Umbara')
+2025-04-05 16:45:03.480 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.480 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Tion Medon', 'NULL', 'male', 'black', 'none', 206, 80.0, 'Utapau')
+2025-04-05 16:45:03.481 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.481 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Finn', 'NULL', 'male', 'dark', 'black', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.481 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.481 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Rey', 'NULL', 'female', 'hazel', 'brown', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.481 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.481 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Poe Dameron', 'NULL', 'male', 'brown', 'brown', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.482 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.482 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('BB8', 'NULL', 'none', 'black', 'none', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.482 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.482 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Captain Phasma', 'NULL', 'female', 'NULL', 'NULL', NULL, NULL, 'NULL')
+2025-04-05 16:45:03.483 CEST [2860352] ERROR:  current transaction is aborted, commands ignored until end of transaction block
+2025-04-05 16:45:03.483 CEST [2860352] STATEMENT:  INSERT INTO ex08_people (name, birth_year, gender, eye_color, hair_color, height, mass, homeworld) VALUES ('Padmé Amidala', '46BBY', 'female', 'brown', 'brown', 165, 45.0, 'Naboo')
+2025-04-05 16:49:03.427 CEST [2854343] LOG:  checkpoint starting: time
+2025-04-05 16:49:04.044 CEST [2854343] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.006 s, total=0.618 s; sync files=6, longest=0.005 s, average=0.001 s; distance=2 kB, estimate=131 kB; lsn=0/1F49F70, redo lsn=0/1F49F18
+2025-04-06 10:42:07.640 CEST [2967951] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-06 10:42:07.641 CEST [2967951] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-06 10:42:07.719 CEST [2967951] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-06 10:42:07.738 CEST [2967954] LOG:  database system was interrupted; last known up at 2025-04-05 16:49:04 CEST
+2025-04-06 10:42:07.814 CEST [2967954] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-06 10:42:07.819 CEST [2967954] LOG:  redo starts at 0/1F49F18
+2025-04-06 10:42:07.820 CEST [2967954] LOG:  invalid record length at 0/1F4A038: expected at least 24, got 0
+2025-04-06 10:42:07.820 CEST [2967954] LOG:  redo done at 0/1F49FE8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-06 10:42:07.826 CEST [2967952] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-06 10:42:07.836 CEST [2967952] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.013 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/1F4A038, redo lsn=0/1F4A038
+2025-04-06 10:42:07.840 CEST [2967951] LOG:  database system is ready to accept connections
+2025-04-06 11:36:44.259 CEST [2968045] ERROR:  could not open file "/path/to/backup_file.csv" for writing: No such file or directory
+2025-04-06 11:36:44.259 CEST [2968045] HINT:  COPY TO instructs the PostgreSQL server process to write a file. You may want a client-side facility such as psql's \copy.
+2025-04-06 11:36:44.259 CEST [2968045] STATEMENT:  COPY (
+	    SELECT *
+	    FROM ex08_people
+	    WHERE homeworld IS NULL
+	) TO '/path/to/backup_file.csv' CSV HEADER;
+2025-04-06 11:37:08.707 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 11:37:09.223 CEST [2967952] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.006 s, total=0.517 s; sync files=5, longest=0.004 s, average=0.002 s; distance=27 kB, estimate=27 kB; lsn=0/1F50EC0, redo lsn=0/1F50E68
+2025-04-06 11:41:51.837 CEST [2968045] ERROR:  syntax error at or near "homeworld" at character 1
+2025-04-06 11:41:51.837 CEST [2968045] STATEMENT:  homeworld | character varying(64)
+	
+	UPDATE ex08_people
+	SET homeworld = 'Unknown'
+	WHERE id IN (
+	    SELECT id
+	    FROM ex08_people
+	    WHERE homeworld IS NULL
+	);
+2025-04-06 11:46:34.797 CEST [2968045] ERROR:  could not open file "/path/to/ex08_backup_full.csv" for writing: No such file or directory
+2025-04-06 11:46:34.797 CEST [2968045] HINT:  COPY TO instructs the PostgreSQL server process to write a file. You may want a client-side facility such as psql's \copy.
+2025-04-06 11:46:34.797 CEST [2968045] STATEMENT:  COPY ex08_people TO '/path/to/ex08_backup_full.csv' CSV HEADER;
+2025-04-06 12:01:38.758 CEST [2968045] ERROR:  invalid input syntax for type double precision: "" at character 56
+2025-04-06 12:01:38.758 CEST [2968045] STATEMENT:  SELECT *
+	FROM ex08_people
+	WHERE mass IS NULL OR mass = '';
+2025-04-06 12:02:04.663 CEST [2968045] ERROR:  invalid input syntax for type double precision: " " at character 56
+2025-04-06 12:02:04.663 CEST [2968045] STATEMENT:  SELECT *
+	FROM ex08_people
+	WHERE mass IS NULL OR mass = ' ';
+2025-04-06 12:04:09.429 CEST [2968045] ERROR:  invalid input syntax for type double precision: "" at character 56
+2025-04-06 12:04:09.429 CEST [2968045] STATEMENT:  SELECT *
+	FROM ex08_people
+	WHERE mass IS NULL OR mass = '';
+2025-04-06 12:16:19.581 CEST [2968045] ERROR:  invalid input syntax for type integer: "" at character 68
+2025-04-06 12:16:19.581 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET height = 0
+	WHERE height IS NULL OR height = '';
+2025-04-06 12:16:26.345 CEST [2968045] ERROR:  invalid input syntax for type double precision: "" at character 62
+2025-04-06 12:16:26.345 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET mass = 0
+	WHERE mass IS NULL OR mass = '';
+2025-04-06 12:17:08.863 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 12:17:09.376 CEST [2967952] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.514 s; sync files=5, longest=0.004 s, average=0.001 s; distance=31 kB, estimate=31 kB; lsn=0/1F58D68, redo lsn=0/1F58D10
+2025-04-06 12:17:39.967 CEST [2968045] ERROR:  invalid input syntax for type integer: "" at character 53
+2025-04-06 12:17:39.967 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET height = NULL
+	WHERE height = '';
+2025-04-06 12:17:46.679 CEST [2968045] ERROR:  invalid input syntax for type double precision: "" at character 49
+2025-04-06 12:17:46.679 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET mass = NULL
+	WHERE mass = '';
+2025-04-06 12:18:10.472 CEST [2968045] ERROR:  invalid input syntax for type integer: "" at character 48
+2025-04-06 12:18:10.472 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET height = NULLIF(height, '');
+2025-04-06 12:18:17.924 CEST [2968045] ERROR:  invalid input syntax for type double precision: "" at character 44
+2025-04-06 12:18:17.924 CEST [2968045] STATEMENT:  UPDATE ex08_people
+	SET mass = NULLIF(mass, '');
+2025-04-06 12:22:08.476 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 12:22:10.195 CEST [2967952] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.704 s, sync=0.006 s, total=1.720 s; sync files=10, longest=0.005 s, average=0.001 s; distance=112 kB, estimate=112 kB; lsn=0/1F74D90, redo lsn=0/1F74D38
+2025-04-06 12:27:08.295 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 12:27:08.708 CEST [2967952] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.401 s, sync=0.004 s, total=0.414 s; sync files=1, longest=0.004 s, average=0.004 s; distance=4 kB, estimate=101 kB; lsn=0/1F75EE0, redo lsn=0/1F75E88
+2025-04-06 12:31:11.668 CEST [2968045] ERROR:  syntax error at or near "Django" at character 2
+2025-04-06 12:31:11.668 CEST [2968045] STATEMENT:  (Django) ➜  Django_2_SQL_todo git:(main) ✗ cat /home/jurrutia/sgoinfre/42_otrogitjon/django/Django_2_SQL/Django_2_SQL_todo/ex08_backup_corrected.csv
+	
+	id,name,birth_year,gender,eye_color,hair_color,height,mass,homeworld
+	262,Luke Skywalker,19BBY,male,blue,blond,172,77,Tatooine
+	266,Leia Organa,19BBY,female,brown,brown,150,49,Alderaan
+	267,Owen Lars,52BBY,male,blue,"brown, grey",178,120,Tatooine
+	268,Beru Whitesun lars,47BBY,female,blue,brown,165,75,Tatooine
+	270,Biggs Darklighter,24BBY,male,brown,black,183,84,Tatooine
+	271,Obi-Wan Kenobi,57BBY,male,blue-gray,"auburn, white",182,77,Stewjon
+	272,Anakin Skywalker,41.9BBY,male,blue,blond,188,84,Tatooine
+	328,Jango Fett,66BBY,male,brown,black,183,79,Concord Dawn
+	329,Zam Wesell,NULL,female,yellow,blonde,168,55,Zolan
+	333,Jocasta Nu,NULL,female,blue,white,167,0,Coruscant
+	339,Tarfful,NULL,male,blue,brown,234,136,Kashyyyk
+	340,Raymus Antilles,NULL,male,brown,brown,188,79,Alderaan
+	343,Finn,NULL,male,dark,black,0,0,NULL
+	344,Rey,NULL,female,hazel,brown,0,0,NULL
+	345,Poe Dameron,NULL,male,brown,brown,0,0,NULL
+	265,Darth Vader,41.9BBY,male,yellow,Not Applicable,202,136,Tatooine
+	276,Greedo,44BBY,male,black,Not Applicable,173,74,Rodia
+	347,Captain Phasma,NULL,female,NULL,NULL,0,0,NULL
+	348,Padmé Amidala,46BBY,female,brown,brown,165,45,Naboo
+	277,Jabba Desilijic Tiure,600BBY,hermaphrodite,orange,Not Applicable,175,1.358,Nal Hutta
+	273,Wilhuff Tarkin,64BBY,male,blue,"auburn, grey",180,0,Eriadu
+	274,Chewbacca,200BBY,male,blue,brown,228,112,Kashyyyk
+	275,Han Solo,29BBY,male,brown,brown,180,80,Corellia
+	278,Wedge Antilles,21BBY,male,hazel,brown,170,77,Corellia
+	279,Jek Tono Porkins,NULL,male,blue,brown,180,110,Bestine IV
+	280,Yoda,896BBY,male,brown,white,66,17,NULL
+	281,Palpatine,82BBY,male,yellow,grey,170,75,Naboo
+	282,Boba Fett,31.5BBY,male,brown,black,183,78.2,Kamino
+	285,Lando Calrissian,31BBY,male,brown,black,177,79,Socorro
+	288,Mon Mothma,48BBY,female,blue,auburn,150,0,Chandrila
+	289,Arvel Crynyd,NULL,male,brown,brown,0,0,NULL
+	290,Wicket Systri Warrick,8BBY,male,brown,brown,88,20,Endor
+	292,Qui-Gon Jinn,92BBY,male,blue,brown,193,89,NULL
+	294,Finis Valorum,91BBY,male,blue,blond,170,0,Coruscant
+	298,Ric Olié,NULL,male,blue,brown,183,0,Naboo
+	299,Watto,NULL,male,yellow,black,137,0,Toydaria
+	301,Quarsh Panaka,62BBY,male,brown,black,183,0,Naboo
+	302,Shmi Skywalker,72BBY,female,brown,black,163,0,Tatooine
+	311,Ki-Adi-Mundi,92BBY,male,yellow,white,198,82,Cerea
+	313,Eeth Koth,NULL,male,brown,black,171,0,Iridonia
+	319,Gregar Typho,NULL,male,brown,black,185,85,Naboo
+	320,Cordé,NULL,female,brown,brown,157,0,Naboo
+	321,Cliegg Lars,82BBY,male,blue,brown,183,0,Tatooine
+	323,Luminara Unduli,58BBY,female,blue,black,170,56.2,Mirial
+	324,Barriss Offee,40BBY,female,blue,black,166,50,Mirial
+	325,Dormé,NULL,female,brown,brown,165,0,Naboo
+	326,Dooku,102BBY,male,brown,white,193,80,Serenno
+	327,Bail Prestor Organa,67BBY,male,brown,black,191,0,Alderaan
+	283,IG-88,15BBY,none,red,Not Applicable,200,140,NULL
+	284,Bossk,53BBY,male,red,Not Applicable,190,113,Trandosha
+	286,Lobot,37BBY,male,blue,Not Applicable,175,79,Bespin
+	287,Ackbar,41BBY,male,orange,Not Applicable,180,83,Mon Cala
+	291,Nien Nunb,NULL,male,black,Not Applicable,160,68,Sullust
+	293,Nute Gunray,NULL,male,red,Not Applicable,191,90,Cato Neimoidia
+	295,Jar Jar Binks,52BBY,male,orange,Not Applicable,196,66,Naboo
+	296,Roos Tarpals,NULL,male,orange,Not Applicable,224,82,Naboo
+	297,Rugor Nass,NULL,male,orange,Not Applicable,206,0,Naboo
+	300,Sebulba,NULL,male,orange,Not Applicable,112,40,Malastare
+	303,Darth Maul,54BBY,male,yellow,Not Applicable,175,80,Dathomir
+	304,Bib Fortuna,NULL,male,pink,Not Applicable,180,0,Ryloth
+	314,Adi Gallia,NULL,female,blue,Not Applicable,184,50,Coruscant
+	315,Saesee Tiin,NULL,male,orange,Not Applicable,188,0,Iktotch
+	316,Yarael Poof,NULL,male,yellow,Not Applicable,264,0,Quermia
+	317,Plo Koon,22BBY,male,black,Not Applicable,188,80,Dorin
+	318,Mas Amedda,NULL,male,blue,Not Applicable,196,0,Champala
+	322,Poggle the Lesser,NULL,male,yellow,Not Applicable,183,80,Geonosis
+	330,Dexter Jettster,NULL,male,yellow,Not Applicable,198,102,Ojom
+	331,Lama Su,NULL,male,black,Not Applicable,229,88,Kamino
+	332,Taun We,NULL,female,black,Not Applicable,213,0,Kamino
+	334,R4-P17,NULL,female,"red, blue",Not Applicable,96,0,NULL
+	335,Wat Tambor,NULL,male,NULL,Not Applicable,193,48,Skako
+	336,San Hill,NULL,male,gold,Not Applicable,191,0,Muunilinst
+	337,Shaak Ti,NULL,female,black,Not Applicable,178,57,Shili
+	338,Grievous,NULL,male,"green, yellow",Not Applicable,216,159,Kalee
+	341,Sly Moore,NULL,female,white,Not Applicable,178,48,Umbara
+	342,Tion Medon,NULL,male,black,Not Applicable,206,80,Utapau
+	346,BB8,NULL,none,black,Not Applicable,0,0,NULL
+	263,C-3PO,112BBY,Not Applicable,yellow,Not Applicable,167,75,Tatooine
+	264,R2-D2,33BBY,Not Applicable,red,Not Applicable,96,32,Naboo
+	305,Ayla Secura,48BBY,female,hazel,Not Applicable,178,55,Ryloth
+	306,Ratts Tyerel,NULL,male,NULL,Not Applicable,79,15,Aleen Minor
+	307,Dud Bolt,NULL,male,yellow,Not Applicable,94,45,Vulpter
+	308,Gasgano,NULL,male,black,Not Applicable,122,0,Troiken
+	309,Ben Quadinaros,NULL,male,orange,Not Applicable,163,65,Tund
+	310,Mace Windu,72BBY,male,brown,Not Applicable,188,84,Haruun Kal
+	312,Kit Fisto,NULL,male,black,Not Applicable,196,87,Glee Anselm
+	269,R5-D4,NULL,Not Applicable,red,Not Applicable,97,32,Tatooine
+	
+	TRUNCATE TABLE ex08_people;
+2025-04-06 12:37:08.833 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 12:37:10.653 CEST [2967952] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.806 s, sync=0.006 s, total=1.821 s; sync files=11, longest=0.004 s, average=0.001 s; distance=91 kB, estimate=100 kB; lsn=0/1F8CC78, redo lsn=0/1F8CC20
+2025-04-06 12:47:08.853 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 12:47:10.675 CEST [2967952] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.808 s, sync=0.006 s, total=1.823 s; sync files=11, longest=0.003 s, average=0.001 s; distance=93 kB, estimate=99 kB; lsn=0/1FA4470, redo lsn=0/1FA4418
+2025-04-06 12:50:15.723 CEST [2968045] ERROR:  relation "planets" does not exist at character 15
+2025-04-06 12:50:15.723 CEST [2968045] STATEMENT:  SELECT *
+	FROM planets
+	WHERE id IS NULL OR name IS NULL OR population < 0;
+2025-04-06 12:50:30.626 CEST [2968045] ERROR:  relation "people" does not exist at character 15
+2025-04-06 12:50:30.626 CEST [2968045] STATEMENT:  SELECT *
+	FROM people
+	WHERE id IS NULL 
+	   OR name IS NULL 
+	   OR birth_year IS NULL 
+	   OR gender NOT IN ('male', 'female', 'hermaphrodite', 'Not Applicable') 
+	   OR eye_color IS NULL 
+	   OR hair_color IS NULL 
+	   OR height < 0 
+	   OR mass < 0;
+2025-04-06 12:56:20.559 CEST [2968045] ERROR:  invalid input syntax for type bigint: "Yavin IV	temperate"
+2025-04-06 12:56:20.559 CEST [2968045] CONTEXT:  COPY ex08_planets, line 2, column id: "Yavin IV	temperate"
+2025-04-06 12:56:20.559 CEST [2968045] STATEMENT:  COPY  ex08_planets FROM STDIN CSV HEADER;
+	
+2025-04-06 12:57:41.084 CEST [2968045] ERROR:  invalid input syntax for type bigint: "Yavin IV"
+2025-04-06 12:57:41.084 CEST [2968045] CONTEXT:  COPY ex08_planets, line 2, column id: "Yavin IV"
+2025-04-06 12:57:41.084 CEST [2968045] STATEMENT:  COPY  ex08_planets FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', HEADER);
+	
+2025-04-06 12:58:12.795 CEST [2968045] ERROR:  invalid input syntax for type bigint: "Yavin IV"
+2025-04-06 12:58:12.795 CEST [2968045] CONTEXT:  COPY ex08_planets, line 2, column id: "Yavin IV"
+2025-04-06 12:58:12.795 CEST [2968045] STATEMENT:  COPY  ex08_planets FROM STDIN WITH (FORMAT CSV, DELIMITER E'\t', HEADER);
+	
+2025-04-06 13:10:27.239 CEST [2968045] ERROR:  syntax error at or near "id" at character 1
+2025-04-06 13:10:27.239 CEST [2968045] STATEMENT:  id  |         name          | birth_year |     gender     |   eye_color   |  hair_color   | height | mass  |   homeworld    
+	-----+-----------------------+------------+----------------+---------------+---------------+--------+-------+----------------
+	 262 | Luke Skywalker        | 19BBY      | male           | blue          | blond         |    172 |    77 | Tatooine
+	 263 | C-3PO                 | 112BBY     | Not Applicable | yellow        | n/a           |    167 |    75 | Tatooine
+	 264 | R2-D2                 | 33BBY      | Not Applicable | red           | n/a           |     96 |    32 | Naboo
+	 265 | Darth Vader           | 41.9BBY    | male           | yellow        | none          |    202 |   136 | Tatooine
+	 266 | Leia Organa           | 19BBY      | female         | brown         | brown         |    150 |    49 | Alderaan
+	 267 | Owen Lars             | 52BBY      | male           | blue          | brown, grey   |    178 |   120 | Tatooine
+	 268 | Beru Whitesun lars    | 47BBY      | female         | blue          | brown         |    165 |    75 | Tatooine
+	 269 | R5-D4                 | Unknown    | Not Applicable | red           | n/a           |     97 |    32 | Tatooine
+	 270 | Biggs Darklighter     | 24BBY      | male           | brown         | black         |    183 |    84 | Tatooine
+	 271 | Obi-Wan Kenobi        | 57BBY      | male           | blue-gray     | auburn, white |    182 |    77 | Stewjon
+	 272 | Anakin Skywalker      | 41.9BBY    | male           | blue          | blond         |    188 |    84 | Tatooine
+	 273 | Wilhuff Tarkin        | 64BBY      | male           | blue          | auburn, grey  |    180 |     0 | Eriadu
+	 274 | Chewbacca             | 200BBY     | male           | blue          | brown         |    228 |   112 | Kashyyyk
+	 275 | Han Solo        
+	SELECT id, name, climate, terrain
+	FROM ex08_planets
+	WHERE climate LIKE '%windy%';
+2025-04-06 13:10:48.395 CEST [2968045] ERROR:  syntax error at or near "FROM" at character 1
+2025-04-06 13:10:48.395 CEST [2968045] STATEMENT:  FROM ex08_planets
+	WHERE climate LIKE '%windy%';
+2025-04-06 13:27:09.316 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:27:11.033 CEST [2967952] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.704 s, sync=0.006 s, total=1.718 s; sync files=14, longest=0.003 s, average=0.001 s; distance=67 kB, estimate=96 kB; lsn=0/1FB5448, redo lsn=0/1FB53B8
+2025-04-06 13:32:09.134 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:32:12.363 CEST [2967952] LOG:  checkpoint complete: wrote 33 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.216 s, sync=0.004 s, total=3.230 s; sync files=18, longest=0.003 s, average=0.001 s; distance=133 kB, estimate=133 kB; lsn=0/1FD6B58, redo lsn=0/1FD6AC8
+2025-04-06 13:42:09.563 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:42:10.481 CEST [2967952] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.006 s, total=0.918 s; sync files=2, longest=0.006 s, average=0.003 s; distance=10 kB, estimate=121 kB; lsn=0/1FD9478, redo lsn=0/1FD9420
+2025-04-06 13:47:09.580 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:47:12.904 CEST [2967952] LOG:  checkpoint complete: wrote 34 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.312 s, sync=0.003 s, total=3.324 s; sync files=18, longest=0.003 s, average=0.001 s; distance=130 kB, estimate=130 kB; lsn=0/1FF9F20, redo lsn=0/1FF9EC8
+2025-04-06 13:52:10.000 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:52:10.516 CEST [2967952] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.005 s, total=0.516 s; sync files=1, longest=0.005 s, average=0.005 s; distance=3 kB, estimate=117 kB; lsn=0/1FFACB8, redo lsn=0/1FFAC60
+2025-04-06 13:57:09.616 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 13:57:10.130 CEST [2967952] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.004 s, total=0.514 s; sync files=2, longest=0.004 s, average=0.002 s; distance=11 kB, estimate=107 kB; lsn=0/1FFDA88, redo lsn=0/1FFDA30
+2025-04-06 14:10:58.006 CEST [2994791] ERROR:  null value in column "population" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:10:58.006 CEST [2994791] DETAIL:  Failing row contains (3, Hoth, 7200, null, frozen, 549, null, 23, 100, tundra, ice caves, mountain ranges).
+2025-04-06 14:10:58.006 CEST [2994791] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Hoth', "diameter" = 7200, "climate" = 'frozen', "orbital_period" = 549, "population" = NULL, "rotation_period" = 23, "surface_water" = 100, "terrain" = 'tundra, ice caves, mountain ranges', "created" = NULL WHERE "ex10_planets"."id" = 3
+2025-04-06 14:12:09.321 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 14:12:09.837 CEST [2967952] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.502 s, sync=0.006 s, total=0.517 s; sync files=6, longest=0.005 s, average=0.001 s; distance=16 kB, estimate=98 kB; lsn=0/2001AC0, redo lsn=0/2001A68
+2025-04-06 14:12:42.128 CEST [2994940] ERROR:  null value in column "surface_water" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:12:42.128 CEST [2994940] DETAIL:  Failing row contains (8, Coruscant, 12240, null, temperate, 368, 1000000000000, 24, null, cityscape, mountains).
+2025-04-06 14:12:42.128 CEST [2994940] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Coruscant', "diameter" = 12240, "climate" = 'temperate', "orbital_period" = 368, "population" = 1000000000000, "rotation_period" = 24, "surface_water" = NULL, "terrain" = 'cityscape, mountains', "created" = NULL WHERE "ex10_planets"."id" = 8
+2025-04-06 14:13:38.353 CEST [2995053] ERROR:  null value in column "orbital_period" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:13:38.353 CEST [2995053] DETAIL:  Failing row contains (19, Stewjon, 0, null, temperate, null, null, null, null, grass).
+2025-04-06 14:13:38.353 CEST [2995053] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Stewjon', "diameter" = 0, "climate" = 'temperate', "orbital_period" = NULL, "population" = NULL, "rotation_period" = NULL, "surface_water" = NULL, "terrain" = 'grass', "created" = NULL WHERE "ex10_planets"."id" = 19
+2025-04-06 14:14:33.825 CEST [2995178] ERROR:  null value in column "rotation_period" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:14:33.825 CEST [2995178] DETAIL:  Failing row contains (19, Stewjon, 0, null, temperate, null, null, null, null, grass).
+2025-04-06 14:14:33.825 CEST [2995178] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Stewjon', "diameter" = 0, "climate" = 'temperate', "orbital_period" = NULL, "population" = NULL, "rotation_period" = NULL, "surface_water" = NULL, "terrain" = 'grass', "created" = NULL WHERE "ex10_planets"."id" = 19
+2025-04-06 14:15:30.790 CEST [2995302] ERROR:  null value in column "diameter" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:15:30.790 CEST [2995302] DETAIL:  Failing row contains (36, Aleen Minor, null, null, null, null, null, null, null, null).
+2025-04-06 14:15:30.790 CEST [2995302] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Aleen Minor', "diameter" = NULL, "climate" = NULL, "orbital_period" = NULL, "population" = NULL, "rotation_period" = NULL, "surface_water" = NULL, "terrain" = NULL, "created" = NULL WHERE "ex10_planets"."id" = 36
+2025-04-06 14:17:09.937 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 14:17:10.656 CEST [2967952] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.704 s, sync=0.007 s, total=0.719 s; sync files=7, longest=0.005 s, average=0.001 s; distance=32 kB, estimate=91 kB; lsn=0/2009CC0, redo lsn=0/2009C68
+2025-04-06 14:18:08.588 CEST [2995528] ERROR:  null value in column "terrain" of relation "ex10_planets" violates not-null constraint
+2025-04-06 14:18:08.588 CEST [2995528] DETAIL:  Failing row contains (36, Aleen Minor, null, null, null, null, null, null, null, null).
+2025-04-06 14:18:08.588 CEST [2995528] STATEMENT:  UPDATE "ex10_planets" SET "name" = 'Aleen Minor', "diameter" = NULL, "climate" = NULL, "orbital_period" = NULL, "population" = NULL, "rotation_period" = NULL, "surface_water" = NULL, "terrain" = NULL, "created" = NULL WHERE "ex10_planets"."id" = 36
+2025-04-06 14:18:48.347 CEST [2995632] ERROR:  null value in column "created" of relation "ex10_people" violates not-null constraint
+2025-04-06 14:18:48.347 CEST [2995632] DETAIL:  Failing row contains (1, Luke Skywalker, male, null, null, 19BBY, blue, blond, 172, 59, 77).
+2025-04-06 14:18:48.347 CEST [2995632] STATEMENT:  INSERT INTO "ex10_people" ("id", "name", "birth_year", "gender", "eye_color", "hair_color", "height", "mass", "homeworld_id", "created", "updated") VALUES (1, 'Luke Skywalker', '19BBY', 'male', 'blue', 'blond', 172, 77.0, 59, NULL, NULL) RETURNING "ex10_people"."id"
+2025-04-06 14:22:09.756 CEST [2967952] LOG:  checkpoint starting: time
+2025-04-06 14:22:14.989 CEST [2967952] LOG:  checkpoint complete: wrote 53 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.222 s, sync=0.004 s, total=5.233 s; sync files=35, longest=0.002 s, average=0.001 s; distance=220 kB, estimate=220 kB; lsn=0/2040F90, redo lsn=0/2040F00
+2025-04-06 16:56:45.777 CEST [3013729] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-06 16:56:45.778 CEST [3013729] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-06 16:56:45.811 CEST [3013729] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-06 16:56:45.830 CEST [3013732] LOG:  database system was interrupted; last known up at 2025-04-06 14:22:14 CEST
+2025-04-06 16:56:45.912 CEST [3013732] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-06 16:56:45.916 CEST [3013732] LOG:  redo starts at 0/2040F00
+2025-04-06 16:56:45.916 CEST [3013732] LOG:  invalid record length at 0/2041040: expected at least 24, got 0
+2025-04-06 16:56:45.916 CEST [3013732] LOG:  redo done at 0/2041008 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-06 16:56:45.923 CEST [3013730] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-06 16:56:45.933 CEST [3013730] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.013 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/2041040, redo lsn=0/2041040
+2025-04-06 16:56:45.938 CEST [3013729] LOG:  database system is ready to accept connections
+2025-04-06 16:57:24.290 CEST [3013782] FATAL:  database "jurrutia" does not exist
+2025-04-06 16:59:45.288 CEST [3013846] FATAL:  database "jurrutia" does not exist
+2025-04-06 17:10:05.852 CEST [3015714] ERROR:  column "id" of relation "ex10_movies" does not exist
+2025-04-06 17:10:05.852 CEST [3015714] STATEMENT:  ALTER TABLE "ex10_movies" DROP COLUMN "id" CASCADE
+2025-04-06 17:11:46.154 CEST [3013730] LOG:  checkpoint starting: time
+2025-04-06 17:11:46.269 CEST [3013730] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.006 s, total=0.116 s; sync files=2, longest=0.006 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/20411D8, redo lsn=0/2041180
+2025-04-06 17:21:46.469 CEST [3013730] LOG:  checkpoint starting: time
+2025-04-06 17:21:54.122 CEST [3013730] LOG:  checkpoint complete: wrote 77 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.635 s, sync=0.010 s, total=7.654 s; sync files=69, longest=0.004 s, average=0.001 s; distance=452 kB, estimate=452 kB; lsn=0/20B2448, redo lsn=0/20B23B8
+2025-04-06 17:25:32.151 CEST [3017488] ERROR:  column mc.movies_episode_nb does not exist at character 116
+2025-04-06 17:25:32.151 CEST [3017488] STATEMENT:  SELECT m.title AS movie_title, p.name AS character_name
+	FROM ex10_movies_characters AS mc
+	JOIN ex10_movies AS m ON mc.movies_episode_nb = m.episode_nb
+	JOIN ex10_people AS p ON mc.people_id = p.id;
+2025-04-06 17:26:37.362 CEST [3017488] ERROR:  column mc.movies_episode_nb does not exist at character 161
+2025-04-06 17:26:37.362 CEST [3017488] STATEMENT:  SELECT p.name AS character_name, m.title AS movie_title
+	FROM ex10_movies_characters AS mc
+	JOIN ex10_people AS p ON mc.people_id = p.id
+	JOIN ex10_movies AS m ON mc.movies_episode_nb = m.episode_nb;
+2025-04-06 17:26:46.222 CEST [3013730] LOG:  checkpoint starting: time
+2025-04-06 17:26:50.557 CEST [3013730] LOG:  checkpoint complete: wrote 44 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.316 s, sync=0.010 s, total=4.335 s; sync files=30, longest=0.007 s, average=0.001 s; distance=162 kB, estimate=423 kB; lsn=0/20DAC98, redo lsn=0/20DAC40
+2025-04-06 17:28:24.663 CEST [3017488] ERROR:  column mc.movie_id does not exist at character 116
+2025-04-06 17:28:24.663 CEST [3017488] HINT:  Perhaps you meant to reference the column "mc.movies_id".
+2025-04-06 17:28:24.663 CEST [3017488] STATEMENT:  SELECT m.title AS movie_title, p.name AS character_name
+	FROM ex10_movies_characters AS mc
+	JOIN ex10_movies AS m ON mc.movie_id = m.episode_nb
+	JOIN ex10_people AS p ON mc.people_id = p.id;
+2025-04-06 17:31:46.657 CEST [3013730] LOG:  checkpoint starting: time
+2025-04-06 17:31:46.870 CEST [3013730] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.003 s, total=0.213 s; sync files=2, longest=0.003 s, average=0.002 s; distance=7 kB, estimate=381 kB; lsn=0/20DC920, redo lsn=0/20DC8C8

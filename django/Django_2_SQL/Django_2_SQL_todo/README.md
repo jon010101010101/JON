@@ -118,3 +118,46 @@ docker-compose up --build
 
 docker-compose down  # Detener y eliminar los contenedores existentes
 docker-compose up --build  # Reconstruir y levantar los contenedores
+
+
+
+find . -name \*.pyc -delete
+find . -name __pycache__ -delete
+
+
+Dentro del proyecto
+
+iniciar servidor
+pg_ctl -D ~/postgresql_data -l logfile start
+verificar 
+pg_ctl -D ~/postgresql_data status
+para conectarse a la base de datos
+psql -U djangouser -d d42
+verificar el estadio del servicio
+ps aux | grep postgres
+
+python manage.py runserver
+
+# pkill -f "python manage.py runserver"
+# lsof -i :8000
+# kill -9 38140
+
+verificar que puerto esta oyendo
+netstat -tuln | grep 5432
+
+
+
+ex06 Comprobar que se ha cambiado metiendo el texto
+
+python manage.py shell
+
+from ex06.models import Movies
+
+# Consulta todos los registros
+movies = Movies.objects.all()
+
+# Imprime el título y el contenido de cada película
+for movie in movies:
+    print(f"Title: {movie.title}\n{movie.opening_crawl}\n")
+
+

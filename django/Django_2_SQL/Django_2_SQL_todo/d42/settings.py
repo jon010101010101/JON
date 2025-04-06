@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qqu!@9-5^w3q^m9nsqv&$)a(m6_p8j12yt$^5#lq7q=bme54az
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Tus aplicaciones personalizadas
+    # Aplicaciones personalizadas
     'ex00',
     'ex01',
     'ex02',
@@ -92,12 +92,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd42',  # Nombre de la base de datos
         'USER': 'djangouser',  # Usuario configurado
-        'PASSWORD': 'secret',  # Contraseña configurada en docker-compose.yml
-        'HOST': 'db',  # Nombre del servicio PostgreSQL en docker-compose.yml
-        'PORT': '5432',
-    }
+        'PASSWORD': 'secret',  # Contraseña configurada
+        'HOST': 'localhost',  # Cambia a 'localhost'
+        'PORT': '5432',  # Puerto por defecto de PostgreSQL
+    },
 }
-
 
 
 # Password validation
@@ -128,7 +127,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

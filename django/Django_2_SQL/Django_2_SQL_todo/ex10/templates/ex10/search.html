@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Characters</title>
+    <style>
+        /* Simple styling for pagination */
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Characters</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>Results:</h2>
+        <ul>
+            {% for result in results %}
+                <li>
+                    {{ result.character_name }} -
+                    {{ result.gender }} -
+                    {{ result.movie_title }} -
+                    {{ result.homeworld_name }} -
+                    {{ result.homeworld_diameter }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Pagination controls -->
+        {% if results.has_other_pages %}
+            <div class="pagination">
+                {% if results.has_previous %}
+                    <a href="?page={{ results.previous_page_number }}">Previous</a>
+                {% endif %}
+                {% if results.has_next %}
+                    <a href="?page={{ results.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

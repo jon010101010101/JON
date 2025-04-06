@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display People</title>
+</head>
+<body>
+    <h1>People from Windy Planets</h1>
+    {% if datas %}
+        <ul>
+            {% for person, homeworld, climate in datas %}
+                <li>{{ person }} - Homeworld: {{ homeworld }} - Climate: {{ climate }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</body>
+</html>
