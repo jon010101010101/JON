@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Characters</title>
     <style>
-        /* Simple styling for pagination */
+        body {
+            font-family: Arial, sans-serif;
+        }
         .pagination {
             margin-top: 20px;
         }
@@ -22,7 +24,7 @@
     </style>
 </head>
 <body>
-    <h1>Search Characters</h1>
+    <h1 style="font-family: Arial, sans-serif;">Search Characters</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
@@ -35,17 +37,28 @@
 
     {% if results %}
         <h2>Results:</h2>
-        <ul>
-            {% for result in results %}
-                <li>
-                    {{ result.character_name }} -
-                    {{ result.gender }} -
-                    {{ result.movie_title }} -
-                    {{ result.homeworld_name }} -
-                    {{ result.homeworld_diameter }}
-                </li>
-            {% endfor %}
-        </ul>
+        <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; margin: 10px 0;">
+            <thead style="background-color: #ADD8E6; text-transform: uppercase; font-weight: bold;">
+                <tr>
+                    <th style="padding: 8px; text-align: left;">Character Name</th>
+                    <th style="padding: 8px; text-align: left;">Gender</th>
+                    <th style="padding: 8px; text-align: left;">Movie Title</th>
+                    <th style="padding: 8px; text-align: left;">Homeworld Name</th>
+                    <th style="padding: 8px; text-align: left;">Homeworld Diameter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr style="background-color: {% cycle '#ffffff' '#f9f9f9' %}">
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ result.character_name }}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ result.gender }}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ result.movie_title }}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ result.homeworld_name }}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ result.homeworld_diameter }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         <!-- Pagination controls -->
         {% if results.has_other_pages %}
