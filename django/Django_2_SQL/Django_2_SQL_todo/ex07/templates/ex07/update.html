@@ -1,22 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Update Movie</title>
+    <title>Update Opening Crawl</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        select {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #495057;
+            background-color: #fff;
+        }
+        textarea {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #495057;
+            background-color: #fff;
+            height: 100px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
     <h1>Update Opening Crawl</h1>
-    <form method="POST">
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+    <form method="post">
         {% csrf_token %}
-        <label for="movie_id">Select a Movie:</label>
-        <select name="movie_id" id="movie_id">
-          {% for movie in movies %}
-          <option value="{{ movie.pk }}">{{ movie.title }}</option>
-          {% endfor %}
-        </select><br><br>
-
-        <label for="opening_crawl">Opening Crawl:</label><br>
-        <textarea name="opening_crawl" id="opening_crawl"></textarea><br><br>
-
+        <label for="title">Select a Movie:</label>
+        <select name="title" id="title">
+            {% for movie in movies %}
+                <option value="{{ movie.id }}">{{ movie.title }}</option>
+            {% endfor %}
+        </select>
+        <label for="opening_crawl">Enter New Opening Crawl:</label>
+        <textarea name="opening_crawl" id="opening_crawl"></textarea>
         <button type="submit">Update</button>
     </form>
 </body>

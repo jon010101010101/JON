@@ -1,17 +1,24 @@
-# Asegurarse de usar Python del entorno conda
-export PATH="/home/jurrutia/miniforge3/envs/django_env/bin:$PATH"
+#!/bin/bash
 
 # Mostrar la versión de pip
 echo "Versión de pip:"
 python -m pip --version
 
-# Actualizar pip
-echo "Actualizando pip..." # Imprime un mensaje indicando que se va a actualizar pip.
-python -m pip install --upgrade pip # Actualiza pip a la última versión disponible.
+# Definir el directorio local_lib
+LIB_DIR="./local_lib"
 
-# Instalar path.py globalmente en el entorno
-echo "Instalando path.py..."  # Imprime un mensaje indicando que se va a instalar path.py.
-python -m pip install path.py  # Instala el paquete path.py en el entorno Conda.
+# Eliminar el directorio local_lib si existe
+if [ -d "$LIB_DIR" ]; then
+    echo "Eliminando el directorio local_lib existente..."
+    rm -rf "$LIB_DIR"
+fi
+
+# Crear el directorio local_lib
+mkdir -p "$LIB_DIR"
+
+# Instalar la versión de desarrollo de path.py desde GitHub en local_lib
+echo "Instalando path.py..."
+pip install --upgrade git+https://github.com/jaraco/path.py.git -t "$LIB_DIR" > path_install.log 2>&1
 
 # Verificar si la instalación fue exitosa
 # $? es una variable especial en Bash que contiene el código de salida del último comando ejecutado
@@ -20,10 +27,10 @@ python -m pip install path.py  # Instala el paquete path.py en el entorno Conda.
 # then es una palabra clave en Bash que se usa después de la condición en una declaración if.
 if [ $? -eq 0 ]; then
     echo "path.py instalado correctamente."
-    # Ejecutar el programa Python
-    python my_program.py
+    # Ejecutar el programa Python con PYTHONPATH
+    PYTHONPATH="$LIB_DIR" python my_program.py
 else
-    echo "Error al instalar path.py."
+    echo "Error al instalar path.py. Revisa path_install.log para más detalles."
 fi
 
 

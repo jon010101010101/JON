@@ -1,0 +1,22 @@
+Looking in indexes: https://pypi.python.org/simple
+Collecting git+https://github.com/jaraco/path.py.git
+  Cloning https://github.com/jaraco/path.py.git to /tmp/pip-req-build-f5ekp5q7
+  Running command git clone --filter=blob:none --quiet https://github.com/jaraco/path.py.git /tmp/pip-req-build-f5ekp5q7
+  Resolved https://github.com/jaraco/path.py.git to commit 836e62ff7ed7d0d0e741221e1019e57613c49963
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: path
+  Building wheel for path (pyproject.toml): started
+  Building wheel for path (pyproject.toml): finished with status 'done'
+  Created wheel for path: filename=path-17.1.1.dev8+g836e62f-py3-none-any.whl size=24050 sha256=6ea8ad18cc6fd45b6ea25cb5542b432c937a4d9dde473c0b12839e2e8b33a616
+  Stored in directory: /tmp/pip-ephem-wheel-cache-_o0ypezc/wheels/6f/2d/b2/024320ff62a970370a258367776fcf4521b491380f46e738f3
+Successfully built path
+Installing collected packages: path
+Successfully installed path-17.1.1.dev8+g836e62f
+
+[notice] A new release of pip is available: 23.0.1 -> 25.0.1
+[notice] To update, run: pip install --upgrade pip

@@ -33,15 +33,19 @@ def populate(request):
 
     try:
         with connection.cursor() as cursor:
-            for entry in data:
+            # Borrar todos los datos existentes en la tabla
+            cursor.execute("DELETE FROM ex02_movies;")
+
+            for episode_nb, title, director, producer, release_date in data:
                 try:
                     cursor.execute("""
                         INSERT INTO ex02_movies (episode_nb, title, director, producer, release_date)
                         VALUES (%s, %s, %s, %s, %s);
-                    """, entry)
+                    """, (episode_nb, title, director, producer, release_date))
                 except Exception as e:
-                    return HttpResponse(f"Error inserting {entry[1]}: {str(e)}")
-        return HttpResponse("OK")
+                    return HttpResponse(f"Error: {str(e)}") # Returns error if any insertion fails
+
+            return HttpResponse("OK") # If all insertions succeed, return OK
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")
 
@@ -53,11 +57,51 @@ def display(request):
             rows = cursor.fetchall()
             if not rows:
                 return HttpResponse("No data available")
-            
-            html = "<table border='1'>"
-            html += "<tr><th>Episode</th><th>Title</th><th>Director</th><th>Producer</th><th>Release Date</th></tr>"
+
+            # Se añade un estilo CSS básico al HTML
+            html = """
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    font-family: Arial, sans-serif;
+                    border: 1px solid black; /* Borde negro para la tabla */
+                }
+                th, td {
+                    padding: 10px;
+                    text-align: left;
+                    border: 1px solid black; /* Borde negro para las celdas */
+                }
+                th {
+                    background-color: #007BFF; /* Azul */
+                    color: white;
+                }
+                tr:nth-child(even) {
+                    background-color: #e0f2f7; /* Azul claro */
+                }
+                tr:nth-child(odd) {
+                    background-color: white; /* Blanco */
+                }
+            </style>
+            <table>
+                <tr>
+                    <th>Episode</th>
+                    <th>Title</th>
+                    <th>Director</th>
+                    <th>Producer</th>
+                    <th>Release Date</th>
+                </tr>
+            """
             for row in rows:
-                html += f"<tr><td>{row[1]}</td><td>{row[0]}</td><td>{row[3]}</td><td>{row[4]}</td><td>{row[5]}</td></tr>"
+                html += f"""
+                <tr>
+                    <td>{row[1]}</td>
+                    <td>{row[0]}</td>
+                    <td>{row[3]}</td>
+                    <td>{row[4]}</td>
+                    <td>{row[5]}</td>
+                </tr>
+                """
             html += "</table>"
             return HttpResponse(html)
     except Exception as e:

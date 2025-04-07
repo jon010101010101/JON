@@ -759,3 +759,147 @@
 	JOIN ex10_people AS p ON mc.people_id = p.id;
 2025-04-06 17:31:46.657 CEST [3013730] LOG:  checkpoint starting: time
 2025-04-06 17:31:46.870 CEST [3013730] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.003 s, total=0.213 s; sync files=2, longest=0.003 s, average=0.002 s; distance=7 kB, estimate=381 kB; lsn=0/20DC920, redo lsn=0/20DC8C8
+2025-04-07 09:20:04.500 CEST [3105031] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-07 09:20:04.501 CEST [3105031] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-07 09:20:04.566 CEST [3105031] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-07 09:20:04.585 CEST [3105034] LOG:  database system was interrupted; last known up at 2025-04-06 17:31:46 CEST
+2025-04-07 09:20:04.660 CEST [3105034] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-07 09:20:04.665 CEST [3105034] LOG:  redo starts at 0/20DC8C8
+2025-04-07 09:20:04.665 CEST [3105034] LOG:  invalid record length at 0/20DC9D0: expected at least 24, got 0
+2025-04-07 09:20:04.665 CEST [3105034] LOG:  redo done at 0/20DC998 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-07 09:20:04.672 CEST [3105032] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-07 09:20:04.684 CEST [3105032] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/20DC9D0, redo lsn=0/20DC9D0
+2025-04-07 09:20:04.688 CEST [3105031] LOG:  database system is ready to accept connections
+2025-04-07 09:21:53.542 CEST [3105742] ERROR:  duplicate key value violates unique constraint "ex02_movies_pkey"
+2025-04-07 09:21:53.542 CEST [3105742] DETAIL:  Key (episode_nb)=(1) already exists.
+2025-04-07 09:21:53.542 CEST [3105742] STATEMENT:  
+	                        INSERT INTO ex02_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (1, 'The Phantom Menace', 'George Lucas', 'Rick McCallum', '1999-05-19');
+	                    
+2025-04-07 09:25:04.784 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 09:25:04.897 CEST [3105032] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.114 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1 kB, estimate=1 kB; lsn=0/20DCE98, redo lsn=0/20DCE40
+2025-04-07 09:35:05.093 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 09:35:05.970 CEST [3105032] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.067 s, total=0.878 s; sync files=6, longest=0.065 s, average=0.012 s; distance=0 kB, estimate=1 kB; lsn=0/20DD280, redo lsn=0/20DD228
+2025-04-07 09:45:06.170 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 09:45:06.485 CEST [3105032] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.006 s, total=0.316 s; sync files=4, longest=0.005 s, average=0.002 s; distance=4 kB, estimate=4 kB; lsn=0/20DE358, redo lsn=0/20DE300
+2025-04-07 09:50:06.585 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 09:50:06.898 CEST [3105032] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.005 s, total=0.314 s; sync files=4, longest=0.004 s, average=0.002 s; distance=5 kB, estimate=5 kB; lsn=0/20DF820, redo lsn=0/20DF7C8
+2025-04-07 09:55:06.998 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 09:55:07.614 CEST [3105032] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.007 s, total=0.617 s; sync files=7, longest=0.005 s, average=0.001 s; distance=28 kB, estimate=28 kB; lsn=0/20E6920, redo lsn=0/20E68C8
+2025-04-07 10:00:06.687 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:00:06.802 CEST [3105032] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.115 s; sync files=2, longest=0.004 s, average=0.002 s; distance=3 kB, estimate=25 kB; lsn=0/20E78C8, redo lsn=0/20E7870
+2025-04-07 10:20:07.100 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:20:07.311 CEST [3105032] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.002 s, total=0.211 s; sync files=3, longest=0.002 s, average=0.001 s; distance=4 kB, estimate=23 kB; lsn=0/20E8B48, redo lsn=0/20E8AF0
+2025-04-07 10:25:07.411 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:25:07.827 CEST [3105032] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.006 s, total=0.417 s; sync files=5, longest=0.004 s, average=0.002 s; distance=8 kB, estimate=22 kB; lsn=0/20EACC8, redo lsn=0/20EAC70
+2025-04-07 10:28:02.053 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.053 CEST [3112790] DETAIL:  Key (episode_nb)=(1) already exists.
+2025-04-07 10:28:02.053 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (1, 'The Phantom Menace', 'George Lucas', 'Rick McCallum', '1999-05-19');
+	                    
+2025-04-07 10:28:02.054 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.054 CEST [3112790] DETAIL:  Key (episode_nb)=(2) already exists.
+2025-04-07 10:28:02.054 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (2, 'Attack of the Clones', 'George Lucas', 'Rick McCallum', '2002-05-16');
+	                    
+2025-04-07 10:28:02.055 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.055 CEST [3112790] DETAIL:  Key (episode_nb)=(3) already exists.
+2025-04-07 10:28:02.055 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (3, 'Revenge of the Sith', 'George Lucas', 'Rick McCallum', '2005-05-19');
+	                    
+2025-04-07 10:28:02.055 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.055 CEST [3112790] DETAIL:  Key (episode_nb)=(4) already exists.
+2025-04-07 10:28:02.055 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (4, 'A New Hope', 'George Lucas', 'Gary Kurtz, Rick McCallum', '1977-05-25');
+	                    
+2025-04-07 10:28:02.055 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.055 CEST [3112790] DETAIL:  Key (episode_nb)=(5) already exists.
+2025-04-07 10:28:02.055 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (5, 'The Empire Strikes Back', 'Irvin Kershner', 'Gary Kurtz, Rick McCallum', '1980-05-17');
+	                    
+2025-04-07 10:28:02.056 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.056 CEST [3112790] DETAIL:  Key (episode_nb)=(6) already exists.
+2025-04-07 10:28:02.056 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (6, 'Return of the Jedi', 'Richard Marquand', 'Howard G. Kazanjian, George Lucas, Rick McCallum', '1983-05-25');
+	                    
+2025-04-07 10:28:02.056 CEST [3112790] ERROR:  duplicate key value violates unique constraint "ex04_movies_pkey"
+2025-04-07 10:28:02.056 CEST [3112790] DETAIL:  Key (episode_nb)=(7) already exists.
+2025-04-07 10:28:02.056 CEST [3112790] STATEMENT:  
+	                        INSERT INTO ex04_movies (episode_nb, title, director, producer, release_date)
+	                        VALUES (7, 'The Force Awakens', 'J. J. Abrams', 'Kathleen Kennedy, J. J. Abrams, Bryan Burk', '2015-12-11');
+	                    
+2025-04-07 10:30:07.912 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:30:08.430 CEST [3105032] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.006 s, total=0.518 s; sync files=6, longest=0.005 s, average=0.001 s; distance=12 kB, estimate=21 kB; lsn=0/20EDDC8, redo lsn=0/20EDD70
+2025-04-07 10:40:07.582 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:40:07.940 CEST [3105032] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.050 s, total=0.359 s; sync files=4, longest=0.048 s, average=0.013 s; distance=5 kB, estimate=19 kB; lsn=0/20EF3C0, redo lsn=0/20EF368
+2025-04-07 10:55:08.239 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 10:55:08.357 CEST [3105032] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.007 s, total=0.118 s; sync files=2, longest=0.005 s, average=0.004 s; distance=3 kB, estimate=17 kB; lsn=0/20F00E8, redo lsn=0/20F0090
+2025-04-07 11:00:08.457 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:00:08.770 CEST [3105032] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.004 s, total=0.314 s; sync files=4, longest=0.002 s, average=0.001 s; distance=6 kB, estimate=16 kB; lsn=0/20F1A68, redo lsn=0/20F1A10
+2025-04-07 11:05:08.812 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:05:09.029 CEST [3105032] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.007 s, total=0.217 s; sync files=3, longest=0.005 s, average=0.003 s; distance=3 kB, estimate=15 kB; lsn=0/20F26C8, redo lsn=0/20F2670
+2025-04-07 11:35:08.503 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:35:10.226 CEST [3105032] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.709 s, sync=0.005 s, total=1.723 s; sync files=14, longest=0.002 s, average=0.001 s; distance=71 kB, estimate=71 kB; lsn=0/2104480, redo lsn=0/2104428
+2025-04-07 11:40:08.326 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:40:08.740 CEST [3105032] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.401 s, sync=0.004 s, total=0.415 s; sync files=5, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=65 kB; lsn=0/2107C18, redo lsn=0/2107BC0
+2025-04-07 11:45:08.752 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:45:09.875 CEST [3105032] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.104 s, sync=0.010 s, total=1.123 s; sync files=9, longest=0.008 s, average=0.002 s; distance=35 kB, estimate=62 kB; lsn=0/2110B10, redo lsn=0/2110AB8
+2025-04-07 11:50:08.975 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:50:09.393 CEST [3105032] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.004 s, total=0.418 s; sync files=5, longest=0.003 s, average=0.001 s; distance=11 kB, estimate=57 kB; lsn=0/2113810, redo lsn=0/21137B8
+2025-04-07 11:55:08.493 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 11:55:08.605 CEST [3105032] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.113 s; sync files=2, longest=0.004 s, average=0.002 s; distance=10 kB, estimate=52 kB; lsn=0/21160F8, redo lsn=0/21160A0
+2025-04-07 12:00:08.705 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:00:09.321 CEST [3105032] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.005 s, total=0.617 s; sync files=6, longest=0.004 s, average=0.001 s; distance=15 kB, estimate=49 kB; lsn=0/2119DB8, redo lsn=0/2119D60
+2025-04-07 12:01:35.746 CEST [3123790] ERROR:  syntax error at or near "SELECT" at character 27
+2025-04-07 12:01:35.746 CEST [3123790] STATEMENT:  SELECT * FROM ex06_movies
+	SELECT * FROM ex06_movies
+	SELECT * FROM ex06_movies;
+2025-04-07 12:05:08.419 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:05:09.740 CEST [3105032] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.008 s, total=1.321 s; sync files=10, longest=0.006 s, average=0.001 s; distance=42 kB, estimate=48 kB; lsn=0/21248C0, redo lsn=0/2124868
+2025-04-07 12:10:08.840 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:10:08.955 CEST [3105032] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.116 s; sync files=2, longest=0.005 s, average=0.003 s; distance=6 kB, estimate=44 kB; lsn=0/2126160, redo lsn=0/2126108
+2025-04-07 12:20:09.155 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:20:09.672 CEST [3105032] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.004 s, total=0.517 s; sync files=5, longest=0.004 s, average=0.001 s; distance=15 kB, estimate=41 kB; lsn=0/2129FC0, redo lsn=0/2129F68
+2025-04-07 12:25:09.772 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:25:10.593 CEST [3105032] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.803 s, sync=0.007 s, total=0.821 s; sync files=7, longest=0.004 s, average=0.001 s; distance=52 kB, estimate=52 kB; lsn=0/2137080, redo lsn=0/2137028
+2025-04-07 12:28:21.836 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.836 CEST [3127056] DETAIL:  Failing row contains (1, The Phantom Menace, null, George Lucas, Rick McCallum, 1999-05-19, null, 2025-04-07 10:28:21.816565+00).
+2025-04-07 12:28:21.836 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'The Phantom Menace', "opening_crawl" = NULL, "director" = 'George Lucas', "producer" = 'Rick McCallum', "release_date" = '1999-05-19'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.816565'::timestamp WHERE "ex07_movie"."episode_nb" = 1
+2025-04-07 12:28:21.838 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.838 CEST [3127056] DETAIL:  Failing row contains (2, Attack of the Clones, null, George Lucas, Rick McCallum, 2002-05-16, null, 2025-04-07 10:28:21.837147+00).
+2025-04-07 12:28:21.838 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'Attack of the Clones', "opening_crawl" = NULL, "director" = 'George Lucas', "producer" = 'Rick McCallum', "release_date" = '2002-05-16'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.837147'::timestamp WHERE "ex07_movie"."episode_nb" = 2
+2025-04-07 12:28:21.838 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.838 CEST [3127056] DETAIL:  Failing row contains (3, Revenge of the Sith, null, George Lucas, Rick McCallum, 2005-05-19, null, 2025-04-07 10:28:21.838307+00).
+2025-04-07 12:28:21.838 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'Revenge of the Sith', "opening_crawl" = NULL, "director" = 'George Lucas', "producer" = 'Rick McCallum', "release_date" = '2005-05-19'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.838307'::timestamp WHERE "ex07_movie"."episode_nb" = 3
+2025-04-07 12:28:21.839 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.839 CEST [3127056] DETAIL:  Failing row contains (4, A New Hope, null, George Lucas, Gary Kurtz, Rick McCallum, 1977-05-25, null, 2025-04-07 10:28:21.839092+00).
+2025-04-07 12:28:21.839 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'A New Hope', "opening_crawl" = NULL, "director" = 'George Lucas', "producer" = 'Gary Kurtz, Rick McCallum', "release_date" = '1977-05-25'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.839092'::timestamp WHERE "ex07_movie"."episode_nb" = 4
+2025-04-07 12:28:21.840 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.840 CEST [3127056] DETAIL:  Failing row contains (5, The Empire Strikes Back, null, Irvin Kershner, Gary Kurtz, Rick McCallum, 1980-05-17, null, 2025-04-07 10:28:21.839648+00).
+2025-04-07 12:28:21.840 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'The Empire Strikes Back', "opening_crawl" = NULL, "director" = 'Irvin Kershner', "producer" = 'Gary Kurtz, Rick McCallum', "release_date" = '1980-05-17'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.839648'::timestamp WHERE "ex07_movie"."episode_nb" = 5
+2025-04-07 12:28:21.840 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.840 CEST [3127056] DETAIL:  Failing row contains (6, Return of the Jedi, null, Richard Marquand, Howard G. Kazanjian, George Lucas, Rick McCallum, 1983-05-25, null, 2025-04-07 10:28:21.840247+00).
+2025-04-07 12:28:21.840 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'Return of the Jedi', "opening_crawl" = NULL, "director" = 'Richard Marquand', "producer" = 'Howard G. Kazanjian, George Lucas, Rick McCallum', "release_date" = '1983-05-25'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.840247'::timestamp WHERE "ex07_movie"."episode_nb" = 6
+2025-04-07 12:28:21.841 CEST [3127056] ERROR:  null value in column "created" of relation "ex07_movie" violates not-null constraint
+2025-04-07 12:28:21.841 CEST [3127056] DETAIL:  Failing row contains (7, The Force Awakens, null, J. J. Abrams, Kathleen Kennedy, J. J. Abrams, Bryan Burk, 2015-12-11, null, 2025-04-07 10:28:21.840872+00).
+2025-04-07 12:28:21.841 CEST [3127056] STATEMENT:  UPDATE "ex07_movie" SET "title" = 'The Force Awakens', "opening_crawl" = NULL, "director" = 'J. J. Abrams', "producer" = 'Kathleen Kennedy, J. J. Abrams, Bryan Burk', "release_date" = '2015-12-11'::date, "created" = NULL, "updated" = '2025-04-07T10:28:21.840872'::timestamp WHERE "ex07_movie"."episode_nb" = 7
+2025-04-07 12:30:09.692 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:30:10.311 CEST [3105032] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.602 s, sync=0.010 s, total=0.620 s; sync files=6, longest=0.006 s, average=0.002 s; distance=22 kB, estimate=49 kB; lsn=0/213CA30, redo lsn=0/213C9D8
+2025-04-07 12:40:09.511 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:40:09.725 CEST [3105032] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.006 s, total=0.215 s; sync files=3, longest=0.004 s, average=0.002 s; distance=4 kB, estimate=44 kB; lsn=0/213DA70, redo lsn=0/213DA18
+2025-04-07 12:45:09.825 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 12:45:10.042 CEST [3105032] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.007 s, total=0.217 s; sync files=3, longest=0.005 s, average=0.003 s; distance=7 kB, estimate=40 kB; lsn=0/213F720, redo lsn=0/213F6C8
+2025-04-07 12:49:27.118 CEST [3123790] ERROR:  relation "ex07_movies" does not exist at character 15
+2025-04-07 12:49:27.118 CEST [3123790] STATEMENT:  SELECT * FROM ex07_movies;
+2025-04-07 13:08:55.630 CEST [3132188] ERROR:  relation "ex07_movies" does not exist at character 15
+2025-04-07 13:08:55.630 CEST [3132188] STATEMENT:  SELECT * FROM ex07_movies;
+2025-04-07 13:09:12.201 CEST [3132188] ERROR:  relation "ex07_movies" does not exist at character 15
+2025-04-07 13:09:12.201 CEST [3132188] STATEMENT:  SELECT * FROM ex07_movies;
+2025-04-07 13:10:09.467 CEST [3105032] LOG:  checkpoint starting: time
+2025-04-07 13:10:10.694 CEST [3105032] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.207 s, sync=0.006 s, total=1.227 s; sync files=12, longest=0.004 s, average=0.001 s; distance=50 kB, estimate=50 kB; lsn=0/214C108, redo lsn=0/214C0B0

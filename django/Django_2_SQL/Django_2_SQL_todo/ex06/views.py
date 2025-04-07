@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.db import connection
 from django.shortcuts import render
-from .models import Movies
+import psycopg2
 import json
 
 def init(request):
@@ -52,50 +52,92 @@ def populate(request):
         {"episode_nb": 7, "title": "The Force Awakens", "director": "J. J. Abrams", "producer": "Kathleen Kennedy, J. J. Abrams, Bryan Burk", "release_date": "2015-12-11"},
     ]
 
-    results = []
-    for entry in data:
-        try:
-            movie = Movies(**entry)
-            movie.save()
-            results.append(f"{entry['title']} inserted successfully.")
-        except Exception as e:
-            results.append(f"Error inserting {entry['title']}: {str(e)}")
-    
-    return HttpResponse("<br>".join(results))
+    try:
+        with connection.cursor() as cursor:
+            # Obtener los opening crawls existentes
+            cursor.execute("SELECT title, opening_crawl FROM ex06_movies")
+            existing_opening_crawls = dict(cursor.fetchall())
 
+            # Borrar todos los datos existentes en la tabla
+            cursor.execute("DELETE FROM ex06_movies;")
+
+            # Insertar los datos con los opening crawls existentes
+            for entry in data:
+                title = entry["title"]
+                opening_crawl = existing_opening_crawls.get(title, '')  # Usar el opening crawl existente si existe, sino, usar una cadena vacía
+                cursor.execute(
+                    "INSERT INTO ex06_movies (episode_nb, title, director, producer, release_date, created, updated, opening_crawl) VALUES (%s, %s, %s, %s, %s, NOW(), NOW(), %s)",
+                    (entry["episode_nb"], title, entry["director"], entry["producer"], entry["release_date"], opening_crawl),
+                )
+            connection.commit()
+        return HttpResponse("OK")
+    except Exception as e:
+        return HttpResponse(f"Error inserting data: {str(e)}")
 
 def display(request):
-    movies = Movies.objects.all()
-    if not movies.exists():
-        return render(request, 'ex06/display.html', {'movies': None})
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT episode_nb, title, director, producer, release_date, created, updated, opening_crawl FROM ex06_movies;")
+            movies = cursor.fetchall()
 
-    return render(request, 'ex06/display.html', {'movies': movies})
+            if not movies:
+                return HttpResponse("No data available")
+
+            return render(request, 'ex06/display.html', {'movies': movies})
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")
 
 
 def update(request):
+    message = None
     if request.method == 'POST':
         title_to_update = request.POST.get('title')
         new_text = request.POST.get('opening_crawl')
-        Movies.objects.filter(title=title_to_update).update(opening_crawl=new_text)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE ex06_movies SET opening_crawl = %s WHERE title = %s", [new_text, title_to_update])
+                connection.commit()
+                message = f"The opening crawl for '{title_to_update}' has been updated successfully."
+        except Exception as e:
+            message = f"Error updating movie: {e}"
 
-    movies = Movies.objects.all()
-    if not movies.exists():
-        return render(request, 'ex06/update.html', {'movies': None})
-
-    return render(request, 'ex06/update.html', {'movies': movies})
+    try:
+        with connection.cursor() as cursor:
+             cursor.execute("SELECT title FROM ex06_movies;")
+             movies = [row[0] for row in cursor.fetchall()]
+    except:
+        movies = None
+   
+    return render(request, 'ex06/update.html', {'movies': movies, 'message': message})
 
 def load_opening_crawl(request):
     try:
         # Ruta al archivo JSON
-        file_path = 'ex06/data/opening_crawl.json'
+        file_path = 'data/opening_crawl.json'
 
         # Abrir y cargar el contenido del archivo JSON
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
 
+        # Conectar a la base de datos
+        conn = psycopg2.connect(
+            dbname='d42',
+            user='djangouser',
+            password='secret',
+            host='localhost'  # Ajusta esto si tu base de datos está en otro host
+        )
+        cur = conn.cursor()
+
         # Actualizar la base de datos con los datos del JSON
         for title, opening_crawl in data.items():
-            Movies.objects.filter(title=title).update(opening_crawl=opening_crawl)
+            cur.execute("UPDATE ex06_movies SET opening_crawl = %s WHERE title = %s", (opening_crawl, title))
+
+        # Guardar los cambios
+        conn.commit()
+
+        # Cerrar la conexión
+        cur.close()
+        conn.close()
 
         return HttpResponse("Opening crawl data loaded successfully.")
     except FileNotFoundError:

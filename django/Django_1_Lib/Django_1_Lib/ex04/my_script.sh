@@ -1,19 +1,21 @@
 #!/bin/bash
 
-# Create a Python3 virtual environment named django_venv
-python3 -m virtualenv django_venv
+# Deactivate the current virtual environment if it is active
+if [[ "$VIRTUAL_ENV" != "" ]]; then
+    deactivate
+    echo "🔄 Previous virtual environment '$VIRTUAL_ENV' deactivated."
+fi
 
-# Install the requirements from the requirement.txt file
-django_venv/bin/pip install -r requirement.txt
+# Create a virtual environment in Python 3 called django_venv
+python3 -m venv django_venv  
 
 # Activate the virtual environment
 source django_venv/bin/activate
 
-# Final message
-echo "✅ Environment configured and activated."
+# Install the requirements from the requirements.txt file
+pip install -r requirement.txt  # Note: Make sure to change 'requirement.txt' to 'requirements.txt'
 
-
-
+echo "✅ Environment 'django_venv' configured and activated."
 
 
 # pip install -r requirement.txt

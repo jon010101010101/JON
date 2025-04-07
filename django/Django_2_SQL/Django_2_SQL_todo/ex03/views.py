@@ -13,30 +13,85 @@ def populate(request):
         {"episode_nb": 7, "title": "The Force Awakens", "director": "J. J. Abrams", "producer": "Kathleen Kennedy, J. J. Abrams, Bryan Burk", "release_date": "2015-12-11"},
     ]
 
-    results = []
-    for entry in data:
-        try:
+    try:
+        # Delete all existing movies
+        Movies.objects.all().delete()
+
+        # Insert the movies
+        for entry in data:
             movie = Movies(**entry)
             movie.save()
-            results.append(f"{entry['title']} inserted successfully.")
-        except Exception as e:
-            results.append(f"Error inserting {entry['title']}: {str(e)}")
-    
-    return HttpResponse("<br>".join(results))
+
+        return HttpResponse("OK")  # Return "OK" if all insertions succeed
+
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")  # Return an error message if any insertion fails
 
 
 # Vista para mostrar los datos de la tabla
 def display(request):
     try:
         movies = Movies.objects.all()
-        if not movies.exists():
+        if not movies:
             return HttpResponse("No data available")
-        
-        html = "<table border='1'>"
-        html += "<tr><th>Episode</th><th>Title</th><th>Director</th><th>Producer</th><th>Release Date</th></tr>"
+
+        html = """
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 20px auto;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: white;
+            }
+            th, td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+            }
+            tr:nth-child(even) {
+                background-color: #e0f2f7;
+            }
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+        </style>
+        <h1>Movies</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Episode</th>
+                    <th>Title</th>
+                    <th>Director</th>
+                    <th>Producer</th>
+                    <th>Release Date</th>
+                </tr>
+            </thead>
+            <tbody>
+        """
+
         for movie in movies:
-            html += f"<tr><td>{movie.episode_nb}</td><td>{movie.title}</td><td>{movie.director}</td><td>{movie.producer}</td><td>{movie.release_date}</td></tr>"
-        html += "</table>"
+            html += f"""
+                <tr>
+                    <td>{movie.episode_nb}</td>
+                    <td>{movie.title}</td>
+                    <td>{movie.director}</td>
+                    <td>{movie.producer}</td>
+                    <td>{movie.release_date}</td>
+                </tr>
+            """
+        html += "</tbody></table>"
         return HttpResponse(html)
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")
