@@ -60,14 +60,14 @@
             </tbody>
         </table>
 
-        <!-- Pagination controls -->
+        <!-- Controles de paginación -->
         {% if results.has_other_pages %}
             <div class="pagination">
                 {% if results.has_previous %}
-                    <a href="?page={{ results.previous_page_number }}">Previous</a>
+                    <a href="?page={{ results.previous_page_number }}">Anterior</a>
                 {% endif %}
                 {% if results.has_next %}
-                    <a href="?page={{ results.next_page_number }}">Next</a>
+                    <a href="?page={{ results.next_page_number }}">Siguiente</a>
                 {% endif %}
             </div>
         {% endif %}

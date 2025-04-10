@@ -133,6 +133,7 @@ verificar
 pg_ctl -D ~/postgresql_data status
 para conectarse a la base de datos
 psql -U djangouser -d d42
+psql -U djangouser -d djangotraining
 verificar el estadio del servicio
 ps aux | grep postgres
 
@@ -161,3 +162,22 @@ for movie in movies:
     print(f"Title: {movie.title}\n{movie.opening_crawl}\n")
 
 
+DELETE FROM django_migrations WHERE app = 'ex01';
+
+DELETE FROM ex02_movies;
+
+\d ex00_movies
+
+* borrar migrations
+djangotraining=# from django.db import connection
+with connection.cursor() as cursor:
+    cursor.execute("DELETE FROM django_migrations;")
+
+* para verificar deberia salir 0 ......
+djangotraining-# from django.db import connection
+
+with connection.cursor() as cursor:
+    cursor.execute("SELECT COUNT(*) FROM django_migrations WHERE app = 'ex07';")
+    count = cursor.fetchone()[0]  # Obtener el número directamente
+
+print(count)  # Imprimir el número directamente

@@ -90,12 +90,12 @@ WSGI_APPLICATION = 'd42.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd42',  # Nombre de la base de datos
-        'USER': 'djangouser',  # Usuario configurado
-        'PASSWORD': 'secret',  # Contraseña configurada
-        'HOST': 'localhost',  # Cambia a 'localhost'
-        'PORT': '5432',  # Puerto por defecto de PostgreSQL
-    },
+        'NAME': 'djangotraining',
+        'USER': 'djangouser',
+        'PASSWORD': 'secret',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 

@@ -2,6 +2,7 @@ import psycopg2
 from django.http import HttpResponse
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 
 def init(request):
     try:
@@ -50,69 +51,7 @@ def display(request):
             movies = cursor.fetchall()
 
             if movies:
-                html = """
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        color: #333;
-                        padding: 20px;
-                    }
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        margin: 20px auto;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        background-color: white;
-                    }
-                    th, td {
-                        padding: 12px 15px;
-                        text-align: left;
-                        border-bottom: 1px solid #ddd;
-                    }
-                    th {
-                        background-color: #007bff;
-                        color: white;
-                        font-weight: bold;
-                    }
-                    tr:nth-child(even) {
-                        background-color: #e0f2f7;
-                    }
-                    tr:hover {
-                        background-color: #f5f5f5;
-                    }
-                </style>
-                <h1>Movies</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Episode</th>
-                            <th>Title</th>
-                            <th>Director</th>
-                            <th>Producer</th>
-                            <th>Release Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                """
-
-                for movie in movies:
-                    episode_nb, title, director, producer, release_date = movie
-                    html += f"""
-                        <tr>
-                            <td>{episode_nb}</td>
-                            <td>{title}</td>
-                            <td>{director}</td>
-                            <td>{producer}</td>
-                            <td>{release_date}</td>
-                        </tr>
-                    """
-
-                html += """
-                    </tbody>
-                </table>
-                """
-                return HttpResponse(html)
+                return render(request, 'ex04/display.html', {'movies': movies})
             else:
                 return HttpResponse("No data available")
     except Exception:
@@ -136,74 +75,6 @@ def remove(request):
             if not titles:
                 return HttpResponse("No data available")
 
-            html = f"""
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    background-color: #f4f4f4;
-                    color: #333;
-                    padding: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }}
-                .message {{
-                    background-color: #dff0d8;
-                    color: #3c763d;
-                    padding: 10px;
-                    margin-bottom: 20px;
-                    border: 1px solid #d6e9c6;
-                    border-radius: 4px;
-                }}
-                form {{
-                    width: 50%;
-                    margin: 20px auto;
-                    background-color: #fff;
-                    padding: 20px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    border-radius: 4px;
-                }}
-                select {{
-                    width: 100%;
-                    padding: 10px;
-                    margin-bottom: 15px;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    box-sizing: border-box;
-                }}
-                button {{
-                    background-color: #007bff;
-                    color: white;
-                    padding: 10px 15px;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    width: 100%; /* Make the button wider */
-                }}
-                button:hover {{
-                    background-color: #0056b3;
-                }}
-                h1 {{
-                    color: #007bff;
-                    text-align: center;
-                    margin-bottom: 20px;
-                }}
-            </style>
-            <h1>Remove a Movie</h1>
-            """
-            if message:
-                html += f'<div class="message">{message}</div>'
-            html += """
-            <form method='post'>
-                <select name='title'>
-            """
-            for title in titles:
-                html += f"<option value='{title}'>{title}</option>"
-            html += """
-                </select>
-                <button type='submit'>Remove</button>
-            </form>
-            """
-            return HttpResponse(html)
+            return render(request, 'ex04/remove.html', {'titles': titles, 'message': message})
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}")

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Search</title>
+    <style>
+        /* Estilo general del cuerpo */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilo del formulario */
+        form {
+            width: 80%;
+            max-width: 300px;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Campos de entrada y desplegables */
+        form select, form input {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 8px !important; /* Forzar tamaño reducido */
+            color: #495057;
+            background-color: #fff;
+        }
+
+        /* Etiquetas */
+        form label {
+            font-size: 8px !important; /* Tamaño reducido para etiquetas */
+        }
+
+        /* Botón de envío */
+        form button {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            font-size: 8px !important; /* Tamaño reducido para botón */
+            color: white;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #0056b3; /* Fondo azul más oscuro al pasar el ratón */
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 1.5em; /* Tamaño ajustado del título principal */
+            text-align: center;
+        }
+
+        .message {
+            background-color: #dff0d8; /* Fondo verde claro para mensajes exitosos */
+            color: #3c763d; /* Texto verde oscuro */
+            padding: 6px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 8px !important; /* Tamaño reducido para mensajes */
+        }
+
+        .error {
+            background-color: #f2dede; /* Fondo rojo claro para mensajes de error */
+            color: #a94442; /* Texto rojo oscuro */
+            border-radius: 4px;
+            font-size: 8px !important; 
+        }
+
+        table {
+            width: 80%;
+            margin-top: 20px;
+            border-collapse: collapse; /* Elimina espacios entre bordes */
+        }
+
+        th, td {
+            padding: 10px; /* Espaciado interno dentro de las celdas */
+            text-align: left; /* Alineación izquierda */
+            border-bottom: 1px solid #ddd; /* Línea inferior gris claro */
+            font-size: 8px !important; /* Forzar tamaño reducido en tabla */
+        }
+
+        th {
+            background-color: #007bff; /* Fondo azul para encabezados */
+            color: white;} 
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Fondo gris claro alternado para filas pares */
+        }
+
+        tr:hover {
+            background-color: #ddd; /* Fondo gris más oscuro al pasar el ratón por las filas */
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Characters</h1>
+
+    <!-- Mostrar mensaje si existe -->
+    {% if message %}
+        <div class="message {% if 'Error' in message %}error{% endif %}">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <!-- Formulario de búsqueda -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Campo para la fecha mínima de lanzamiento -->
+        <label for="min_release_date">Movies minimum release date:</label>
+        <input type="date" name="min_release_date" id="min_release_date">
+
+        <!-- Campo para la fecha máxima de lanzamiento -->
+        <label for="max_release_date">Movies maximum release date:</label>
+        <input type="date" name="max_release_date" id="max_release_date">
+
+        <!-- Campo para el diámetro mínimo del planeta -->
+        <label for="min_planet_diameter">Planet diameter greater than:</label>
+        <input type="number" name="min_planet_diameter" id="min_planet_diameter">
+
+        <!-- Campo desplegable para seleccionar el género del personaje -->
+        <label for="character_gender">Character gender:</label>
+        <select name="character_gender" id="character_gender">
+            {% for value, label in form.fields.character_gender.choices %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Botón de envío -->
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Tabla de resultados (si existen) -->
+    {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Character Name</th>
+                    <th>Gender</th>
+                    <th>Movie Title</th>
+                    <th>Homeworld Name</th>
+                    <th>Homeworld Diameter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.character_name }}</td>
+                        <td>{{ result.gender }}</td>
+                        <td>{{ result.movie_title }}</td>
+                        <td>{{ result.homeworld_name }}</td>
+                        <td>{{ result.homeworld_diameter }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

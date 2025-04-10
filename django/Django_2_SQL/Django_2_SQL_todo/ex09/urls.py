@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import display_characters
+from .views import display
 
 urlpatterns = [
-    path('display/', display_characters, name='display_characters'),
+    path('display/', display, name='display'),
 ]
