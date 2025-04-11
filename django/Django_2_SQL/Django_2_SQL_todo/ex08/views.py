@@ -8,7 +8,6 @@ import csv
 import psycopg2
 
 
-@csrf_exempt
 def init(request):
     try:
         with connection.cursor() as cursor:
@@ -50,7 +49,6 @@ def init(request):
     except Exception as e:
         return render(request, 'ex08/init.html', {'message': f"Error: {e}"})
 
-@csrf_exempt
 def populate(request):
     try:
         # Definir las rutas de los archivos CSV

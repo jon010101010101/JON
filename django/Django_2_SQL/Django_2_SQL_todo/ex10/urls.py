@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import search_characters
+from . import views
 
 urlpatterns = [
-    path('', search_characters, name='search_characters'),  # Ruta raíz para ex10
+    path('', views.search_characters, name='search_characters'),  # Map the empty path to the view
 ]

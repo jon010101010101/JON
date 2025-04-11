@@ -3174,3 +3174,41 @@
 2025-04-10 20:36:02.378 CEST [3630881] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.114 s; sync files=2, longest=0.003 s, average=0.003 s; distance=7 kB, estimate=61 kB; lsn=0/304FB48, redo lsn=0/304FAF0
 2025-04-10 20:41:02.446 CEST [3630881] LOG:  checkpoint starting: time
 2025-04-10 20:41:02.562 CEST [3630881] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.006 s, total=0.116 s; sync files=2, longest=0.004 s, average=0.003 s; distance=4 kB, estimate=56 kB; lsn=0/3050EA0, redo lsn=0/3050E48
+2025-04-11 16:05:45.882 CEST [3764276] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-11 16:05:45.882 CEST [3764276] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-11 16:05:45.930 CEST [3764276] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-11 16:05:45.953 CEST [3764279] LOG:  database system was interrupted; last known up at 2025-04-10 20:41:02 CEST
+2025-04-11 16:05:46.095 CEST [3764279] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-11 16:05:46.101 CEST [3764279] LOG:  redo starts at 0/3050E48
+2025-04-11 16:05:46.101 CEST [3764279] LOG:  invalid record length at 0/3050F50: expected at least 24, got 0
+2025-04-11 16:05:46.101 CEST [3764279] LOG:  redo done at 0/3050F18 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-11 16:05:46.107 CEST [3764277] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-11 16:05:46.119 CEST [3764277] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.014 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/3050F50, redo lsn=0/3050F50
+2025-04-11 16:05:46.124 CEST [3764276] LOG:  database system is ready to accept connections
+2025-04-11 16:25:46.496 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 16:25:46.618 CEST [3764277] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.122 s; sync files=1, longest=0.004 s, average=0.004 s; distance=7 kB, estimate=7 kB; lsn=0/3052F20, redo lsn=0/3052EC8
+2025-04-11 16:45:46.948 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 16:45:47.263 CEST [3764277] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.005 s, total=0.315 s; sync files=4, longest=0.005 s, average=0.002 s; distance=5 kB, estimate=7 kB; lsn=0/30546B8, redo lsn=0/3054660
+2025-04-11 16:50:46.352 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 16:50:46.770 CEST [3764277] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.007 s, total=0.418 s; sync files=5, longest=0.005 s, average=0.002 s; distance=7 kB, estimate=7 kB; lsn=0/30564B0, redo lsn=0/3056458
+2025-04-11 17:03:17.353 CEST [3766797] ERROR:  syntax error at or near "SELECT" at character 27
+2025-04-11 17:03:17.353 CEST [3766797] STATEMENT:  SELECT * FROM ex04_movies
+	SELECT * FROM ex04_movies;
+2025-04-11 17:05:47.021 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:05:47.334 CEST [3764277] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.004 s, total=0.314 s; sync files=4, longest=0.004 s, average=0.001 s; distance=10 kB, estimate=10 kB; lsn=0/3059078, redo lsn=0/3059020
+2025-04-11 17:15:47.460 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:15:47.875 CEST [3764277] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.006 s, total=0.416 s; sync files=5, longest=0.004 s, average=0.002 s; distance=11 kB, estimate=11 kB; lsn=0/305BD70, redo lsn=0/305BD18
+2025-04-11 17:35:48.219 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:35:48.435 CEST [3764277] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.201 s, sync=0.006 s, total=0.217 s; sync files=3, longest=0.004 s, average=0.002 s; distance=6 kB, estimate=10 kB; lsn=0/305D888, redo lsn=0/305D830
+2025-04-11 17:40:48.535 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:40:48.650 CEST [3764277] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.005 s, total=0.116 s; sync files=2, longest=0.004 s, average=0.003 s; distance=7 kB, estimate=10 kB; lsn=0/305F598, redo lsn=0/305F540
+2025-04-11 17:50:48.850 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:50:54.794 CEST [3764277] LOG:  checkpoint complete: wrote 60 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.927 s, sync=0.009 s, total=5.945 s; sync files=46, longest=0.006 s, average=0.001 s; distance=331 kB, estimate=331 kB; lsn=0/30B24A8, redo lsn=0/30B2418
+2025-04-11 17:55:48.835 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 17:55:49.457 CEST [3764277] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.009 s, total=0.622 s; sync files=2, longest=0.009 s, average=0.005 s; distance=13 kB, estimate=299 kB; lsn=0/30B5BD8, redo lsn=0/30B5B80
+2025-04-11 18:05:48.592 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 18:05:51.628 CEST [3764277] LOG:  checkpoint complete: wrote 31 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.015 s, sync=0.012 s, total=3.037 s; sync files=17, longest=0.011 s, average=0.001 s; distance=138 kB, estimate=283 kB; lsn=0/30D8478, redo lsn=0/30D8420
+2025-04-11 18:10:48.692 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 18:10:50.621 CEST [3764277] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.911 s, sync=0.011 s, total=1.929 s; sync files=17, longest=0.004 s, average=0.001 s; distance=78 kB, estimate=263 kB; lsn=0/30EBD78, redo lsn=0/30EBD20
+2025-04-11 18:15:48.720 CEST [3764277] LOG:  checkpoint starting: time
+2025-04-11 18:15:51.143 CEST [3764277] LOG:  checkpoint complete: wrote 25 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.409 s, sync=0.007 s, total=2.424 s; sync files=15, longest=0.004 s, average=0.001 s; distance=76 kB, estimate=244 kB; lsn=0/30FEF18, redo lsn=0/30FEEC0

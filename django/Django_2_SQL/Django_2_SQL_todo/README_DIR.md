@@ -216,7 +216,7 @@ para volver a cargar original
 
 127.0.0.1:8000/ex07/display     tabla movies
 
-127.0.0.1:8000/ex07/update      lo mismo que en ex06 pero con ORM 
+127.0.0.1:8000/ex07/update      desplegable seleccion peliculas para elegir y poder cambierle el resumen de la pelicula. 
 
 * Para probar que ha borrado
 python manage.py shell
@@ -226,13 +226,10 @@ movies = Movie.objects.all()
 for movie in movies:
     print(movie.title, movie.opening_crawl)
 * Ver si una pelicula en concreto esta cambiado el opening_crawl
-specific_movie = Movie.objects.filter(title="The Phantom Menace").first()
-if specific_movie:
-    print(specific_movie.title, specific_movie.opening_crawl)
-else:
-    print("La película no se encontró.")
 
-The Phantom Menace Turmoil has engulfed the
+>>> movie = Movie.objects.get(title="The Phantom Menace")
+>>> print(movie.opening_crawl)
+Turmoil has engulfed the
 Galactic Republic. The taxation
 of trade routes to outlying star
 systems is in dispute.
@@ -251,20 +248,17 @@ the Supreme Chancellor has
 secretly dispatched two Jedi
 Knights, the guardians of
 peace and justice in the
-galaxy, to settle the conflict...   
+galaxy, to settle the conflict....
+>>> 
 
 >>> from ex07.models import Movie
->>> specific_movie = Movie.objects.filter(title="The Phantom Menace").first()
->>> if specific_movie:
-...     print(specific_movie.title, specific_movie.opening_crawl)
-... else:
-...     print("La película no se encontró.")
-... 
-The Phantom Menace cambio
+>>> >>> movie = Movie.objects.get(title="The Phantom Menace")
+>>> print(movie.opening_crawl)
+cambio
 >>> 
-   
 
-# ex08: 
+
+# ex08: SQL
 
 127.0.0.1:8000/ex08/init   OK: ex08_planets and ex08_people tables successfully created!
 
@@ -313,7 +307,6 @@ WHERE table_name = 'ex08_people';
 (9 rows)
 
 
-
 127.0.0.1:8000/ex08/populate        OK pero ha tenido que cargar las tablas
 
 Comprobacion
@@ -358,70 +351,44 @@ Saesee Tiin	Iktotch	arid, rocky, windy
 Tion Medon	Utapau	temperate, arid, windy
 
 
-# ex09: 
+# ex09: ORM Foreign Key
 
 127.0.0.1:8000/ex09/display         tabla con personas cuyo planeta es ventoso o moderamente ventoso
 
-Carga de registros a la base de datos
+* Carga de registros a la base de datos
 python manage.py loaddata ex09/fixtures/ex09_initial_data.json 
 
 python manage.py shell
 Para verificar los registros en la tabla Planets
 from ex09.models import Planets
 Planets.objects.all()
+<QuerySet [<Planets: Alderaan>, <Planets: Yavin IV>, <Planets: Bespin>, <Planets: Endor>, <Planets: Kamino>, <Planets: Utapau>, <Planets: Mustafar>, <Planets: Rodia>, <Planets: Kashyyyk>, <Planets: Polis Massa>, <Planets: Bestine IV>, <Planets: Chandrila>, <Planets: Ryloth>, <Planets: Glee Anselm>, <Planets: Tatooine>, <Planets: Hoth>, <Planets: Dagobah>, <Planets: Mygeeto>, <Planets: Felucia>, <Planets: Cato Neimoidia>, '...(remaining elements truncated)...']>
 
 Para verificar los registros en la tabla People:
 from ex09.models import People
 People.objects.all()
+<QuerySet [<People: Obi-Wan Kenobi>, <People: Anakin Skywalker>, <People: Chewbacca>, <People: Han Solo>, <People: Greedo>, <People: Jabba Desilijic Tiure>, <People: Wedge Antilles>, <People: Yoda>, <People: Palpatine>, <People: Boba Fett>, <People: IG-88>, <People: Bossk>, <People: Lando Calrissian>, <People: Lobot>, <People: Ackbar>, <People: Wicket Systri Warrick>, <People: Qui-Gon Jinn>, <People: Jar Jar Binks>, <People: Darth Maul>, <People: Ayla Secura>, '...(remaining elements truncated)...']>
+>>> 
 
 verificar la creacion de las tablas
-djangotraining=# \d ex09_planets;
 
-                                          Table "public.ex09_planets"
-     Column      |            Type             | Collation | Nullable |                 Default                  
------------------+-----------------------------+-----------+----------+------------------------------------------
- id              | integer                     |           | not null | nextval('ex09_planets_id_seq'::regclass)
- name            | character varying(64)       |           | not null | 
- climate         | character varying(255)      |           |          | 
- diameter        | integer                     |           |          | 
- orbital_period  | integer                     |           |          | 
- population      | bigint                      |           |          | 
- rotation_period | integer                     |           |          | 
- surface_water   | double precision            |           |          | 
- terrain         | text                        |           |          | 
- created         | timestamp without time zone |           |          | CURRENT_TIMESTAMP
- updated         | timestamp without time zone |           |          | CURRENT_TIMESTAMP
-Indexes:
-    "ex09_planets_pkey" PRIMARY KEY, btree (id)
-    "ex09_planets_name_key" UNIQUE CONSTRAINT, btree (name)
-Referenced by:
-    TABLE "ex09_people" CONSTRAINT "ex09_people_homeworld_id_fkey" FOREIGN KEY (homeworld_id) REFERENCES ex09_planets(id) ON DELETE SET NULL
+>>> from ex09.models import People
+>>> print(Planets._meta.fields)
+(<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
 
-djangotraining=# \d ex09_people;
-                                         Table "public.ex09_people"
-    Column    |            Type             | Collation | Nullable |                 Default                 
---------------+-----------------------------+-----------+----------+-----------------------------------------
- id           | integer                     |           | not null | nextval('ex09_people_id_seq'::regclass)
- name         | character varying(64)       |           | not null | 
- birth_year   | character varying(20)       |           |          | 
- gender       | character varying(32)       |           |          | 
- eye_color    | character varying(20)       |           |          | 
- hair_color   | character varying(20)       |           |          | 
- height       | integer                     |           |          | 
- mass         | double precision            |           |          | 
- homeworld_id | integer                     |           |          | 
- created      | timestamp without time zone |           |          | CURRENT_TIMESTAMP
- updated      | timestamp without time zone |           |          | CURRENT_TIMESTAMP
-Indexes:
-    "ex09_people_pkey" PRIMARY KEY, btree (id)
-Foreign-key constraints:
-    "ex09_people_homeworld_id_fkey" FOREIGN KEY (homeworld_id) REFERENCES ex09_planets(id) ON DELETE SET NULL
-
+>>> from ex09.models import Planets
+>>> print(Planets._meta.fields)
+(<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
+>>> 
 
 # ex10: ORM Many to Many
 
 http://127.0.0.1:8000/ex10/         sale desplegable para haber busqueda
 
-Carga de registros
-python manage.py loaddata ex10/fixtures/ex10_initial_data.json
 
+* Carga de registros
+python manage.py loaddata ex10/fixtures/ex10_initial_data.json
+_initial_data.json
+Installed 154 object(s) from 1 fixture(s)
+
+psql -U djangouser -d djangotraining

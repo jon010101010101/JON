@@ -63,6 +63,7 @@
         <div class="message">{{ message }}</div>
     {% endif %}
     <form method="post">
+        {% csrf_token %}
         <select name="title">
             {% for title in titles %}
                 <option value="{{ title }}">{{ title }}</option>

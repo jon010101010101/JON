@@ -26,7 +26,6 @@ def get_db_connection():
         print(f"Database connection error: {e}")
         return None
 
-@csrf_exempt
 def init(request):
     conn = get_db_connection()
     if not conn:
@@ -86,7 +85,6 @@ def init(request):
             cursor.close()
             conn.close()
 
-@csrf_exempt
 def populate(request):
     conn = get_db_connection()
     if not conn:

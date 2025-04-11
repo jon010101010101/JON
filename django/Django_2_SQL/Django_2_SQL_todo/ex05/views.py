@@ -3,9 +3,13 @@ from django.http import HttpResponse
 from .models import Movies
 from django.db import IntegrityError
 from datetime import date
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt # Eliminar esta línea
 
 def populate(request):
+    """
+    Inserta datos de películas en la base de datos usando el ORM de Django.
+    Inserts movie data into the database using Django's ORM.
+    """
     data = [
         {"episode_nb": 1, "title": "The Phantom Menace", "director": "George Lucas", "producer": "Rick McCallum", "release_date": date(1999, 5, 19)},
         {"episode_nb": 2, "title": "Attack of the Clones", "director": "George Lucas", "producer": "Rick McCallum", "release_date": date(2002, 5, 16)},
@@ -36,11 +40,18 @@ def populate(request):
     return HttpResponse("OK")
 
 def display(request):
+    """
+    Muestra todas las películas en una tabla HTML.
+    Displays all movies in an HTML table.
+    """
     movies = Movies.objects.all()
     return render(request, 'ex05/display.html', {'movies': movies})
 
-@csrf_exempt
 def remove(request):
+    """
+    Muestra un formulario para eliminar películas y maneja la eliminación.
+    Displays a form to remove movies and handles the deletion.
+    """
     message = None
     if request.method == 'POST':
         title_to_remove = request.POST.get('title')
@@ -53,3 +64,8 @@ def remove(request):
 
     movies = Movies.objects.all()
     return render(request, 'ex05/remove.html', {'movies': movies, 'message': message})
+
+
+
+# Al eliminar la decoración @csrf_exempt (la tenia en remove) de la vista remove, estás permitiendo 
+# que Django aplique su protección CSRF por defecto.
