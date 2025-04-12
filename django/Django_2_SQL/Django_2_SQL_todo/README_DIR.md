@@ -392,3 +392,42 @@ _initial_data.json
 Installed 154 object(s) from 1 fixture(s)
 
 psql -U djangouser -d djangotraining
+
+
+# OTROS
+
+Dentro del proyecto
+
+iniciar servidor
+pg_ctl -D ~/postgresql_data -l logfile start
+verificar 
+pg_ctl -D ~/postgresql_data status
+para conectarse a la base de datos
+psql -U djangouser -d d42
+psql -U djangouser -d djangotraining
+verificar el estadio del servicio
+ps aux | grep postgres
+
+python manage.py runserver
+
+# pkill -f "python manage.py runserver"
+# lsof -i :8000
+# kill -9 38140
+
+verificar que puerto esta oyendo
+netstat -tuln | grep 5432
+
+
+* borrar migrations
+djangotraining=# from django.db import connection
+with connection.cursor() as cursor:
+    cursor.execute("DELETE FROM django_migrations;")
+
+* para verificar deberia salir 0 ......
+djangotraining-# from django.db import connection
+
+with connection.cursor() as cursor:
+    cursor.execute("SELECT COUNT(*) FROM django_migrations WHERE app = 'ex07';")
+    count = cursor.fetchone()[0]  # Obtener el número directamente
+
+print(count)  # Imprimir el número directamente

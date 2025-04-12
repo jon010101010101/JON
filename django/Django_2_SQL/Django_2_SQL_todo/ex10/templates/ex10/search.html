@@ -54,6 +54,13 @@
             margin-bottom: 20px;
             border-radius: 4px;
         }
+        .error {
+            background-color: #cc6b62; /* Fondo rojo*/
+            color: white; /* Texto blanco */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
         table {
             border-collapse: collapse; /* Colapsa los bordes de la tabla */
             width: 80%; /* Ancho de la tabla al 80% del contenedor */
@@ -83,62 +90,75 @@
 <body>
     <h1>Search Movies and Characters</h1>
 
-    <!-- Formulario -->
-    <form method="POST">
-        {% csrf_token %}
-        
-        <label for="min_date">Movies Minimum Release Date:</label>
-        <input type="date" name="min_release_date" id="min_date" required>
+   <!-- Formulario -->
+<form method="POST">
+    {% csrf_token %}
+    
+    <label for="min_date">Movies Minimum Release Date:</label>
+    <input type="date" name="min_release_date" id="min_date" required>
+    {{ form.min_release_date.errors }}
 
-        <label for="max_date">Movies Maximum Release Date:</label>
-        <input type="date" name="max_release_date" id="max_date" required>
+    <label for="max_date">Movies Maximum Release Date:</label>
+    <input type="date" name="max_release_date" id="max_date" required>
+    {{ form.max_release_date.errors }}
 
-        <label for="planet_diameter">Planet Diameter Greater Than:</label>
-        <input type="number" name="planet_diameter_greater_than" id="planet_diameter" required>
+    <label for="planet_diameter">Planet Diameter Greater Than:</label>
+    <input type="number" name="planet_diameter_greater_than" id="planet_diameter" required>
+    {{ form.planet_diameter_greater_than.errors }}
 
-        <label for="gender">Character Gender:</label>
-        <select name="character_gender" id="gender" required>
-            <option value="">Select Gender</option>
-            {% for gender in form.character_gender.field.choices %}
-                <option value="{{ gender.0 }}">{{ gender.1 }}</option>
+    <label for="gender">Character Gender:</label>
+    <select name="character_gender" id="gender" required>
+    <option value="" disabled selected>Select Gender</option> <!-- Opción no seleccionable -->
+    {% for gender in form.character_gender.field.choices %}
+        <option value="{{ gender.0 }}">{{ gender.1 }}</option>
+    {% endfor %}
+    </select>
+    {{ form.character_gender.errors }}
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- Mensaje de éxito -->
+{% if message %}
+    <div class="message">{{ message }}</div>
+{% endif %}
+
+<!-- Mensaje de error -->
+{% if errors %}
+    <div class="error">
+        {% for field, error_list in errors.items %}
+            <p>{{ field }}: {{ error_list|join:", " }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Resultados -->
+{% if results %}
+    <h2>Results:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                <th>Character Name</th>
+                <th>Gender</th>
+                <th>Homeworld Name</th>
+                <th>Homeworld Diameter</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result.movie_title }}</td>
+                <td>{{ result.character_name }}</td>
+                <td>{{ result.character_gender }}</td>
+                <td>{{ result.homeworld_name }}</td>
+                <td>{{ result.homeworld_diameter }}</td>
+            </tr>
             {% endfor %}
-        </select>
-
-        <button type="submit">Search</button>
-    </form>
-
-    <!-- Mensaje -->
-    {% if message %}
-        <div class="message">{{ message }}</div>
-    {% endif %}
-
-    <!-- Resultados -->
-    {% if results %}
-        <h2>Results:</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Movie Title</th>
-                    <th>Character Name</th>
-                    <th>Gender</th>
-                    <th>Homeworld Name</th>
-                    <th>Homeworld Diameter</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for result in results %}
-                <tr>
-                    <td>{{ result.movie_title }}</td>
-                    <td>{{ result.character_name }}</td>
-                    <td>{{ result.character_gender }}</td>
-                    <td>{{ result.homeworld_name }}</td>
-                    <td>{{ result.homeworld_diameter }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No results found.</p>
-    {% endif %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
 </body>
 </html>

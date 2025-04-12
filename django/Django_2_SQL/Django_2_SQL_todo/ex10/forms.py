@@ -20,7 +20,7 @@ class SearchForm(forms.Form):
     )
 
     # Obtener géneros únicos de la base de datos y agregar placeholder
-    gender_choices = [('', 'Gender')]  # Placeholder no seleccionable
+    gender_choices = [('', 'Select Gender')]  # Placeholder no seleccionable
     gender_choices += [(gender, gender) for gender in People.objects.values_list('gender', flat=True).distinct() if gender]
 
     character_gender = forms.ChoiceField(
@@ -45,4 +45,3 @@ class SearchForm(forms.Form):
                 self.add_error('max_release_date', f"Date cannot exceed current year ({current_year}).")
 
         return cleaned_data
-
