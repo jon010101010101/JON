@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Characters and Planets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Tipo de letra general */
+            background-color: #f4f4f4; /* Color de fondo */
+            color: #333; /* Color del texto */
+            padding: 20px; /* Espacio alrededor del contenido */
+        }
+        table {
+            border-collapse: collapse; /* Colapsa los bordes de la tabla */
+            width: 100%; /* Ancho de la tabla al 100% del contenedor */
+            margin: 20px auto; /* Margen superior e inferior, centrado horizontalmente */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            background-color: white; /* Color de fondo de la tabla */
+        }
+        th, td {
+            padding: 8px 10px; /* Reduce el padding para que sea más pequeño */
+            text-align: left; /* Alineación del texto a la izquierda */
+            border-bottom: 1px solid #ddd; /* Borde inferior de las celdas */
+            font-size: 12px; /* Tamaño de letra más pequeño */
+        }
+        th {
+            background-color: #007bff; /* Color de fondo de las cabeceras */
+            color: white; /* Color del texto de las cabeceras */
+            font-weight: bold; /* Texto en negrita */
+        }
+        tr:nth-child(even) {
+            background-color: #e0f2f7; /* Color de fondo para filas pares */
+        }
+        tr:hover {
+            background-color: #f5f5f5; /* Color de fondo al pasar el ratón */      
+        }
+    </style>
+</head>
+<body>
+    <h1>Characters and their Planets</h1> <!-- Encabezado principal -->
+    {% if data %}
+    <table>
+        <thead>
+            <tr>
+                <th>Character</th> <!-- Cabecera para el nombre del personaje -->
+                <th>Planet</th> <!-- Cabecera para el nombre del planeta -->
+                <th>Climate</th> <!-- Cabecera para el clima del planeta -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %} {# Iterar sobre cada fila en la lista 'data' #}
+            <tr>
+                <td>{{ row.0 }}</td> {# Mostrar el nombre del personaje (índice 0) #}
+                <td>{{ row.1 }}</td> {# Mostrar el nombre del planeta (índice 1) #}
+                <td>{{ row.2 }}</td> {# Mostrar el clima del planeta (índice 2) #}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No data available.</p> <!-- Mensaje si no hay datos disponibles -->
+    {% endif %}
+</body>
+</html>

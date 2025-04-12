@@ -383,7 +383,7 @@ verificar la creacion de las tablas
 
 # ex10: ORM Many to Many
 
-http://127.0.0.1:8000/ex10/         sale desplegable para haber busqueda
+http://127.0.0.1:8000/ex10/         sale desplegable para haber busqueda y un listado con la busqueda
 
 
 * Carga de registros

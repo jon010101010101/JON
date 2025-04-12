@@ -164,6 +164,10 @@ for movie in movies:
 
 DELETE FROM django_migrations WHERE app = 'ex01';
 
+python manage.py migrate --fake para borrar rastro de migrations
+
+
+
 DELETE FROM ex02_movies;
 
 \d ex00_movies
@@ -181,3 +185,6 @@ with connection.cursor() as cursor:
     count = cursor.fetchone()[0]  # Obtener el número directamente
 
 print(count)  # Imprimir el número directamente
+
+
+
