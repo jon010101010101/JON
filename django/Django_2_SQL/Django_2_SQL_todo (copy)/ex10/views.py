@@ -32,7 +32,7 @@ def search_view(request):
 
             # Generar combinaciones únicas de resultados
             for movie in movies:
-                for person in movie.characters.filter(pk__in=people):
+                for person in movie.characters.filter(gender=gender):
                     results.append({
                         'movie_title': movie.title,
                         'character_name': person.name,
@@ -52,7 +52,15 @@ def search_view(request):
 
             if not results:
                 message = "No results found."
+        else:
+            # Si el formulario no es válido, se pasan los errores automáticamente
+            message = "Please correct the errors below."
     else:
         form = SearchForm()
 
-    return render(request, 'ex10/search.html', {'form': form, 'results': results, 'message': message})
+    return render(request, 'ex10/search.html', {
+        'form': form,
+        'results': results,
+        'message': message,
+        'errors': form.errors if not form.is_valid() else None  # Pasar errores si el formulario no es válido
+    })

@@ -188,9 +188,3 @@ print(count)  # Imprimir el número directamente
 
 
 
-MOVIE TITLE          CHARACTER NAME      GENDER      HOMEWORLD NAME      HOMEWORLD DIAMETER
-A New Hope           Leia Organa         Female      Alderaan             12500
-The Empire Strikes Back Leia Organa      Female      Alderaan             12500
-Return of the Jedi   Leia Organa         Female      Alderaan             12500
-Return of the Jedi   Mon Mothma          Female      Chandrila            13500
-The Phantom Menace   Padmé Amidala       Female      Naboo                12120

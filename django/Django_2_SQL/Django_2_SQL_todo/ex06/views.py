@@ -86,97 +86,80 @@ def init(request):
             conn.close()
 
 def populate(request):
-    conn = get_db_connection()
-    if not conn:
-        return HttpResponse("Error: Could not connect to the database")
-
-    json_file_path = os.path.join(settings.BASE_DIR, 'data', 'opening_crawl.json')
-
     try:
-        with open(json_file_path, 'r') as file:
-            movies_data = json.load(file)
+        conn = psycopg2.connect(
+            dbname=settings.DATABASES['default']['NAME'],
+            user=settings.DATABASES['default']['USER'],
+            password=settings.DATABASES['default']['PASSWORD'],
+            host=settings.DATABASES['default']['HOST'],
+            port=settings.DATABASES['default']['PORT']
+        )
+        cur = conn.cursor()
 
-    except FileNotFoundError:
-        return HttpResponse("Error: JSON file not found.")
+        # Borrar todos los opening_crawl existentes
+        cur.execute("UPDATE ex06_movies SET opening_crawl = NULL;")
+        conn.commit()
 
-    try:
-        cursor = conn.cursor()
-        insert_query = """
-            INSERT INTO ex06_movies (title, episode_nb, opening_crawl, director, producer, release_date)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            ON CONFLICT (episode_nb) DO NOTHING;  -- Ignorar si ya existe
-        """
+        # Cargar los datos desde el archivo JSON
+        json_file_path = os.path.join(settings.BASE_DIR, 'data', 'opening_crawl.json')
 
+        with open(json_file_path, 'r') as f:
+            movies_data = json.load(f)
+
+        # Insertar datos desde el archivo JSON
         for title, opening_crawl in movies_data.items():
-            movie_details = {
-                "The Phantom Menace": {
-                    "episode_nb": 1,
-                    "director": "George Lucas",
-                    "producer": "Rick McCallum",
-                    "release_date": "1999-05-19"
-                },
-                "Attack of the Clones": {
-                    "episode_nb": 2,
-                    "director": "George Lucas",
-                    "producer": "Rick McCallum",
-                    "release_date": "2002-05-16"
-                },
-                "Revenge of the Sith": {
-                    "episode_nb": 3,
-                    "director": "George Lucas",
-                    "producer": "Rick McCallum",
-                    "release_date": "2005-05-19"
-                },
-                "A New Hope": {
-                    "episode_nb": 4,
-                    "director": "George Lucas",
-                    "producer": "Gary Kurtz, Rick McCallum",
-                    "release_date": "1977-05-25"
-                },
-                "The Empire Strikes Back": {
-                    "episode_nb": 5,
-                    "director": "Irvin Kershner",
-                    "producer": "Gary Kurtz, Rick McCallum",
-                    "release_date": "1980-05-17"
-                },
-                "Return of the Jedi": {
-                    "episode_nb": 6,
-                    "director": "Richard Marquand",
-                    "producer": "Howard G. Kazanjian, George Lucas, Rick McCallum",
-                    "release_date": "1983-05-25"
-                },
-                "The Force Awakens": {
-                    "episode_nb": 7,
-                    "director": "J. J. Abrams",
-                    "producer": "Kathleen Kennedy, J. J. Abrams, Bryan Burk",
-                    "release_date": "2015-12-11"
-                }
-            }
+            if title == "The Phantom Menace":
+                episode_nb = 1
+                director = "George Lucas"
+                producer = "Rick McCallum"
+                release_date = "1999-05-19"
+            elif title == "Attack of the Clones":
+                episode_nb = 2
+                director = "George Lucas"
+                producer = "Rick McCallum"
+                release_date = "2002-05-16"
+            elif title == "Revenge of the Sith":
+                episode_nb = 3
+                director = "George Lucas"
+                producer = "Rick McCallum"
+                release_date = "2005-05-19"
+            elif title == "A New Hope":
+                episode_nb = 4
+                director = "George Lucas"
+                producer = "Gary Kurtz, Rick McCallum"
+                release_date = "1977-05-25"
+            elif title == "The Empire Strikes Back":
+                episode_nb = 5
+                director = "Irvin Kershner"
+                producer = "Gary Kurtz, Rick McCallum"
+                release_date = "1980-05-17"
+            elif title == "Return of the Jedi":
+                episode_nb = 6
+                director = "Richard Marquand"
+                producer = "Howard G. Kazanjian, George Lucas, Rick McCallum"
+                release_date = "1983-05-25"
+            elif title == "The Force Awakens":
+                episode_nb = 7
+                director = "J. J. Abrams"
+                producer = "Kathleen Kennedy, J. J. Abrams, Bryan Burk"
+                release_date = "2015-12-11"
 
-            if title in movie_details:
-                details = movie_details[title]
-                cursor.execute(insert_query, (
-                    title,
-                    details["episode_nb"],
-                    opening_crawl,
-                    details["director"],
-                    details["producer"],
-                    details["release_date"]
-                ))
+            cur.execute("""
+                INSERT INTO ex06_movies (episode_nb, title, director, producer, release_date, opening_crawl)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (episode_nb) DO UPDATE
+                SET title = %s, director = %s, producer = %s, release_date = %s, opening_crawl = %s;
+            """, (episode_nb, title, director, producer, release_date, opening_crawl,
+                  title, director, producer, release_date, opening_crawl))
 
         conn.commit()
+        cur.close()
+        conn.close()
+
         return HttpResponse("OK")
 
-    except psycopg2.Error as e:
-        conn.rollback()
+    except Exception as e:
         return HttpResponse(f"Error: {e}")
-
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
-
-from django.shortcuts import render
 
 def display(request):
     conn = get_db_connection()

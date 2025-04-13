@@ -1,142 +1,426 @@
+# ex00:   SQL  building a table
 
-Dentro de cada directorio a entregar (ex00 a ex10)
+127.0.0.1:8000/ex00/init  OK
+Demostración de que se ha creado la tabla
+psql -U djangouser -d djangotraining
+djangotraining=# \d ex00_movies
+                       Table "public.ex00_movies"
+    Column     |          Type          | Collation | Nullable | Default 
+---------------+------------------------+-----------+----------+---------
+ title         | character varying(64)  |           | not null | 
+ episode_nb    | integer                |           | not null | 
+ opening_crawl | text                   |           |          | 
+ director      | character varying(32)  |           | not null | 
+ producer      | character varying(128) |           | not null | 
+ release_date  | date                   |           | not null | 
+Indexes:
+    "ex00_movies_pkey" PRIMARY KEY, btree (episode_nb)
+    "ex00_movies_title_key" UNIQUE CONSTRAINT, btree (title)
 
-* para crear la estructura del proyecto *
-Este comando se utiliza para crear la estructura básica de un proyecto Django. Genera archivos como manage.py, settings.py, urls.py, etc., que son necesarios para configurar y gestionar el proyecto. Este comando debe ejecutarse una vez por proyecto, en el directorio donde quieres que se cree el proyecto.
+# ex01: ORM  building a table
 
-django-admin startproject d00 .   
-(el punto al final es importante para que no cree otra subcarpeta)
+Se prueba con Shell por que esta hecho con ORM
+python manage.py shell 
 
-
-*Para crear la estructura de la app*
-Este comando se utiliza para crear la estructura básica de una aplicación Django dentro del proyecto. Genera archivos como apps.py, views.py, models.py, etc., que son necesarios para desarrollar funcionalidades específicas dentro del proyecto. Este comando debe ejecutarse cada vez que quieras crear una nueva aplicación o funcionalidad.
-
-python manage.py startapp ex00_app
-
-estructura que se crea:
-
-ex00/
-├── manage.py                 # Archivo principal para comandos Django
-├── d00_project/              # Configuración global del proyecto
-│   ├── __init__.py
-│   ├── settings.py           # Configuración global del proyecto
-│   ├── urls.py               # URLs principales del proyecto
-│   ├── wsgi.py
-│   ├── asgi.py
-├── ex00_app/                 # Aplicación específica para el ejercicio ex00
-│   ├── __init__.py           # Archivo que define este módulo como paquete Python.
-│   ├── admin.py              # Configuración del panel de administración (opcional).
-│   ├── apps.py               # Configuración de la aplicación ex00_app.
-│   ├── models.py             # Definición de modelos (opcional).
-│   ├── tests.py              # Pruebas unitarias (opcional).
-│   ├── views.py              # Lógica para las vistas del ejercicio ex00.
-
-En d00/settings.py
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'ex00_app',  # Registrar la aplicación ex00_app.
-]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd00_project',  # Debe coincidir con POSTGRES_DB en docker-compose.yml
-        'USER': 'djangouser',   # Debe coincidir con POSTGRES_USER en docker-compose.yml
-        'PASSWORD': 'secret',   # Debe coincidir con POSTGRES_PASSWORD en docker-compose.yml
-        'HOST': 'db',           # Nombre del servicio definido en docker-compose.yml
-        'PORT': '5432',
-    }
-}
+>>> from ex01.models import Movies
+>>> print(Movies._meta.db_table)  # This will print the table name
+ex01_movies
+>>> print(Movies._meta.get_fields())  # This will print a list of the model's fields
+(<django.db.models.fields.CharField: title>, <django.db.models.fields.IntegerField: episode_nb>, <django.db.models.fields.TextField: opening_crawl>, <django.db.models.fields.CharField: director>, <django.db.models.fields.CharField: producer>, <django.db.models.fields.DateField: release_date>)
 
 
-d00/urls.py
-from django.contrib import admin
-from django.urls import path, include
+# ex02:   SQL   Data insertion
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('ex00_app.urls')),  # Conectar las URLs de ex00_app.
-]
+127.0.0.1:8000/ex02/init        OK
 
-Crear archivo ex00_app/urls.py
+127.0.0.1:8000/ex02/populate    OK
 
-from django.urls import path
-from . import views
+127.0.0.1:8000/ex02/display     tabla con peliculas y directores
 
-urlpatterns = [
-    path('init/', views.init, name='init'),
-]
-
-ex00_app/views.py
-
-from django.http import HttpResponse
-import psycopg2
-
-def init(request):
-    try:
-        # Conexión a la base de datos PostgreSQL
-        conn = psycopg2.connect(
-            dbname="d00_project",  # Nombre de la base de datos
-            user="djangouser",     # Usuario de la base de datos
-            password="secret",     # Contraseña del usuario
-            host="db",             # Nombre del servicio definido en docker-compose.yml
-            port="5432"            # Puerto de PostgreSQL
-        )
-        cursor = conn.cursor()
-
-        # Crear una tabla si no existe
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS ex00_movies (
-            episode_nb SERIAL PRIMARY KEY,
-            title VARCHAR(64) UNIQUE NOT NULL,
-            opening_crawl TEXT,
-            director VARCHAR(32) NOT NULL,
-            producer VARCHAR(128) NOT NULL,
-            release_date DATE NOT NULL
-        );
-        """
-        cursor.execute(create_table_query)
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        return HttpResponse("OK")  # Respuesta exitosa
-
-    except Exception as e:
-        return HttpResponse(f"Error: {str(e)}", status=500)  # Respuesta con error
+Demostración de que se ha creado la tabla
+psql -U djangouser -d djangotraining
+djangotraining=# \d ex02_movies
+                       Table "public.ex02_movies"
+    Column     |          Type          | Collation | Nullable | Default 
+---------------+------------------------+-----------+----------+---------
+ episode_nb    | integer                |           | not null | 
+ title         | character varying(64)  |           | not null | 
+ opening_crawl | text                   |           |          | 
+ director      | character varying(32)  |           | not null | 
+ producer      | character varying(128) |           | not null | 
+ release_date  | date                   |           | not null | 
+Indexes:
+    "ex02_movies_pkey" PRIMARY KEY, btree (episode_nb)
+    "ex02_movies_title_key" UNIQUE CONSTRAINT, btree (title)
 
 
-Desde la raiz, para levantar el docker
-docker-compose up --build
+# ex03:  ORM   Data insertion
+
+127.0.0.1:8000/ex03/populate    OK
+
+127.0.0.1:8000/ex03/display     tabla con peliculas y directores
+
+(Django) ➜  Django_2_SQL_todo git:(main) ✗ python manage.py shell 
+Python 3.10.16 | packaged by conda-forge | (main, Dec  5 2024, 14:16:10) [GCC 13.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from ex03.models import Movies
+>>> print(Movies._meta.db_table)
+ex03_movies
+>>> print(Movies._meta.get_fields())
+(<django.db.models.fields.CharField: title>, <django.db.models.fields.IntegerField: episode_nb>, <django.db.models.fields.TextField: opening_crawl>, <django.db.models.fields.CharField: director>, <django.db.models.fields.CharField: producer>, <django.db.models.fields.DateField: release_date>)
+>>> for movie in Movies.objects.all():
+...     print(movie.episode_nb, movie.title, movie.director, movie.producer, movie.release_date)
+... 
+1 The Phantom Menace George Lucas Rick McCallum 1999-05-19
+2 Attack of the Clones George Lucas Rick McCallum 2002-05-16
+3 Revenge of the Sith George Lucas Rick McCallum 2005-05-19
+4 A New Hope George Lucas Gary Kurtz, Rick McCallum 1977-05-25
+5 The Empire Strikes Back Irvin Kershner Gary Kurtz, Rick McCallum 1980-05-17
+6 Return of the Jedi Richard Marquand Howard G. Kazanjian, George Lucas, Rick McCallum 1983-05-25
+7 The Force Awakens J. J. Abrams Kathleen Kennedy, J. J. Abrams, Bryan Burk 2015-12-11
+>>> 
 
 
-docker-compose down  # Detener y eliminar los contenedores existentes
-docker-compose up --build  # Reconstruir y levantar los contenedores
+# ex04:  SQL   Data deleting
+
+127.0.0.1:8000/ex04/init        OK
+
+127.0.0.1:8000/ex04/populate    OK
+
+127.0.0.1:8000/ex04/display     tabla Movies con peliculas y directores
+
+127.0.0.1:8000/ex04/remove      sale desplegale y boton. Borrar una. 
+
+para comprobar borrado 
+psql -U djangouser -d djangotraining
+SELECT * FROM ex04_movies; salen las peliculas. 
+Luego ejecutar populate para que las vuelva a poner todas. Se puede volver a comprobar que ha cargado todas otra vez
+
+
+djangotraining=# \d ex04_movies
+                       Table "public.ex04_movies"
+    Column     |          Type          | Collation | Nullable | Default 
+---------------+------------------------+-----------+----------+---------
+ title         | character varying(64)  |           | not null | 
+ episode_nb    | integer                |           | not null | 
+ opening_crawl | text                   |           |          | 
+ director      | character varying(32)  |           | not null | 
+ producer      | character varying(128) |           | not null | 
+ release_date  | date                   |           | not null | 
+Indexes:
+    "ex04_movies_pkey" PRIMARY KEY, btree (episode_nb)
+    "ex04_movies_title_key" UNIQUE CONSTRAINT, btree (title)
+
+ddjangotraining=# SELECT title FROM ex04_movies;
+          title          
+-------------------------
+ The Phantom Menace
+ Attack of the Clones
+ Revenge of the Sith
+ A New Hope
+ The Empire Strikes Back
+ Return of the Jedi
+ The Force Awakens
+(7 rows)
+
+cuando se ha eliminado una 
+
+djangotraining=# SELECT title FROM ex04_movies;
+          title          
+-------------------------
+ The Phantom Menace
+ Attack of the Clones
+ Revenge of the Sith
+ The Empire Strikes Back
+ Return of the Jedi
+ The Force Awakens
+(6 rows)
+
+djangotraining=# 
+
+Para volver a cargar ejecutar populate display y remove y se vuelven a cargar
+
+# ex05:  ORM   Data deleting
+
+127.0.0.1:8000/ex05/populate    OK
+
+127.0.0.1:8000/ex05/display     tabla Movies con peliculas y directores
+
+127.0.0.1:8000/ex05/remove      sale desplegale y boton.
+
+* Para probar que ha borrado
+python manage.py shell
+from ex05.models import Movies
+* Cuenta las peliculas que estan
+Movies.objects.count()
+* Ver si una pelicula en concreto esta eliminada
+Movies.objects.filter(title="The Phantom Menace").exists() da True o False
+* Ver la peliculas que quedan
+remaining_movies = Movies.objects.all()
+for movie in remaining_movies:
+    print(movie.title)
+
+>>> from ex05.models import Movies
+>>> Movies.objects.count()
+7
+remaining_movies = Movies.objects.all()
+for movie in remaining_movies:
+     print(movie.title)
+... 
+The Phantom Menace
+Attack of the Clones
+Revenge of the Sith
+A New Hope
+The Empire Strikes Back
+Return of the Jedi
+The Force Awakens
+>>> Movies.objects.count()
+6
+remaining_movies = Movies.objects.all()
+for movie in remaining_movies:
+     print(movie.title)
+... 
+The Phantom Menace
+Attack of the Clones
+Revenge of the Sith
+The Empire Strikes Back
+Return of the Jedi
+The Force Awakens
+>>> 
+
+
+# ex06:   SQL   Updating a data
+
+127.0.0.1:8000/ex06/init        OK
+
+127.0.0.1:8000/ex06/populate    OK
+
+127.0.0.1:8000/ex06/display     tabla movies
+
+127.0.0.1:8000/ex06/update      se hace con SQL. desplegable seleccion peliculas para elegir y poder cambierle el resumen de la pelicula.
+y se le puede poner nuevo 
+
+para comprobar borrado 
+psql -U djangouser -d d42
+SELECT * FROM ex06_movies; salen las peliculas. 
+Luego ejecutar populate para que las vuelva a poner todas. Se puede volver a comprobar que ha cargado todas otra vez
+
+para volver a cargar original 
+
+
+# ex07:  ORM  Updating a data
+
+127.0.0.1:8000/ex07/populate    OK, y carga opening_crawl 
+
+127.0.0.1:8000/ex07/display     tabla movies
+
+127.0.0.1:8000/ex07/update      desplegable seleccion peliculas para elegir y poder cambierle el resumen de la pelicula. 
+
+* Para probar que ha borrado
+python manage.py shell
+from ex07.models import Movie
+* Ver la peliculas que quedan
+movies = Movie.objects.all()
+for movie in movies:
+    print(movie.title, movie.opening_crawl)
+* Ver si una pelicula en concreto esta cambiado el opening_crawl
+
+*para comprobar todas las openings
+movies = Movie.objects.all()
+for movie in movies:
+    print(f"Título: {movie.title}")
+    print(f"Episode: {movie.episode_nb}")
+    print(f"Director: {movie.director}")
+    print(f"Opening Crawl: {movie.opening_crawl}")  # Imprime el opening crawl completo
+    print("---")
 
 
 
-find . -name \*.pyc -delete
-find . -name __pycache__ -delete
+>>> movie = Movie.objects.get(title="The Phantom Menace")
+>>> print(movie.opening_crawl)
+Turmoil has engulfed the
+Galactic Republic. The taxation
+of trade routes to outlying star
+systems is in dispute.
 
+Hoping to resolve the matter
+with a blockade of deadly
+battleships, the greedy Trade
+Federation has stopped all
+shipping to the small planet
+of Naboo.
+
+While the Congress of the
+Republic endlessly debates
+this alarming chain of events,
+the Supreme Chancellor has
+secretly dispatched two Jedi
+Knights, the guardians of
+peace and justice in the
+galaxy, to settle the conflict....
+>>> 
+
+>>> from ex07.models import Movie
+>>> >>> movie = Movie.objects.get(title="The Phantom Menace")
+>>> print(movie.opening_crawl)
+cambio
+>>> 
+
+
+# ex08: SQL  Foreign Key
+
+127.0.0.1:8000/ex08/init   OK: ex08_planets and ex08_people tables successfully created!
+
+comprobacion de que las tablas se han creado con la estructura correcta
+
+djangotraining=# SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+AND table_name IN ('ex08_planets', 'ex08_people');
+  table_name  
+--------------
+ ex08_people
+ ex08_planets
+(2 rows)
+
+
+djangotraining=# SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'ex08_planets';
+   column_name   |     data_type     | is_nullable 
+-----------------+-------------------+-------------
+ id              | integer           | NO
+ name            | character varying | NO
+ climate         | character varying | YES
+ diameter        | integer           | YES
+ orbital_period  | integer           | YES
+ population      | bigint            | YES
+ rotation_period | integer           | YES
+ surface_water   | real              | YES
+ terrain         | character varying | YES
+(9 rows)
+
+
+djangotraining=# SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'ex08_people';
+ column_name  |     data_type     | is_nullable 
+--------------+-------------------+-------------
+ id           | integer           | NO
+ name         | character varying | NO
+ birth_year   | character varying | YES
+ gender       | character varying | YES
+ eye_color    | character varying | YES
+ hair_color   | character varying | YES
+ height       | integer           | YES
+ mass         | real              | YES
+ homeworld_id | integer           | YES
+(9 rows)
+
+
+127.0.0.1:8000/ex08/populate        OK pero ha tenido que cargar las tablas
+
+Comprobacion
+psql -U djangouser -d djangotraining
+
+SELECT * FROM ex08_planets LIMIT 10;
+id |   name    |       climate       | diameter | orbital_period |  population   | rotation_period | surface_water |                 terrain                  
+----+-----------+---------------------+----------+----------------+---------------+-----------------+---------------+------------------------------------------
+  1 | Alderaan  | temperate           |    12500 |            364 |    2000000000 |              24 |            40 | grasslands, mountains
+  2 | Yavin IV  | temperate, tropical |    10200 |           4818 |          1000 |              24 |             8 | jungle, rainforests
+  6 | Hoth      | frozen              |     7200 |            549 |               |              23 |           100 | tundra, ice caves, mountain ranges
+  7 | Dagobah   | murky               |     8900 |            341 |               |              23 |             8 | swamp, jungles
+  8 | Bespin    | temperate           |   118000 |           5110 |       6000000 |              12 |             0 | gas giant
+  9 | Endor     | temperate           |     4900 |            402 |      30000000 |              18 |             8 | forests, mountains, lakes
+ 10 | Naboo     | temperate           |    12120 |            312 |    4500000000 |              26 |            12 | grassy hills, swamps, forests, mountains
+ 11 | Coruscant | temperate           |    12240 |            368 | 1000000000000 |              24 |               | cityscape, mountains
+ 12 | Kamino    | temperate           |    19720 |            463 |    1000000000 |              27 |           100 | ocean
+ 13 | Geonosis  | temperate, arid     |    11370 |            256 |  100000000000 |              30 |             5 | rock, desert, mountain, barren
+
+djangotraining=# SELECT * FROM ex08_people LIMIT 10;
+ id |        name        | birth_year | gender | eye_color |  hair_color   | height | mass | homeworld_id 
+----+--------------------+------------+--------+-----------+---------------+--------+------+--------------
+  1 | Luke Skywalker     | 19BBY      | male   | blue      | blond         |    172 |   77 |           62
+  2 | C-3PO              | 112BBY     | n/a    | yellow    | n/a           |    167 |   75 |           62
+  3 | R2-D2              | 33BBY      | n/a    | red       | n/a           |     96 |   32 |           10
+  4 | Darth Vader        | 41.9BBY    | male   | yellow    | none          |    202 |  136 |           62
+  5 | Leia Organa        | 19BBY      | female | brown     | brown         |    150 |   49 |            1
+  6 | Owen Lars          | 52BBY      | male   | blue      | brown, grey   |    178 |  120 |           62
+  7 | Beru Whitesun lars | 47BBY      | female | blue      | brown         |    165 |   75 |           62
+  8 | R5-D4              |            | n/a    | red       | n/a           |     97 |   32 |           62
+  9 | Biggs Darklighter  | 24BBY      | male   | brown     | black         |    183 |   84 |           62
+ 10 | Obi-Wan Kenobi     | 57BBY      | male   | blue-gray | auburn, white |    182 |   77 |           22
+(10 rows)
+
+
+127.0.0.1:8000/ex08/display     tabla con personajes y planetas
+
+
+Characters and their Planets
+Character	Planet	Climate
+Saesee Tiin	Iktotch	arid, rocky, windy
+Tion Medon	Utapau	temperate, arid, windy
+
+
+# ex09: ORM Foreign Key
+
+127.0.0.1:8000/ex09/display         tabla con personas cuyo planeta es ventoso o moderamente ventoso
+
+* Carga de registros a la base de datos
+python manage.py loaddata ex09/fixtures/ex09_initial_data.json 
+
+Las tablas se han creado con models
+python manage.py shell
+Para verificar los registros en la tabla Planets
+from ex09.models import Planets
+Planets.objects.all()
+<QuerySet [<Planets: Alderaan>, <Planets: Yavin IV>, <Planets: Bespin>, <Planets: Endor>, <Planets: Kamino>, <Planets: Utapau>, <Planets: Mustafar>, <Planets: Rodia>, <Planets: Kashyyyk>, <Planets: Polis Massa>, <Planets: Bestine IV>, <Planets: Chandrila>, <Planets: Ryloth>, <Planets: Glee Anselm>, <Planets: Tatooine>, <Planets: Hoth>, <Planets: Dagobah>, <Planets: Mygeeto>, <Planets: Felucia>, <Planets: Cato Neimoidia>, '...(remaining elements truncated)...']>
+
+Para verificar los registros en la tabla People:
+from ex09.models import People
+People.objects.all()
+<QuerySet [<People: Obi-Wan Kenobi>, <People: Anakin Skywalker>, <People: Chewbacca>, <People: Han Solo>, <People: Greedo>, <People: Jabba Desilijic Tiure>, <People: Wedge Antilles>, <People: Yoda>, <People: Palpatine>, <People: Boba Fett>, <People: IG-88>, <People: Bossk>, <People: Lando Calrissian>, <People: Lobot>, <People: Ackbar>, <People: Wicket Systri Warrick>, <People: Qui-Gon Jinn>, <People: Jar Jar Binks>, <People: Darth Maul>, <People: Ayla Secura>, '...(remaining elements truncated)...']>
+>>> 
+
+verificar la creacion de las tablas
+
+>>> from ex09.models import People
+>>> print(Planets._meta.fields)
+(<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
+
+>>> from ex09.models import Planets
+>>> print(Planets._meta.fields)
+(<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
+>>> 
+
+# ex10: ORM Many to Many
+
+http://127.0.0.1:8000/ex10/         sale desplegable para haber busqueda y un listado con la busqueda
+
+
+* Carga de registros
+python manage.py loaddata ex10/fixtures/ex10_initial_data.json
+_initial_data.json
+Installed 154 object(s) from 1 fixture(s)
+
+psql -U djangouser -d djangotraining
+
+
+# OTROS
 
 Dentro del proyecto
 
-iniciar servidor
+* iniciar servidor
 pg_ctl -D ~/postgresql_data -l logfile start
-verificar 
+* verificar 
 pg_ctl -D ~/postgresql_data status
-para conectarse a la base de datos
-psql -U djangouser -d d42
+* para conectarse a la base de datos
 psql -U djangouser -d djangotraining
-verificar el estadio del servicio
+* verificar el estadio del servicio
 ps aux | grep postgres
 
+* Conectarse Django
 python manage.py runserver
 
 # pkill -f "python manage.py runserver"
@@ -146,31 +430,6 @@ python manage.py runserver
 verificar que puerto esta oyendo
 netstat -tuln | grep 5432
 
-
-
-ex06 Comprobar que se ha cambiado metiendo el texto
-
-python manage.py shell
-
-from ex06.models import Movies
-
-# Consulta todos los registros
-movies = Movies.objects.all()
-
-# Imprime el título y el contenido de cada película
-for movie in movies:
-    print(f"Title: {movie.title}\n{movie.opening_crawl}\n")
-
-
-DELETE FROM django_migrations WHERE app = 'ex01';
-
-python manage.py migrate --fake para borrar rastro de migrations
-
-
-
-DELETE FROM ex02_movies;
-
-\d ex00_movies
 
 * borrar migrations
 djangotraining=# from django.db import connection
@@ -186,5 +445,14 @@ with connection.cursor() as cursor:
 
 print(count)  # Imprimir el número directamente
 
+* Borrar cache
+find . -name \*.pyc -delete
+find . -name __pycache__ -delete
 
-
+* Migrations
+Crear migrations
+python manage.py makemigrations
+Hacerr migrations
+python manage.py migrate
+Ver las migrations realizadas
+python manage.py showmigrations

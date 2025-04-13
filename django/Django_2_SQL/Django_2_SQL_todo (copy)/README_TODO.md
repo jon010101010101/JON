@@ -65,7 +65,7 @@ text
 |   |-- ..
 |   |-- .git
 |   |-- .gitignore
-|   |-- d42  # Nombre del proyecto (reemplaza d42)
+|   |-- d10  # Nombre del proyecto (reemplaza d10)
 |   |   |-- __init__.py
 |   |   |-- settings.py
 |   |   |-- urls.py

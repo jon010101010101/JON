@@ -3236,3 +3236,68 @@
 2025-04-12 16:50:47.330 CEST [3923489] LOG:  checkpoint starting: end-of-recovery immediate wait
 2025-04-12 16:50:47.342 CEST [3923489] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.014 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/3100F18, redo lsn=0/3100F18
 2025-04-12 16:50:47.346 CEST [3923488] LOG:  database system is ready to accept connections
+2025-04-13 09:28:39.691 CEST [4014009] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-13 09:28:39.692 CEST [4014009] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-13 09:28:39.738 CEST [4014009] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-13 09:28:39.762 CEST [4014012] LOG:  database system was interrupted; last known up at 2025-04-12 16:50:47 CEST
+2025-04-13 09:28:39.888 CEST [4014012] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-13 09:28:39.892 CEST [4014012] LOG:  redo starts at 0/3100F90
+2025-04-13 09:28:39.892 CEST [4014012] LOG:  invalid record length at 0/3100FC8: expected at least 24, got 0
+2025-04-13 09:28:39.892 CEST [4014012] LOG:  redo done at 0/3100F90 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-13 09:28:39.899 CEST [4014010] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-13 09:28:39.911 CEST [4014010] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.003 s, total=0.015 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/3100FC8, redo lsn=0/3100FC8
+2025-04-13 09:28:39.915 CEST [4014009] LOG:  database system is ready to accept connections
+2025-04-13 09:34:26.201 CEST [4015915] FATAL:  lock file "postmaster.pid" already exists
+2025-04-13 09:34:26.201 CEST [4015915] HINT:  Is another postmaster (PID 4014009) running in data directory "/home/jurrutia/postgresql_data"?
+2025-04-13 09:35:01.716 CEST [4014009] LOG:  received fast shutdown request
+2025-04-13 09:35:01.720 CEST [4014009] LOG:  aborting any active transactions
+2025-04-13 09:35:01.721 CEST [4014009] LOG:  background worker "logical replication launcher" (PID 4014015) exited with exit code 1
+2025-04-13 09:35:01.722 CEST [4014010] LOG:  shutting down
+2025-04-13 09:35:01.730 CEST [4014010] LOG:  checkpoint starting: shutdown immediate
+2025-04-13 09:35:01.738 CEST [4014010] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.016 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=0 kB; lsn=0/3101078, redo lsn=0/3101078
+2025-04-13 09:35:01.741 CEST [4014009] LOG:  database system is shut down
+2025-04-13 09:35:09.282 CEST [4016006] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-13 09:35:09.282 CEST [4016006] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-13 09:35:09.323 CEST [4016006] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-13 09:35:09.330 CEST [4016009] LOG:  database system was shut down at 2025-04-13 09:35:01 CEST
+2025-04-13 09:35:09.335 CEST [4016006] LOG:  database system is ready to accept connections
+2025-04-13 09:40:09.430 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 09:40:09.445 CEST [4016007] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.005 s, total=0.015 s; sync files=2, longest=0.004 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/3101180, redo lsn=0/3101128
+2025-04-13 10:15:09.952 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 10:15:11.172 CEST [4016007] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.205 s, sync=0.005 s, total=1.220 s; sync files=13, longest=0.004 s, average=0.001 s; distance=31 kB, estimate=31 kB; lsn=0/3108EB0, redo lsn=0/3108E58
+2025-04-13 10:19:31.942 CEST [4019666] ERROR:  syntax error at or near "remaining_movies" at character 1
+2025-04-13 10:19:31.942 CEST [4019666] STATEMENT:  remaining_movies = Movies.objects.all()
+	for movie in remaining_movies:
+	print(movie.title)
+	    print(movie.title)
+	SELECT * FROM ex06_movies;
+2025-04-13 10:20:09.264 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 10:20:10.686 CEST [4016007] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.008 s, total=1.422 s; sync files=13, longest=0.006 s, average=0.001 s; distance=49 kB, estimate=49 kB; lsn=0/3115418, redo lsn=0/31153C0
+2025-04-13 10:35:09.157 CEST [4019666] ERROR:  syntax error at or near "from" at character 1
+2025-04-13 10:35:09.157 CEST [4019666] STATEMENT:  from ex07.models import Movie
+	SELECT * FROM ex07_movies;
+2025-04-13 10:35:09.880 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 10:35:09.996 CEST [4016007] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.006 s, total=0.117 s; sync files=2, longest=0.004 s, average=0.003 s; distance=11 kB, estimate=45 kB; lsn=0/31181D8, redo lsn=0/3118180
+2025-04-13 10:40:10.048 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 10:40:10.161 CEST [4016007] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.004 s, total=0.113 s; sync files=1, longest=0.004 s, average=0.004 s; distance=7 kB, estimate=41 kB; lsn=0/311A100, redo lsn=0/311A0A8
+2025-04-13 10:55:10.396 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 10:55:10.512 CEST [4016007] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.006 s, total=0.116 s; sync files=2, longest=0.006 s, average=0.003 s; distance=8 kB, estimate=38 kB; lsn=0/311C3C8, redo lsn=0/311C370
+2025-04-13 11:00:10.612 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 11:00:16.453 CEST [4016007] LOG:  checkpoint complete: wrote 59 buffers (0.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.828 s, sync=0.003 s, total=5.842 s; sync files=45, longest=0.003 s, average=0.001 s; distance=337 kB, estimate=337 kB; lsn=0/3189180, redo lsn=0/3170AC0
+2025-04-13 11:05:10.554 CEST [4016007] LOG:  checkpoint starting: time
+2025-04-13 11:05:12.080 CEST [4016007] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.508 s, sync=0.008 s, total=1.527 s; sync files=8, longest=0.006 s, average=0.001 s; distance=98 kB, estimate=313 kB; lsn=0/31894F8, redo lsn=0/31894A0
+2025-04-13 17:25:36.107 CEST [4061521] LOG:  starting PostgreSQL 17.4 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 13.3.0-2) 13.3.0, 64-bit
+2025-04-13 17:25:36.108 CEST [4061521] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-13 17:25:36.153 CEST [4061521] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-04-13 17:25:36.180 CEST [4061524] LOG:  database system was interrupted; last known up at 2025-04-13 11:05:12 CEST
+2025-04-13 17:25:36.312 CEST [4061524] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-13 17:25:36.316 CEST [4061524] LOG:  redo starts at 0/31894A0
+2025-04-13 17:25:36.316 CEST [4061524] LOG:  invalid record length at 0/31895A8: expected at least 24, got 0
+2025-04-13 17:25:36.316 CEST [4061524] LOG:  redo done at 0/3189570 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-13 17:25:36.323 CEST [4061522] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-13 17:25:36.334 CEST [4061522] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.004 s, total=0.014 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/31895A8, redo lsn=0/31895A8
+2025-04-13 17:25:36.338 CEST [4061521] LOG:  database system is ready to accept connections
+2025-04-13 17:30:36.434 CEST [4061522] LOG:  checkpoint starting: time
+2025-04-13 17:30:39.165 CEST [4061522] LOG:  checkpoint complete: wrote 28 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.716 s, sync=0.006 s, total=2.732 s; sync files=13, longest=0.005 s, average=0.001 s; distance=115 kB, estimate=115 kB; lsn=0/31A6268, redo lsn=0/31A61D8
+2025-04-13 17:35:36.265 CEST [4061522] LOG:  checkpoint starting: time
+2025-04-13 17:35:37.226 CEST [4061522] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.903 s, sync=0.004 s, total=0.961 s; sync files=2, longest=0.004 s, average=0.002 s; distance=19 kB, estimate=105 kB; lsn=0/31AB160, redo lsn=0/31AB108

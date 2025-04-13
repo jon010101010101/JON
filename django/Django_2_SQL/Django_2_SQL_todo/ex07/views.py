@@ -5,7 +5,6 @@ from django.conf import settings
 import os
 import json
 
-
 def populate(request):
     # Ruta al archivo JSON
     json_file_path = os.path.join(settings.BASE_DIR, 'data', 'opening_crawl.json')
@@ -21,63 +20,74 @@ def populate(request):
 
         # Detalles adicionales de las películas (sin opening_crawl)
         movie_details = {
-    "The Phantom Menace": {
-        "episode_nb": 1,
-        "director": "George Lucas",
-        "producer": "Rick McCallum",
-        "release_date": "1999-05-19"
-    },
-    "Attack of the Clones": {
-        "episode_nb": 2,
-        "director": "George Lucas",
-        "producer": "Rick McCallum",
-        "release_date": "2002-05-16"
-    },
-    "Revenge of the Sith": {
-        "episode_nb": 3,
-        "director": "George Lucas",
-        "producer": "Rick McCallum",
-        "release_date": "2005-05-19"
-    },
-    "A New Hope": {
-        "episode_nb": 4,
-        "director": "George Lucas",
-        "producer": "Gary Kurtz, Rick McCallum",
-        "release_date": "1977-05-25"
-    },
-    "The Empire Strikes Back": {
-        "episode_nb": 5,
-        "director": "Irvin Kershner",
-        "producer": "Gary Kurtz, Rick McCallum",
-        "release_date": "1980-05-17"
-    },
-    "Return of the Jedi": {
-        "episode_nb": 6,
-        "director": "Richard Marquand",
-        "producer": "Howard G. Kazanjian, George Lucas, Rick McCallum",
-        "release_date": "1983-05-25"
-    },
-    "The Force Awakens": {
-        "episode_nb": 7,
-        "director": "J. J. Abrams",
-        "producer": "Kathleen Kennedy, J. J. Abrams, Bryan Burk",
-        "release_date": "2015-12-18"
-    }
-}
+            "The Phantom Menace": {
+                "episode_nb": 1,
+                "director": "George Lucas",
+                "producer": "Rick McCallum",
+                "release_date": "1999-05-19"
+            },
+            "Attack of the Clones": {
+                "episode_nb": 2,
+                "director": "George Lucas",
+                "producer": "Rick McCallum",
+                "release_date": "2002-05-16"
+            },
+            "Revenge of the Sith": {
+                "episode_nb": 3,
+                "director": "George Lucas",
+                "producer": "Rick McCallum",
+                "release_date": "2005-05-19"
+            },
+            "A New Hope": {
+                "episode_nb": 4,
+                "director": "George Lucas",
+                "producer": "Gary Kurtz, Rick McCallum",
+                "release_date": "1977-05-25"
+            },
+            "The Empire Strikes Back": {
+                "episode_nb": 5,
+                "director": "Irvin Kershner",
+                "producer": "Gary Kurtz, Rick McCallum",
+                "release_date": "1980-05-17"
+            },
+            "Return of the Jedi": {
+                "episode_nb": 6,
+                "director": "Richard Marquand",
+                "producer": "Howard G. Kazanjian, George Lucas, Rick McCallum",
+                "release_date": "1983-05-25"
+            },
+            "The Force Awakens": {
+                "episode_nb": 7,
+                "director": "J. J. Abrams",
+                "producer": "Kathleen Kennedy, J. J. Abrams, Bryan Burk",
+                "release_date": "2015-12-18"
+            }
+        }
+        # Borrar todos los opening_crawl antes de insertar nuevos valores
+        Movie.objects.all().update(opening_crawl='')
+
         # Insertar o actualizar registros en la base de datos
         for title, opening_crawl in movies_data.items():
             if title in movie_details:
                 details = movie_details[title]
-                Movie.objects.update_or_create(
-                    episode_nb=details["episode_nb"],
-                    defaults={
-                        'title': title,
-                        'director': details["director"],
-                        'producer': details["producer"],
-                        'release_date': details["release_date"],
-                        'opening_crawl': opening_crawl
-                    }
-                )
+                
+                # Buscar la película
+                try:
+                    movie = Movie.objects.get(episode_nb=details["episode_nb"])
+                    # Asignar el nuevo opening_crawl
+                    movie.opening_crawl = opening_crawl
+                    movie.save()
+                except Movie.DoesNotExist:
+                    # Si la película no existe, crearla
+                    movie = Movie(
+                        episode_nb=details["episode_nb"],
+                        title=title,
+                        director=details["director"],
+                        producer=details["producer"],
+                        release_date=details["release_date"],
+                        opening_crawl=opening_crawl  # Inicializar opening_crawl con el valor del JSON
+                    )
+                    movie.save()
 
         return HttpResponse("OK")  # Mostrar solo OK si todo se ejecuta correctamente
 
@@ -85,6 +95,8 @@ def populate(request):
         return HttpResponse(f"Error: JSON file is not properly formatted. {e}")
     except Exception as e:
         return HttpResponse(f"Error: {e}")
+
+
 
 def display(request):
     try:
