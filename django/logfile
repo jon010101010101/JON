@@ -1,0 +1,2 @@
+2025-04-14 09:11:20.928 CEST [4149170] FATAL:  lock file "postmaster.pid" already exists
+2025-04-14 09:11:20.928 CEST [4149170] HINT:  Is another postmaster (PID 4148679) running in data directory "/home/jurrutia/postgresql_data"?

@@ -112,16 +112,7 @@ Indexes:
     "ex04_movies_pkey" PRIMARY KEY, btree (episode_nb)
     "ex04_movies_title_key" UNIQUE CONSTRAINT, btree (title)
 
-from ex04.models import Movies
-
-# Obtener todos los títulos
-titles = Movies.objects.values_list('title', flat=True)
-for title in titles:
-    print(title)
-
-
-
-djangotraining=# SELECT title FROM ex04_movies;
+ddjangotraining=# SELECT title FROM ex04_movies;
           title          
 -------------------------
  The Phantom Menace
@@ -246,8 +237,9 @@ for movie in movies:
 
 
 
->>> movie = Movie.objects.get(title="The Phantom Menace")
->>> print(movie.opening_crawl)
+movie = Movie.objects.get(title="The Phantom Menace")
+print(movie.opening_crawl)
+
 Turmoil has engulfed the
 Galactic Republic. The taxation
 of trade routes to outlying star
@@ -394,12 +386,12 @@ People.objects.all()
 
 verificar la creacion de las tablas
 
->>> from ex09.models import People
->>> print(Planets._meta.fields)
+from ex09.models import People
+print(Planets._meta.fields)
 (<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
 
->>> from ex09.models import Planets
->>> print(Planets._meta.fields)
+from ex09.models import Planets
+print(Planets._meta.fields)
 (<django.db.models.fields.BigAutoField: id>, <django.db.models.fields.CharField: name>, <django.db.models.fields.CharField: climate>, <django.db.models.fields.IntegerField: diameter>, <django.db.models.fields.PositiveIntegerField: orbital_period>, <django.db.models.fields.BigIntegerField: population>, <django.db.models.fields.PositiveIntegerField: rotation_period>, <django.db.models.fields.FloatField: surface_water>, <django.db.models.fields.TextField: terrain>, <django.db.models.fields.DateTimeField: created>, <django.db.models.fields.DateTimeField: updated>)
 >>> 
 
@@ -461,7 +453,18 @@ find . -name __pycache__ -delete
 * Migrations
 Crear migrations
 python manage.py makemigrations
-Hacerr migrations
+Hacer migrations
 python manage.py migrate
 Ver las migrations realizadas
 python manage.py showmigrations
+
+
+rm ex01/migrations/0001_initial.py 
+rm ex03/migrations/0001_initial.py
+rm ex05/migrations/0001_initial.py
+rm ex07/migrations/0001_initial.py
+rm ex09/migrations/0001_initial.py
+rm ex10/migrations/0001_initial.py
+
+panel administracion
+http://127.0.0.1:8000/admin/

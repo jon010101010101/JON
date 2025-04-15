@@ -1,15 +1,16 @@
 from datetime import date
 from django.shortcuts import render
-from .models import Movies, People, Planets  # Importa el modelo Planets
-from .forms import SearchForm
+from .models import Movies, People, Planets  # Importa los modelos necesarios
+from .forms import SearchForm  # Importa el formulario
 
 def search_view(request):
-    results = []
-    message = None
+    results = []  # Lista para almacenar los resultados
+    message = None  # Mensaje para mostrar al usuario
 
     if request.method == 'POST':
-        form = SearchForm(request.POST)
+        form = SearchForm(request.POST)  # Instanciar el formulario con los datos enviados
         if form.is_valid():
+            # Obtener los datos validados del formulario
             min_date = form.cleaned_data['min_release_date']
             max_date = form.cleaned_data['max_release_date']
             min_diameter = form.cleaned_data['planet_diameter_greater_than']
@@ -26,13 +27,13 @@ def search_view(request):
                 form.add_error('max_release_date', f"Dates must not exceed the current year ({current_year}).")
                 return render(request, 'ex10/search.html', {'form': form, 'results': results, 'message': message})
 
-            # Filtrar películas y personajes según los criterios
+            # Filtrar películas por rango de fechas
             movies = Movies.objects.filter(release_date__range=(min_date, max_date))
             
-            # Filtrar a las personas por género Y diámetro del planeta
+            # Filtrar personajes por género y diámetro del planeta
             people = People.objects.filter(
                 gender=gender,
-                homeworld__diameter__gte=min_diameter  # Accede al diámetro a través de homeworld
+                homeworld__diameter__gte=min_diameter  # Accede al diámetro a través del campo relacionado `homeworld`
             )
 
             # Generar combinaciones únicas de resultados
@@ -50,17 +51,19 @@ def search_view(request):
             results.sort(key=lambda x: (
                 x['movie_title'],          # Ordenar por título de película
                 x['character_name'],       # Ordenar por nombre del personaje
-                x['character_gender'],     # Ordenar por género
+                x['character_gender'],     # Ordenar por género del personaje
                 x['homeworld_name'],       # Ordenar por nombre del planeta
                 x['homeworld_diameter']    # Ordenar por diámetro del planeta
             ))
 
             if not results:
-                message = "No results found."
+                message = "No results found."  # Mensaje si no hay resultados
+
         else:
-            # Si el formulario no es válido, se pasan los errores automáticamente
+            # Si el formulario no es válido, se pasan los errores automáticamente a la plantilla
             message = "Please correct the errors below."
     else:
+        # Si no es una solicitud POST, se crea un formulario vacío
         form = SearchForm()
 
     return render(request, 'ex10/search.html', {

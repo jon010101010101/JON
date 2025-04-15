@@ -18,25 +18,28 @@ class SearchForm(forms.Form):
         min_value=0,
         error_messages={'min_value': 'Diameter cannot be negative.'}
     )
+
+    # Placeholder para géneros (se inicializa vacío)
     character_gender = forms.ChoiceField(
         label="Character gender",
-        choices=[],  # Inicialmente vacío; se llenará dinámicamente en __init__.
+        choices=[('', 'Select Gender')],  # Placeholder no seleccionable
         required=True,
         error_messages={'required': 'Please select a valid gender.'}
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Genera las opciones dinámicamente desde la base de datos.
-        self.fields['character_gender'].choices = [('', 'Select Gender')]  # Placeholder inicial.
-        self.fields['character_gender'].choices += [
-            (gender, gender)
-            for gender in People.objects.values_list('gender', flat=True).distinct()
-            if gender
+        
+        # Obtener géneros únicos de la base de datos dinámicamente
+        gender_choices = [('', 'Select Gender')]  # Placeholder no seleccionable
+        gender_choices += [
+            (gender, gender) for gender in People.objects.values_list('gender', flat=True).distinct() if gender
         ]
+        
+        # Actualizar las opciones del campo `character_gender`
+        self.fields['character_gender'].choices = gender_choices
 
-    # Validación personalizada para fechas
+    # Validación de fechas
     def clean(self):
         cleaned_data = super().clean()
         min_date = cleaned_data.get('min_release_date')
@@ -45,7 +48,7 @@ class SearchForm(forms.Form):
         if min_date and max_date:
             if max_date < min_date:
                 self.add_error('max_release_date', "Maximum date cannot be earlier than minimum date.")
-
+            
             current_year = datetime.date.today().year
             if max_date.year > current_year:
                 self.add_error('max_release_date', f"Date cannot exceed current year ({current_year}).")
