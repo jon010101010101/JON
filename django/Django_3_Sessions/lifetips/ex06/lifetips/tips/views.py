@@ -1,75 +1,37 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate, logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
-from .forms import RegisterForm, LoginForm, TipForm
-from .models import Tip, CustomUser  # Import CustomUser
-from django.conf import settings
-import random, time
+from .models import Tip
+from .forms import TipForm, RegistrationForm, LoginForm
+
 
 def home(request):
-    tips = Tip.objects.select_related('author').order_by('-date')
-    tip_form = None
-    error = None
-
-    if request.user.is_authenticated:
-        username = request.user.username
-        if request.method == 'POST':
-            tip_form = TipForm(request.POST)
-            if tip_form.is_valid():
-                tip = tip_form.save(commit=False)
-                tip.author = request.user
-                tip.save()
-                return redirect('home')
-            else:
-                error = "Please correct the errors below."
-        else:
-            tip_form = TipForm()
-        return render(request, 'home.html', {
-            'username': username,
-            'is_authenticated': True,
-            'tips': tips,
-            'tip_form': tip_form,
-            'error': error,
-            'user': request.user,  # For use in the template
-        })
+    tips = Tip.objects.all()
+    if request.method == 'POST':
+        form = TipForm(request.POST)
+        if form.is_valid():
+            tip = form.save(commit=False)
+            tip.author = request.user
+            tip.save()
+            return redirect('home')
     else:
-        now = time.time()
-        anonymous_name = request.session.get('anonymous_name')
-        timestamp = request.session.get('anonymous_name_timestamp', 0)
-        if not anonymous_name or now - timestamp > 42:
-            anonymous_name = random.choice(settings.USERNAME_LIST)
-            request.session['anonymous_name'] = anonymous_name
-            request.session['anonymous_name_timestamp'] = now
-        return render(request, 'home.html', {
-            'username': anonymous_name,
-            'is_authenticated': False,
-            'tips': tips,
-        })
+        form = TipForm()
+    return render(request, 'home.html', {'tips': tips, 'form': form})
+
 
 def register(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    error = None
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = CustomUser.objects.create_user(  # Use CustomUser
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password']
-            )
+            user = form.save()
             login(request, user)
             return redirect('home')
-        else:
-            error = "Please correct the errors below."
     else:
-        form = RegisterForm()
-    return render(request, 'register.html', {'form': form, 'error': error})
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
 
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    error = None
+
+def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -80,49 +42,34 @@ def login_view(request):
                 login(request, user)
                 return redirect('home')
             else:
-                error = "Invalid username or password."
+                form.add_error(None, "Invalid username or password")
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form, 'error': error})
+    return render(request, 'login.html', {'form': form})
 
-def logout_view(request):
+
+def user_logout(request):
     logout(request)
     return redirect('home')
 
+
 @login_required
 def upvote_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
-    user = request.user
-    if user in tip.upvoted_by.all():
-        tip.upvoted_by.remove(user)
-    else:
-        tip.upvoted_by.add(user)
-        tip.downvoted_by.remove(user)
+    tip = Tip.objects.get(pk=tip_id)
+    tip.upvoted_by.add(request.user)
     return redirect('home')
+
 
 @login_required
 def downvote_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
+    tip = Tip.objects.get(pk=tip_id)
+    tip.downvoted_by.add(request.user)
+    return redirect('home')
 
-    # Permitir al autor downvotear su propio tip o si tiene el permiso
-    if request.user == tip.author or request.user.has_perm('tips.can_downvote_tip'):
-        user = request.user
-        if user in tip.downvoted_by.all():
-            tip.downvoted_by.remove(user)
-        else:
-            tip.downvoted_by.add(user)
-            tip.upvoted_by.remove(user)
-        tip.save()
-        return redirect('home')
-    else:
-        return HttpResponseForbidden("You do not have permission to downvote this tip.")
 
 @login_required
 def delete_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
-    # Only the author or a user with the special permission can delete
-    if request.user == tip.author or request.user.has_perm('tips.can_delete_tip'):
+    tip = Tip.objects.get(pk=tip_id)
+    if tip.author == request.user or request.user.has_perm('tips.delete_tip'):
         tip.delete()
-        return redirect('home')
-    else:
-        return HttpResponseForbidden("You do not have permission to delete this tip.")
+    return redirect('home')

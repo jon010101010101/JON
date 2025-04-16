@@ -81,6 +81,9 @@ http://localhost:8000/login/ → Página de inicio de sesión (login).
 http://localhost:8000/logout/ → Logout: cierra la sesión del usuario y redirige a la página principal.
 
 
+
+# EJERCICIO EX05
+
 http://localhost:8000/admin    
 
 lo que se puede hacer desdde el panel de administracion
@@ -103,6 +106,10 @@ Sesiones: Ver y borrar sesiones de usuario.
 Archivos estáticos: Gestionar la colección de archivos estáticos del sitio.
 
 Caché: Limpiar la caché del sitio.
+
+
+
+# EJERCICIO EX06
 
 
 
