@@ -72,7 +72,7 @@ http://localhost:8000/logout/ → Logout (cierra la sesión y redirige a la home
 # EJERCICIO EX04
 
 
-http://localhost:8000/ → Página principal (home): muestra todos los tips y, si el usuario está logueado, también el formulario para crear un tip.
+ → Página principal (home): muestra todos los tips y, si el usuario está logueado, también el formulario para crear un tip.
 
 http://localhost:8000/register/ → Página de registro de usuario.
 
@@ -111,11 +111,12 @@ Caché: Limpiar la caché del sitio.
 
 # EJERCICIO EX06
 
+Home: http://127.0.0.1:8000/ para la página de inicio.
+Login: http://127.0.0.1:8000/login/ para el inicio de sesión.
+Register: http://127.0.0.1:8000/register/ para el registro de usuarios.
+Create Tip: http://127.0.0.1:8000/create_tip/ para crear un nuevo tip.
 
-
-
-
-
+export PYTHONPATH=/sgoinfre/students/jurrutia/42_otrogitjon/django/Django_3_Sessions/lifetips:$PYTHONPATH
 
 
 
