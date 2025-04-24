@@ -80,37 +80,55 @@ class Tip(models.Model):
     )
 
     def add_upvote(self, user):
-        """Handles the addition of an upvote."""
-        if user in self.downvotes.all():
+        """Adds an upvote for the tip if the user hasn't already upvoted or downvoted."""
+        if user == self.author:
+            return False  # No puedes votar por tu propio tip
+        if self.downvotes.filter(id=user.id).exists():
             self.downvotes.remove(user)
-            self.author.update_reputation(2)  # Recover reputation lost by downvote
-        if user not in self.upvotes.all():
+            self.author.update_reputation(2)  # Revertir efecto del downvote
+        if not self.upvotes.filter(id=user.id).exists():
             self.upvotes.add(user)
             self.author.update_reputation(5)
+            return True
+        return False  # Voto duplicado
 
     def add_downvote(self, user):
-        """Handles the addition of a downvote."""
-        if user.reputation < 2:
-            return False  # Do not allow downvote if reputation is less than 2
-        if user in self.upvotes.all():
+        """Adds a downvote for the tip if the user hasn't already downvoted or upvoted."""
+        if user == self.author:
+            return False  # No puedes votar por tu propio tip
+        if user.reputation < 15 and not user.is_superuser:
+            return False  # No tiene suficiente reputación
+        if self.upvotes.filter(id=user.id).exists():
             self.upvotes.remove(user)
-            self.author.update_reputation(-5)  # Remove reputation gained from upvote
-        if user not in self.downvotes.all():
+            self.author.update_reputation(-5)  # Revertir efecto del upvote
+        if not self.downvotes.filter(id=user.id).exists():
             self.downvotes.add(user)
             self.author.update_reputation(-2)
-        return True
+            return True
+        return False  # Voto duplicado
 
-    def remove_upvote(self, user):
-        """Handles the removal of an upvote."""
-        if user in self.upvotes.all():
+    def remove_vote(self, user):
+        """Removes a user's vote, either upvote or downvote."""
+        if self.upvotes.filter(id=user.id).exists():
             self.upvotes.remove(user)
             self.author.update_reputation(-5)
-
-    def remove_downvote(self, user):
-        """Handles the removal of a downvote."""
-        if user in self.downvotes.all():
+        elif self.downvotes.filter(id=user.id).exists():
             self.downvotes.remove(user)
             self.author.update_reputation(2)
+
+    def can_delete(self, user):
+        """Checks if the user can delete the tip."""
+        return user.is_superuser or user.reputation >= 30
+
+    def delete(self, *args, **kwargs):
+        """Deletes the tip and clears all associated votes."""
+        if not kwargs.pop('force_delete', False) and not self.can_delete(self.author):
+            raise PermissionError("User does not have permission to delete this tip.")
+        for user in self.upvotes.all():
+            self.remove_vote(user)
+        for user in self.downvotes.all():
+            self.remove_vote(user)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Tip by {self.author.username} - {self.content[:30]}"
