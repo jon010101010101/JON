@@ -16,9 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from tips import views as tips_views  # Agrega las vistas principales aquí
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),  # Login/logout
-    path('', include('tips.urls')),  # Tips app urls
+    path('', tips_views.home, name='home'),  # Página de inicio
+    path('login/', tips_views.login_view, name='login'),  # Inicio de sesión
+    path('register/', tips_views.register, name='register'),  # Registro
+    path('tips/', include('tips.urls')),  # Incluye las URLs de la app "tips"
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

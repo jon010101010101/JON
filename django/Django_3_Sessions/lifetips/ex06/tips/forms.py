@@ -7,7 +7,19 @@ class TipForm(forms.ModelForm):
         model = Tip
         fields = ['content']
 
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content or len(content.strip()) < 5:  # Longitud mínima de 10 caracteres
+            raise forms.ValidationError("The tip content must be at least 10 characters long.")
+        return content
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already registered. Please use a different one.")
+        return email

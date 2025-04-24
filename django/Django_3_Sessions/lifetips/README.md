@@ -111,12 +111,78 @@ Caché: Limpiar la caché del sitio.
 
 # EJERCICIO EX06
 
-Home: http://127.0.0.1:8000/ para la página de inicio.
-Login: http://127.0.0.1:8000/login/ para el inicio de sesión.
-Register: http://127.0.0.1:8000/register/ para el registro de usuarios.
-Create Tip: http://127.0.0.1:8000/create_tip/ para crear un nuevo tip.
+Página de Inicio: http://127.0.0.1:8000/
+Inicio de Sesión: http://127.0.0.1:8000/login/
+Registro de Usuarios: http://127.0.0.1:8000/register/
+Crear un Tip: http://127.0.0.1:8000/tips/create/
+Ver Tips Creados: http://127.0.0.1:8000/tips/list/
+Votar Positivo en un Tip: http://127.0.0.1:8000/tips/<tip_id>/upvote/
+Votar Negativo en un Tip: http://127.0.0.1:8000/tips/<tip_id>/downvote/
+Eliminar un Tip: http://127.0.0.1:8000/tips/<tip_id>/delete/
+
+Pagina no existe http://localhost:8000/nonexistent-page
 
 export PYTHONPATH=/sgoinfre/students/jurrutia/42_otrogitjon/django/Django_3_Sessions/lifetips:$PYTHONPATH
+
+
+# Para sacar listado de tips metidos
+python manage.py list_tips
+
+# Para hacer test
+python manage.py test
+
+pruebas que hace
+
+1.- Realizar un upvote:
+
+Aumenta el contador de upvotes.
+Incrementa la reputación del autor en 5 puntos.
+
+2.-Realizar un downvote:
+
+Aumenta el contador de downvotes.
+Reduce la reputación del autor en 2 puntos.
+
+3.-Cambiar de un upvote a un downvote:
+
+Actualiza correctamente los contadores.
+Ajusta la reputación del autor según corresponda.
+
+4.-Evitar votos duplicados:
+
+Garantiza que un usuario no pueda votar dos veces por el mismo tip.
+
+5.- Verificar múltiples usuarios votando:
+
+Asegura que varios usuarios puedan votar por el mismo tip.
+
+6.-Validar restricciones de permisos:
+
+Los usuarios con reputación baja no pueden realizar downvotes.
+Los usuarios con reputación baja aún pueden realizar upvotes.
+
+7.-Eliminar un tip:
+
+Verifica que el tip y sus votos desaparecen tras ser eliminado.
+Asegura que no se puedan realizar votos en un tip eliminado.
+
+8.-Errores al votar sin reputación suficiente:
+
+Verifica que no se permita votar si un usuario no tiene suficiente reputación para realizar downvotes.
+
+9.-Actualizar reputación en combinaciones de votos:
+
+Valida que la reputación del autor se ajuste correctamente al recibir una combinación de upvotes y downvotes.
+
+10.-Evitar votos tras eliminación del tip:
+
+Asegura que no se puedan registrar votos en un tip eliminado.
+
+
+
+
+
+
 
 
 

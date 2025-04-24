@@ -1,16 +1,26 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib import messages
-from .forms import TipForm
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from .forms import TipForm, CustomUserCreationForm
 from .models import Tip
-from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 # Vista para la página de inicio (Home)
 def home(request):
-    tips = Tip.objects.all()  # Obtiene todos los tips del modelo Tip
-    return render(request, 'home.html', {'tips': tips})
+    tips = Tip.objects.select_related('author').all()  # Optimiza las consultas
+    print("Tips for template:", tips)  # Diagnóstico
+    try:
+        return render(request, 'home.html', {'tips': tips})
+    except Exception as e:
+        print("Error rendering template:", str(e))  # Diagnóstico
+        raise e
 
 # Vista para el inicio de sesión (Login)
 def login_view(request):
@@ -20,22 +30,24 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, 'You have successfully logged in.')
-            return redirect('home')  # Redirige a la página principal después del inicio de sesión
+            return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid username or password. Please try again.')
+            print("Form errors:", form.errors)  # Diagnóstico para revisar errores en consola
     return render(request, 'login.html', {'form': form})
 
 # Vista para el registro de usuarios (Register)
 def register(request):
-    form = CustomUserCreationForm(request.POST or None)  # Usa el formulario personalizado
+    form = CustomUserCreationForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            user = form.save()  # Guarda el usuario utilizando el modelo personalizado
-            login(request, user)  # Inicia sesión automáticamente después del registro
+            user = form.save()
+            login(request, user)
             messages.success(request, f'Welcome, {user.username}! Your account has been created successfully.')
-            return redirect('home')  # Redirige a la página principal
+            return redirect('home')
         else:
             messages.error(request, 'There was an error in your registration form. Please try again.')
+            print("Form errors:", form.errors)  # Diagnóstico para revisar errores en consola
     return render(request, 'register.html', {'form': form})
 
 # Vista para cerrar sesión (Logout)
@@ -51,53 +63,111 @@ def create_tip(request):
         form = TipForm(request.POST)
         if form.is_valid():
             tip = form.save(commit=False)
-            tip.author = request.user  # Asignar el usuario autenticado como autor
+            tip.author = request.user
             tip.save()
-            return redirect('home')  # Redirigir a la página principal
+            messages.success(request, 'Tip created successfully!')
+            return redirect('home')
     else:
         form = TipForm()
     return render(request, 'create_tip.html', {'form': form})
 
 # Vista para manejar los "upvotes" de un tip
+@login_required
 def upvote_tip(request, tip_id):
-    if not request.user.is_authenticated:
-        messages.error(request, "You must be logged in to upvote a tip.")
-        return redirect('login')
-    
     tip = get_object_or_404(Tip, id=tip_id)
-    if request.user not in tip.upvotes.all():  # Evita duplicados
+
+    # Si el usuario ya ha realizado un upvote, lo elimina
+    if request.user in tip.upvotes.all():
+        tip.upvotes.remove(request.user)
+        tip.author.reputation -= 5
+        messages.info(request, "You have removed your upvote.")
+    else:
+        # Agregar un nuevo upvote
         tip.upvotes.add(request.user)
-        tip.author.update_reputation(5)  # Aumenta la reputación del autor
+        tip.author.reputation += 5
         messages.success(request, "You have upvoted the tip!")
-    else:
-        messages.info(request, "You have already upvoted this tip.")
+
+        # Si el usuario ya había hecho un downvote, lo elimina
+        if request.user in tip.downvotes.all():
+            tip.downvotes.remove(request.user)
+            tip.author.reputation += 2  # Recupera la reputación perdida
+            messages.info(request, "Your previous downvote has been removed.")
+
+    # Guardar los cambios en la reputación del autor
+    tip.author.save()
     return redirect('home')
 
-# Manejar el downvote de un tip
+# Vista para manejar los "downvotes" de un tip
+@login_required
 def downvote_tip(request, tip_id):
-    if not request.user.is_authenticated:
-        messages.error(request, "You must be logged in to downvote a tip.")
-        return redirect('login')
-    
     tip = get_object_or_404(Tip, id=tip_id)
+
+    # Si el usuario ya ha realizado un downvote, lo elimina
     if request.user in tip.downvotes.all():
-        messages.info(request, "You have already downvoted this tip.")
+        tip.downvotes.remove(request.user)
+        tip.author.reputation += 2
+        messages.info(request, "You have removed your downvote.")
     else:
-        try:
-            tip.downvote(request.user)
-            messages.success(request, "You have downvoted the tip!")
-        except PermissionError as e:
-            messages.error(request, str(e))
+        # Verificar si el usuario tiene suficiente reputación para downvote
+        if request.user.reputation < 2:
+            messages.error(request, "You don't have enough reputation to downvote.")
+            return redirect('home')
+
+        # Agregar un nuevo downvote
+        tip.downvotes.add(request.user)
+        tip.author.reputation -= 2
+        messages.success(request, "You have downvoted the tip!")
+
+        # Si el usuario ya había hecho un upvote, lo elimina
+        if request.user in tip.upvotes.all():
+            tip.upvotes.remove(request.user)
+            tip.author.reputation -= 5  # Restaura la reputación ganada por el upvote
+            messages.info(request, "Your previous upvote has been removed.")
+
+    # Guardar los cambios en la reputación del autor
+    tip.author.save()
     return redirect('home')
 
-# Eliminar un tip
+# Vista para eliminar un tip
+@login_required
 def delete_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    if not request.user.is_authenticated or request.user != tip.author:
-        messages.error(request, "You don't have permission to delete this tip.")
-        return redirect('home')
-    
-    # Si el usuario es el autor, eliminar el tip
+    if request.user != tip.author and not request.user.has_perm('tips.can_delete_tip'):
+        raise PermissionDenied("You don't have permission to delete this tip.")  # Lanza excepción
+
     tip.delete()
     messages.success(request, "The tip has been deleted successfully.")
     return redirect('home')
+
+# Vista para listar todos los tips
+def tips_list(request):
+    tips = Tip.objects.all()  # Obtén todos los tips
+    return render(request, 'tips/tips_list.html', {'tips': tips})
+
+# Vista para recuperación de contraseñas (Password Reset)
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            associated_users = User.objects.filter(email=email)
+            if associated_users.exists():
+                for user in associated_users:
+                    send_mail(
+                        subject="Password Reset Requested",
+                        message="Click the link below to reset your password.",
+                        from_email=None,
+                        recipient_list=[user.email]
+                    )
+                messages.success(request, "An email has been sent with instructions to reset your password.")
+                return redirect('login')
+            else:
+                messages.error(request, "No user is associated with this email address.")
+    else:
+        form = PasswordResetForm()
+    return render(request, 'registration/password_reset_form.html', {'form': form})
+
+# Vista personalizada para 404
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)
+
