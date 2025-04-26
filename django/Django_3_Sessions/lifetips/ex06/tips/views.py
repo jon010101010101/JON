@@ -102,17 +102,17 @@ def upvote_tip(request, tip_id):
 def downvote_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
 
+    # Verificar si el usuario tiene suficiente reputación para downvote
+    if not request.user.can_downvote():
+        messages.error(request, "You don't have enough reputation to downvote.")
+        return redirect('home')
+
     # Si el usuario ya ha realizado un downvote, lo elimina
     if request.user in tip.downvotes.all():
         tip.downvotes.remove(request.user)
         tip.author.reputation += 2
         messages.info(request, "You have removed your downvote.")
     else:
-        # Verificar si el usuario tiene suficiente reputación para downvote
-        if request.user.reputation < 2:
-            messages.error(request, "You don't have enough reputation to downvote.")
-            return redirect('home')
-
         # Agregar un nuevo downvote
         tip.downvotes.add(request.user)
         tip.author.reputation -= 2
@@ -132,7 +132,7 @@ def downvote_tip(request, tip_id):
 @login_required
 def delete_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    if request.user != tip.author and not request.user.has_perm('tips.can_delete_tip'):
+    if not request.user.can_delete_tips():
         raise PermissionDenied("You don't have permission to delete this tip.")  # Lanza excepción
 
     tip.delete()
@@ -170,4 +170,3 @@ def password_reset_request(request):
 # Vista personalizada para 404
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
-

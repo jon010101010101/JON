@@ -1,73 +1,62 @@
-from django.contrib.auth.models import AbstractUser, Permission
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 
 class CustomUser(AbstractUser):
     """
-    Customized user model with a reputation field.
+    Modelo de usuario personalizado que extiende AbstractUser.
+    Incluye un campo adicional de reputación y lógica para manejar cambios.
     """
-    reputation = models.IntegerField(default=0)
-
-    def __str__(self):
-        return f"{self.username} ({self.reputation})"
+    reputation = models.IntegerField(default=0)  # Campo para la reputación
+    reputation_changed = False  # Atributo para rastrear cambios en la reputación
 
     def save(self, *args, **kwargs):
-        # Detect if the user is new
-        is_new = not self.pk
+        """
+        Detecta cambios en la reputación antes de guardar.
+        """
+        if self.pk:  # Si el usuario ya existe
+            old_reputation = CustomUser.objects.get(pk=self.pk).reputation
+            self.reputation_changed = old_reputation != self.reputation
+        else:
+            self.reputation_changed = True  # Es un usuario nuevo
+
         super().save(*args, **kwargs)
-        if is_new:
-            self.assign_permissions()
 
-    def assign_permissions(self):
-        """Assigns permissions based on reputation."""
-        # Get content type for CustomUser
-        content_type = ContentType.objects.get_for_model(CustomUser)
+    def update_reputation(self, delta_upvotes=0, delta_downvotes=0):
+        """
+        Actualiza la reputación incrementalmente.
+        delta_upvotes y delta_downvotes son los cambios en los votos.
+        """
+        self.reputation += delta_upvotes * 5 - delta_downvotes * 2
+        self.save(update_fields=['reputation'])
 
-        # Get or create permissions
-        can_downvote_permission, created = Permission.objects.get_or_create(
-            codename='can_downvote_tip',
-            defaults={
-                'name': 'Can downvote tip',
-                'content_type': content_type,
-            }
-        )
-        can_delete_tip_permission, created = Permission.objects.get_or_create(
-            codename='can_delete_tip',
-            defaults={
-                'name': 'Can delete tip',
-                'content_type': content_type,
-            }
-        )
+    @property
+    def can_downvote(self):
+        """Determina si el usuario puede hacer downvote."""
+        return self.reputation >= 15
 
-        # Assign downvote permission
-        if self.reputation >= 15 and not self.user_permissions.filter(codename='can_downvote_tip').exists():
-            self.user_permissions.add(can_downvote_permission)
-        elif self.reputation < 15:
-            self.user_permissions.remove(can_downvote_permission)
+    @property
+    def can_delete_tips(self):
+        """Determina si el usuario puede eliminar Tips."""
+        return self.reputation >= 30
 
-        # Assign delete tip permission
-        if self.reputation >= 30 and not self.user_permissions.filter(codename='can_delete_tip').exists():
-            self.user_permissions.add(can_delete_tip_permission)
-        elif self.reputation < 30:
-            self.user_permissions.remove(can_delete_tip_permission)
-
-    def update_reputation(self, points):
-        """Updates reputation and assigns permissions."""
-        self.reputation += points
-        self.save(update_fields=["reputation"])  # Optimize save to only update the reputation field
-        self.assign_permissions()
+    def __str__(self):
+        return f"{self.username} ({self.reputation} rep)"
 
 
 class Tip(models.Model):
+    """
+    Modelo de Tip que representa un contenido creado por un usuario.
+    Incluye lógica para manejar upvotes, downvotes y eliminación.
+    """
+    content = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='tips'
     )
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     upvotes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='upvoted_tips',
@@ -79,38 +68,73 @@ class Tip(models.Model):
         blank=True
     )
 
-    def add_upvote(self, user):
-        """Handles the addition of an upvote."""
-        if user in self.downvotes.all():
+    def save(self, *args, **kwargs):
+        """
+        Asegura que la reputación del autor se actualice al crear un Tip.
+        """
+        is_new = self.pk is None  # Verifica si el Tip es nuevo
+        super().save(*args, **kwargs)
+        if is_new:
+            self.author.update_reputation()
+
+    def delete(self, *args, **kwargs):
+        """
+        Recalcula la reputación del autor al eliminar un Tip.
+        """
+        # Revertir el impacto de los votos antes de eliminar
+        upvotes_count = self.upvotes.count()
+        downvotes_count = self.downvotes.count()
+        if not self.author.can_delete_tips:
+            raise PermissionError("No tienes suficiente reputación para eliminar este tip.")
+        super().delete(*args, **kwargs)
+        self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
+
+    def upvote(self, user):
+        """
+        Maneja la lógica de agregar un upvote.
+        """
+        if user == self.author:
+            raise PermissionError("No puedes votar tu propio tip.")
+
+        if self.downvotes.filter(id=user.id).exists():  # Revertir un downvote previo
             self.downvotes.remove(user)
-            self.author.update_reputation(2)  # Recover reputation lost by downvote
-        if user not in self.upvotes.all():
+            self.author.update_reputation(delta_downvotes=-1)
+
+        if not self.upvotes.filter(id=user.id).exists():  # Agregar el upvote
             self.upvotes.add(user)
-            self.author.update_reputation(5)
+            self.author.update_reputation(delta_upvotes=1)
 
-    def add_downvote(self, user):
-        """Handles the addition of a downvote."""
-        if user.reputation < 2:
-            return False  # Do not allow downvote if reputation is less than 2
-        if user in self.upvotes.all():
+    def downvote(self, user):
+        """
+        Maneja la lógica de agregar un downvote.
+        """
+        if user == self.author:
+            raise PermissionError("No puedes votar tu propio tip.")
+
+        if self.upvotes.filter(id=user.id).exists():  # Revertir un upvote previo
             self.upvotes.remove(user)
-            self.author.update_reputation(-5)  # Remove reputation gained from upvote
-        if user not in self.downvotes.all():
+            self.author.update_reputation(delta_upvotes=-1)
+
+        if not self.downvotes.filter(id=user.id).exists():  # Agregar el downvote
             self.downvotes.add(user)
-            self.author.update_reputation(-2)
-        return True
+            self.author.update_reputation(delta_downvotes=1)
 
-    def remove_upvote(self, user):
-        """Handles the removal of an upvote."""
-        if user in self.upvotes.all():
-            self.upvotes.remove(user)
-            self.author.update_reputation(-5)
+    def upvotes_count(self):
+        """Devuelve el número total de upvotes."""
+        return self.upvotes.count()
 
-    def remove_downvote(self, user):
-        """Handles the removal of a downvote."""
-        if user in self.downvotes.all():
-            self.downvotes.remove(user)
-            self.author.update_reputation(2)
+    def downvotes_count(self):
+        """Devuelve el número total de downvotes."""
+        return self.downvotes.count()
 
-    def __str__(self):
-        return f"Tip by {self.author.username} - {self.content[:30]}"
+    def score(self):
+        """
+        Devuelve el puntaje total del tip (upvotes - downvotes).
+        """
+        return self.upvotes_count() - self.downvotes_count()
+
+    class Meta:
+        permissions = [
+            ("can_delete_tip", "Can delete tip"),
+            ("can_downvote_tip", "Can downvote a tip"),
+        ]

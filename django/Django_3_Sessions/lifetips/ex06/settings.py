@@ -110,7 +110,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Esto debe apuntar al directorio donde está tu carpeta "static"
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos con collectstatic
+#STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos 
+# con collectstatic. ejecutamos python manage.py collectstatic
 
 # Configuración del correo gmail (desde .env)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
