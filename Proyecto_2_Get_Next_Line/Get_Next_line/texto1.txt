@@ -1,5 +1,0 @@
-TEXTO CON SALTOS LINEAS
-hola amigo
-como estas?
-tercera linea
-cuarta linea

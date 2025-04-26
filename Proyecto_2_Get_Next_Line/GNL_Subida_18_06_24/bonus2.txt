@@ -1,4 +1,0 @@
-quinta linea
-sexta linea
-septima linea
-octava linea
