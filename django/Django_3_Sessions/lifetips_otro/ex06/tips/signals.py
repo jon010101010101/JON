@@ -2,8 +2,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+<<<<<<< HEAD:django/Django_3_Sessions/lifetips/ex06/tips/signals.py
 from django.apps import apps  # Importación necesaria para obtener modelos dinámicamente
 import logging
+=======
+from .models import CustomUser, Tip
+>>>>>>> 6e876342 (Django y mas):django/Django_3_Sessions/lifetips_otro/ex06/tips/signals.py
 
 # Configuración del logger
 logging.basicConfig(level=logging.DEBUG)
@@ -11,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=apps.get_model('tips', 'CustomUser'))
 def assign_permissions_on_user_creation(sender, instance, created, **kwargs):
+<<<<<<< HEAD:django/Django_3_Sessions/lifetips/ex06/tips/signals.py
     logger.debug("Señal 'assign_permissions_on_user_creation' ejecutada.")
     if created:
         try:
@@ -59,12 +64,36 @@ def update_permissions_on_reputation_change(sender, instance, **kwargs):
         can_downvote_permission = Permission.objects.get(
             codename='can_downvote_tip',
             content_type=content_type,
+=======
+    """Asigna permisos automáticamente al crear un nuevo usuario."""
+    if created:  # Solo asigna permisos al crear un usuario
+        # Cambiar el content_type al modelo Tip
+        content_type = ContentType.objects.get_for_model(Tip)
+
+        # Crear o buscar el permiso para "can_downvote_tip"
+        can_downvote_permission, _ = Permission.objects.get_or_create(
+            codename='can_downvote_tip',
+            defaults={
+                'name': 'Can downvote tip',
+                'content_type': content_type,  # Asociar al modelo Tip
+            }
+>>>>>>> 6e876342 (Django y mas):django/Django_3_Sessions/lifetips_otro/ex06/tips/signals.py
         )
         logger.debug(f"Permiso obtenido: {can_downvote_permission}")
 
+<<<<<<< HEAD:django/Django_3_Sessions/lifetips/ex06/tips/signals.py
         can_delete_tip_permission = Permission.objects.get(
             codename='can_delete_tip',
             content_type=content_type,
+=======
+        # Crear o buscar el permiso para "can_delete_tip"
+        can_delete_tip_permission, _ = Permission.objects.get_or_create(
+            codename='can_delete_tip',
+            defaults={
+                'name': 'Can delete tip',
+                'content_type': content_type,  # Asociar al modelo Tip
+            }
+>>>>>>> 6e876342 (Django y mas):django/Django_3_Sessions/lifetips_otro/ex06/tips/signals.py
         )
         logger.debug(f"Permiso obtenido: {can_delete_tip_permission}")
 
