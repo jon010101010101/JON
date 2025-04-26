@@ -5,15 +5,17 @@ from . import views
 urlpatterns = [
     # Página principal
     path('', views.home, name='home'),  # Página de inicio
-
+    
     # Funciones relacionadas con los tips
     path('create/', views.create_tip, name='create_tip'),  # Crear nuevo tip
-    path('<int:tip_id>/vote/<str:vote_type>/', views.vote_tip, name='vote_tip'), # Votar
+    path('<int:tip_id>/upvote/', views.upvote_tip, name='upvote_tip'),  # Votar positivo en tip
+    path('<int:tip_id>/downvote/', views.downvote_tip, name='downvote_tip'),  # Votar negativo en tip
     path('<int:tip_id>/delete/', views.delete_tip, name='delete_tip'),  # Eliminar un tip
-
+    path('list/', views.tips_list, name='tips_list'),  # Listar tips
+    
     # Registro de nuevos usuarios
     path("register/", views.register, name="register"),  # Página de registro
-
+    
     # Login y Logout
     path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),  # Plantilla de login
     path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),  # Redirige al home después del logout

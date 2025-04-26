@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser, Permission
 from django.db import models
-from django.conf import settings
-from django.db.models import F
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
+
 
 class CustomUser(AbstractUser):
     """
@@ -13,37 +13,50 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.reputation})"
 
+    def save(self, *args, **kwargs):
+        # Detect if the user is new
+        is_new = not self.pk
+        super().save(*args, **kwargs)
+        if is_new:
+            self.assign_permissions()
+
     def assign_permissions(self):
-        """Asignar permisos según la reputación."""
-        content_type = ContentType.objects.get_for_model(Tip)
+        """Assigns permissions based on reputation."""
+        # Get content type for CustomUser
+        content_type = ContentType.objects.get_for_model(CustomUser)
+
+        # Get or create permissions
         can_downvote_permission, created = Permission.objects.get_or_create(
             codename='can_downvote_tip',
-            content_type=content_type,
-            defaults={'name': 'Can downvote tip'}
+            defaults={
+                'name': 'Can downvote tip',
+                'content_type': content_type,
+            }
         )
-        can_delete_permission, created = Permission.objects.get_or_create(
+        can_delete_tip_permission, created = Permission.objects.get_or_create(
             codename='can_delete_tip',
-            content_type=content_type,
-            defaults={'name': 'Can delete tip'}
+            defaults={
+                'name': 'Can delete tip',
+                'content_type': content_type,
+            }
         )
 
-        if self.reputation >= 15:
+        # Assign downvote permission
+        if self.reputation >= 15 and not self.user_permissions.filter(codename='can_downvote_tip').exists():
             self.user_permissions.add(can_downvote_permission)
-        else:
-            if can_downvote_permission in self.user_permissions.all():
-                self.user_permissions.remove(can_downvote_permission)
+        elif self.reputation < 15:
+            self.user_permissions.remove(can_downvote_permission)
 
-        if self.reputation >= 30:
-            self.user_permissions.add(can_delete_permission)
-        else:
-            if can_delete_tip_permission in self.user_permissions.all():
-                self.user_permissions.remove(can_delete_tip_permission)
+        # Assign delete tip permission
+        if self.reputation >= 30 and not self.user_permissions.filter(codename='can_delete_tip').exists():
+            self.user_permissions.add(can_delete_tip_permission)
+        elif self.reputation < 30:
+            self.user_permissions.remove(can_delete_tip_permission)
 
-    def update_reputation(self, increment):
-        """Actualizar la reputación del usuario y manejar permisos."""
-        self.reputation = F('reputation') + increment
-        self.save()
-        self.refresh_from_db()
+    def update_reputation(self, points):
+        """Updates reputation and assigns permissions."""
+        self.reputation += points
+        self.save(update_fields=["reputation"])  # Optimize save to only update the reputation field
         self.assign_permissions()
 
 
@@ -66,57 +79,38 @@ class Tip(models.Model):
         blank=True
     )
 
-    class Meta:
-        permissions = [
-            ("can_downvote_tip", "Can downvote a tip"),
-            ("can_delete_tip", "Can delete a tip"),
-        ]
-
     def add_upvote(self, user):
-        """Agregar un upvote al tip."""
-        if not self.pk:
-            raise ValueError("Cannot vote on a deleted tip.")
-        if user == self.author:
-            return False
-        if self.upvotes.filter(id=user.id).exists():
-            self.upvotes.remove(user)
-            self.author.update_reputation(-5)
-            return True
-        if self.downvotes.filter(id=user.id).exists():
+        """Handles the addition of an upvote."""
+        if user in self.downvotes.all():
             self.downvotes.remove(user)
-            self.author.update_reputation(2)
-        self.upvotes.add(user)
-        self.author.update_reputation(5)
-        return True
+            self.author.update_reputation(2)  # Recover reputation lost by downvote
+        if user not in self.upvotes.all():
+            self.upvotes.add(user)
+            self.author.update_reputation(5)
 
     def add_downvote(self, user):
-        """Agregar un downvote al tip."""
-        if not self.pk:
-            raise ValueError("Cannot vote on a deleted tip.")
-        if not user.has_perm('tips.can_downvote_tip') and not user.is_superuser:
-            return False
-        if user == self.author:
-            return False
-        if self.downvotes.filter(id=user.id).exists():
-            self.downvotes.remove(user)
-            self.author.update_reputation(2)
-            return True
-        if self.upvotes.filter(id=user.id).exists():
+        """Handles the addition of a downvote."""
+        if user.reputation < 2:
+            return False  # Do not allow downvote if reputation is less than 2
+        if user in self.upvotes.all():
             self.upvotes.remove(user)
-            self.author.update_reputation(-5)
-        self.downvotes.add(user)
-        self.author.update_reputation(-2)
+            self.author.update_reputation(-5)  # Remove reputation gained from upvote
+        if user not in self.downvotes.all():
+            self.downvotes.add(user)
+            self.author.update_reputation(-2)
         return True
 
-    def delete(self, *args, **kwargs):
-        """Eliminar el tip y revertir el impacto de los votos."""
-        for user in self.upvotes.all():
+    def remove_upvote(self, user):
+        """Handles the removal of an upvote."""
+        if user in self.upvotes.all():
             self.upvotes.remove(user)
             self.author.update_reputation(-5)
-        for user in self.downvotes.all():
+
+    def remove_downvote(self, user):
+        """Handles the removal of a downvote."""
+        if user in self.downvotes.all():
             self.downvotes.remove(user)
             self.author.update_reputation(2)
-        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Tip by {self.author.username} - {self.content[:30]}"
