@@ -2,16 +2,15 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from .models import CustomUser, Tip
+from django.apps import apps  # Importación necesaria para get_model
 
-
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=apps.get_model('tips', 'CustomUser'))  # Cambia 'ex06.tips' a 'tips'
 def assign_permissions_on_user_creation(sender, instance, created, **kwargs):
     """
     Asigna permisos automáticamente al crear un nuevo usuario.
     """
     if created:  # Solo asigna permisos al crear un usuario
-        content_type = ContentType.objects.get_for_model(CustomUser)
+        content_type = ContentType.objects.get_for_model(instance.__class__)
 
         # Crear o buscar el permiso para "can_downvote_tip"
         can_downvote_permission, _ = Permission.objects.get_or_create(
@@ -38,12 +37,12 @@ def assign_permissions_on_user_creation(sender, instance, created, **kwargs):
             instance.user_permissions.add(can_delete_tip_permission)
 
 
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=apps.get_model('tips', 'CustomUser'))  # Cambia 'ex06.tips' a 'tips'
 def update_permissions_on_reputation_change(sender, instance, **kwargs):
     """
     Actualiza los permisos cuando cambia la reputación del usuario.
     """
-    content_type = ContentType.objects.get_for_model(CustomUser)
+    content_type = ContentType.objects.get_for_model(instance.__class__)
 
     # Obtener los permisos existentes
     can_downvote_permission = Permission.objects.get(

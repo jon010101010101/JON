@@ -48,7 +48,7 @@ class CustomUser(AbstractUser):
 class Tip(models.Model):
     """
     Modelo de Tip que representa un contenido creado por un usuario.
-    Incluye lógica para manejar upvotes, downvotes y eliminación.
+    Incluye lógica para manejar votos y eliminación.
     """
     content = models.TextField()
     author = models.ForeignKey(
@@ -81,11 +81,13 @@ class Tip(models.Model):
         """
         Recalcula la reputación del autor al eliminar un Tip.
         """
-        # Revertir el impacto de los votos antes de eliminar
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
+
+        # Verifica si el autor tiene permiso para eliminar el Tip
         if not self.author.can_delete_tips:
             raise PermissionError("No tienes suficiente reputación para eliminar este tip.")
+
         super().delete(*args, **kwargs)
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
 
@@ -96,13 +98,15 @@ class Tip(models.Model):
         if user == self.author:
             raise PermissionError("No puedes votar tu propio tip.")
 
+        if self.upvotes.filter(id=user.id).exists():
+            raise PermissionError("Ya has votado positivamente este tip.")
+
         if self.downvotes.filter(id=user.id).exists():  # Revertir un downvote previo
             self.downvotes.remove(user)
             self.author.update_reputation(delta_downvotes=-1)
 
-        if not self.upvotes.filter(id=user.id).exists():  # Agregar el upvote
-            self.upvotes.add(user)
-            self.author.update_reputation(delta_upvotes=1)
+        self.upvotes.add(user)
+        self.author.update_reputation(delta_upvotes=1)
 
     def downvote(self, user):
         """
@@ -111,13 +115,15 @@ class Tip(models.Model):
         if user == self.author:
             raise PermissionError("No puedes votar tu propio tip.")
 
+        if self.downvotes.filter(id=user.id).exists():
+            raise PermissionError("Ya has votado negativamente este tip.")
+
         if self.upvotes.filter(id=user.id).exists():  # Revertir un upvote previo
             self.upvotes.remove(user)
             self.author.update_reputation(delta_upvotes=-1)
 
-        if not self.downvotes.filter(id=user.id).exists():  # Agregar el downvote
-            self.downvotes.add(user)
-            self.author.update_reputation(delta_downvotes=1)
+        self.downvotes.add(user)
+        self.author.update_reputation(delta_downvotes=1)
 
     def upvotes_count(self):
         """Devuelve el número total de upvotes."""
