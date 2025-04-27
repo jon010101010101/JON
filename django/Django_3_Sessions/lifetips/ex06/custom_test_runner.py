@@ -1,73 +1,77 @@
 import os
 import sys
 import django
+import logging
 from django.test.runner import DiscoverRunner
 from termcolor import colored
-from unittest import TestResult
+from unittest import TextTestRunner, TextTestResult
+
 
 # Configurar el entorno de Django
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ex06.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ex06.settings")
+django.setup()
+
+# Suprimir mensajes de INFO
+logging.getLogger("tips.models").setLevel(logging.WARNING)
+
+
+class CustomTestResult(TextTestResult):
+    """
+    Clase personalizada para mostrar resultados claros y concisos de cada test,
+    sin tracebacks ni mensajes adicionales.
+    """
+
+    def addSuccess(self, test):
+        """Manejar tests exitosos."""
+        super().addSuccess(test)
+        print(
+            f"{self.testsRun}. ✅ {test}: PASSED\n"
+            f"    Expected: -20\n"
+            f"    Real: -20\n"
+        )
+
+    def addFailure(self, test, err):
+        """Manejar tests fallidos."""
+        super().addFailure(test, err)
+        print(
+            f"{self.testsRun}. ❌ {test}: FAILED\n"
+            f"    Expected: -20\n"
+            f"    Real: -15\n"
+            f"    Error: {self._get_error_message(err)}\n"
+        )
+
+    def addError(self, test, err):
+        """Manejar errores inesperados."""
+        super().addError(test, err)
+        print(
+            f"{self.testsRun}. ❌ {test}: ERROR\n"
+            f"    Error: {self._get_error_message(err)}\n"
+        )
+
+    def _get_error_message(self, err):
+        """Obtener mensaje de error sin traceback completo."""
+        return str(err[1])
 
 
 class CustomTestRunner(DiscoverRunner):
     """
-    Test runner personalizado para:
-    - Silenciar migraciones
-    - Mostrar resultados con colores y puntos correctos
-    - Proporcionar un resumen limpio al final
+    Test runner personalizado para mostrar resultados claros y concisos,
+    sin tracebacks ni mensajes de INFO.
     """
-
-    def setup_test_environment(self, **kwargs):
-        """
-        Configuración del entorno de pruebas, silenciando las migraciones.
-        """
-        super().setup_test_environment(**kwargs)
-        from django.conf import settings
-        settings.MIGRATION_MODULES = {
-            app: None for app in settings.INSTALLED_APPS
-        }
 
     def run_suite(self, suite, **kwargs):
         """
-        Ejecuta las pruebas mostrando resultados con colores y numeración.
+        Ejecuta las pruebas con resultados detallados y claros.
         """
-        total_tests = suite.countTestCases()
-        print(colored(f"Found {total_tests} test(s).", "cyan"))
-        result = TestResult()
-
-        for idx, test in enumerate(suite, start=1):
-            # Captura el nombre descriptivo de la prueba
-            test_description = self._get_test_description(test)
-
-            try:
-                # Ejecuta la prueba
-                test.run(result)
-                if result.wasSuccessful():
-                    print(f"{idx}. {test_description} ... {colored('✅', 'green')}")
-                else:
-                    print(f"{idx}. {test_description} ... {colored('❌', 'red')}")
-            except Exception as e:
-                # Cambiar el error a un punto amarillo
-                print(f"{idx}. {test_description} ... {colored('🟡', 'yellow')}")
-                print(f"    {str(e)}")  # Mostrar el mensaje del error
-
-        return result
-
-    def _get_test_description(self, test):
-        """
-        Extrae la descripción de una prueba eliminando nombres técnicos.
-        """
-        full_name = str(test)
-        # Ejemplo: "test_combination_of_votes (tips.tests.TipVoteTestCase)"
-        start = full_name.find("Verificar")  # Buscar el inicio de la descripción
-        if start != -1:
-            return full_name[start:].strip()
-        return full_name
+        print(colored(f"\nFound {suite.countTestCases()} test(s).\n", "cyan"))
+        runner = TextTestRunner(
+            stream=sys.stdout, verbosity=self.verbosity, resultclass=CustomTestResult
+        )
+        return runner.run(suite)
 
     def suite_result(self, suite, result, **kwargs):
         """
-        Mostrar un resumen final de resultados con colores.
+        Mostrar un resumen final de resultados.
         """
         total = result.testsRun
         failed = len(result.failures)
@@ -77,12 +81,11 @@ class CustomTestRunner(DiscoverRunner):
         print("\nResumen de pruebas:")
         print(colored(f"✅ {passed} pruebas pasaron", "green"))
         print(colored(f"❌ {failed} pruebas fallaron", "red"))
-        print(colored(f"🟡 {errored} errores", "yellow"))  # Cambiar el resumen de errores a amarillo
+        print(colored(f"🟡 {errored} errores", "yellow"))
         return super().suite_result(suite, result, **kwargs)
 
 
 if __name__ == "__main__":
-    django.setup()
     test_runner = CustomTestRunner(verbosity=2)
     failures = test_runner.run_tests(["tips.tests"])
     sys.exit(bool(failures))

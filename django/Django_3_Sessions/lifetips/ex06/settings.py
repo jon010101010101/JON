@@ -22,6 +22,10 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = '/login/'  # Redirección para vistas protegidas
 
+# Configuración del Test Runner personalizado
+TEST_RUNNER = "custom_test_runner.CustomTestRunner"
+
+
 # Configuración de aplicaciones
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -123,3 +127,26 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 # Configuración de claves automáticas
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Eliminar mensajes de deuración
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'WARNING',  # Cambiar los mensajes DEBUG a WARNING
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
+        'tips.signals': {  # Configuración específica para tips.signals
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
