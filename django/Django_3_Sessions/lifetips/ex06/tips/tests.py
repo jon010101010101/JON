@@ -103,3 +103,10 @@ class ReputationSystemTestCase(TestCase):
         admin_user = CustomUser.objects.create_user(username="Admin", reputation=50, is_admin=True)
         self.tip.delete(user=admin_user)
         self.assertFalse(Tip.objects.filter(id=self.tip.id).exists())
+
+    def test_user_representation(self):
+        """Verify that the user's string representation includes their reputation."""
+        self.assertEqual(str(self.user1), "User1 (0 rep)")
+        self.user1.reputation = 10
+        self.user1.save()
+        self.assertEqual(str(self.user1), "User1 (10 rep)")

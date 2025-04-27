@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.db import transaction
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CustomUser(AbstractUser):
@@ -28,7 +32,8 @@ class CustomUser(AbstractUser):
         Actualiza la reputación incrementalmente.
         delta_upvotes y delta_downvotes son los cambios en los votos.
         """
-        self.reputation += delta_upvotes * 5 - delta_downvotes * 2
+        new_reputation = self.reputation + delta_upvotes * 5 - delta_downvotes * 2
+        self.reputation = max(new_reputation, -20)  # Límite inferior de reputación
         self.save(update_fields=['reputation'])
 
     @property
@@ -77,16 +82,16 @@ class Tip(models.Model):
         if is_new:
             self.author.update_reputation()
 
-    def delete(self, *args, **kwargs):
+    def delete(self, user, *args, **kwargs):
         """
         Recalcula la reputación del autor al eliminar un Tip.
+        Verifica si el usuario tiene permiso para eliminar el Tip.
         """
+        if user != self.author and not user.is_superuser:
+            raise PermissionError("No tienes permiso para eliminar este tip.")
+
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
-
-        # Verifica si el autor tiene permiso para eliminar el Tip
-        if not self.author.can_delete_tips:
-            raise PermissionError("No tienes suficiente reputación para eliminar este tip.")
 
         super().delete(*args, **kwargs)
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
@@ -95,35 +100,41 @@ class Tip(models.Model):
         """
         Maneja la lógica de agregar un upvote.
         """
-        if user == self.author:
-            raise PermissionError("No puedes votar tu propio tip.")
+        with transaction.atomic():
+            if user == self.author:
+                raise PermissionError("No puedes votar tu propio tip.")
 
-        if self.upvotes.filter(id=user.id).exists():
-            raise PermissionError("Ya has votado positivamente este tip.")
+            if self.upvotes.filter(id=user.id).exists():
+                raise PermissionError("Ya has votado positivamente este tip.")
 
-        if self.downvotes.filter(id=user.id).exists():  # Revertir un downvote previo
-            self.downvotes.remove(user)
-            self.author.update_reputation(delta_downvotes=-1)
+            if self.downvotes.filter(id=user.id).exists():  # Revertir un downvote previo
+                self.downvotes.remove(user)
+                self.author.update_reputation(delta_downvotes=-1)
 
-        self.upvotes.add(user)
-        self.author.update_reputation(delta_upvotes=1)
+            self.upvotes.add(user)
+            self.author.update_reputation(delta_upvotes=1)
+
+            logger.info(f"User {user} upvoted Tip {self.id}")
 
     def downvote(self, user):
         """
         Maneja la lógica de agregar un downvote.
         """
-        if user == self.author:
-            raise PermissionError("No puedes votar tu propio tip.")
+        with transaction.atomic():
+            if user == self.author:
+                raise PermissionError("No puedes votar tu propio tip.")
 
-        if self.downvotes.filter(id=user.id).exists():
-            raise PermissionError("Ya has votado negativamente este tip.")
+            if self.downvotes.filter(id=user.id).exists():
+                raise PermissionError("Ya has votado negativamente este tip.")
 
-        if self.upvotes.filter(id=user.id).exists():  # Revertir un upvote previo
-            self.upvotes.remove(user)
-            self.author.update_reputation(delta_upvotes=-1)
+            if self.upvotes.filter(id=user.id).exists():  # Revertir un upvote previo
+                self.upvotes.remove(user)
+                self.author.update_reputation(delta_upvotes=-1)
 
-        self.downvotes.add(user)
-        self.author.update_reputation(delta_downvotes=1)
+            self.downvotes.add(user)
+            self.author.update_reputation(delta_downvotes=1)
+
+            logger.info(f"User {user} downvoted Tip {self.id}")
 
     def upvotes_count(self):
         """Devuelve el número total de upvotes."""
