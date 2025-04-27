@@ -17,7 +17,7 @@ print(f"DEBUG={DEBUG}")  # Esto imprimirá el valor de DEBUG en la consola
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
 # Configuración del usuario
-AUTH_USER_MODEL = 'ex06.tips.CustomUser'
+AUTH_USER_MODEL = 'tips.CustomUser'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = '/login/'  # Redirección para vistas protegidas
