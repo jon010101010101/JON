@@ -61,7 +61,7 @@ AXES_RESET_ON_SUCCESS = True  # Restablecer en inicio exitoso
 
 # Configuración de URLs
 ROOT_URLCONF = 'ex06.urls'
-handler404 = 'tips.views.custom_404_view'
+#handler404 = 'tips.views.custom_404_view'
 
 # Configuración de plantillas
 TEMPLATES = [
