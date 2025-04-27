@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
-from .forms import TipForm, CustomUserCreationForm
+#from .forms import TipForm, CustomUserCreationForm
 from .models import Tip
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -38,6 +38,7 @@ def login_view(request):
 
 # Vista para el registro de usuarios (Register)
 def register(request):
+    from .forms import CustomUserCreationForm  # Importación dentro de la función
     form = CustomUserCreationForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
