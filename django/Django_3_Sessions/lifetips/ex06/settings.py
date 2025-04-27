@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ex06.tips',
+    'tips',
     'bootstrap5',
     'axes',  # Protección contra ataques de fuerza bruta
 ]
