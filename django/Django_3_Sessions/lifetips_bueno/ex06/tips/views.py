@@ -11,9 +11,6 @@ from .forms import TipForm, CustomUserCreationForm
 from .models import Tip
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.views import PasswordResetView
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 
 # Vista para la página de inicio (Home)
 def home(request):
@@ -174,30 +171,3 @@ def password_reset_request(request):
 # Vista personalizada para 404
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
-
-class CustomPasswordResetView(PasswordResetView):
-    email_template_name = 'registration/password_reset_email.txt'  # Para texto plano (opcional)
-    html_email_template_name = 'registration/password_reset_email.html'  # Para HTML
-    subject_template_name = 'registration/password_reset_subject.txt'  # Asunto del correo
-
-    def send_mail(self, subject_template_name, email_template_name,
-                  context, from_email, to_email, html_email_template_name=None):
-        # Agregar el dominio y protocolo al contexto
-        context['protocol'] = 'https' if not settings.DEBUG else 'http'
-        context['domain'] = settings.DOMAIN  # Define el dominio en settings.py o .env
-
-        # Renderizar las plantillas para texto plano y HTML
-        subject = render_to_string(subject_template_name, context).strip()
-        text_content = render_to_string(email_template_name, context)
-        html_content = render_to_string(html_email_template_name, context) if html_email_template_name else None
-
-        # Enviar el correo
-        msg = EmailMultiAlternatives(
-            subject,
-            text_content,
-            from_email,
-            [to_email]
-        )
-        if html_content:
-            msg.attach_alternative(html_content, "text/html")
-        msg.send()

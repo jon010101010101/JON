@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
-from decouple import config, Csv
-import environ
+from decouple import config
 
 # Rutas base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -115,34 +114,16 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Esto debe apuntar al directorio donde está tu carpeta "static"
 ]
-#STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos 
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos 
 # con collectstatic. ejecutamos python manage.py collectstatic
 
-# Inicializar django-environ
-env = environ.Env()
-environ.Env.read_env()  # Cargar variables desde .env
-
-# Configurar el dominio
-DOMAIN = env("DOMAIN", default="127.0.0.1:8000")  # Usar 127.0.0.1:8000 por defecto en desarrollo
-
-
 # Configuración del correo gmail (desde .env)
-from decouple import config  # Importar la función config de python-decouple
-
-# Backend para enviar correos
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Configuración del servidor SMTP de SendGrid
-EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  # Siempre 'apikey' para SendGrid
-EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')  # Leer clave API desde el archivo .env
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Leer correo desde el archivo .env
-
-# Opcional: Configuración de correo alternativo
-EMAIL_HOST_USER_ALT = config('EMAIL_HOST_USER', default=None)
-EMAIL_HOST_PASSWORD_ALT = config('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 # Configuración de claves automáticas
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
