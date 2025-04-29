@@ -1,5 +1,3 @@
-{% load static %}
-{% load url %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,69 +7,60 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
             background-color: #f8f9fa;
             color: #333;
-            text-align: center;
-            padding: 40px;
-            margin: 0;
         }
-
-        .error-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 8px;
-            background: #ffffff;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .error-image-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .error-image {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-        }
-
-        h1 {
-            color: #007bff;
-            font-size: 3em;
+        .header {
+            font-size: 20px;
+            color: #007BFF; /* Blue for the "Life Pro Tips" header */
             margin-bottom: 10px;
         }
-
-        p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
+        .oops {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
         }
-
+        .error-symbol {
+            font-size: 100px;
+            color: #dc3545; /* Red for the error symbol */
+            margin: 20px 0;
+        }
+        p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
         a {
-            color: #ffffff;
-            background-color: #007bff;
+            display: inline-block;
+            margin-top: 20px;
             padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-weight: bold;
         }
-
         a:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="error-container">
-        <h1>Life Pro Tips</h1>
-        <p>Oops! The page you're looking for doesn't exist.</p>
-        <p>If you want to go to the correct page, click the button below.</p>
-        <a href="{% url 'homepage' %}">Go to Home</a>
-    </div>
+    <!-- Main Header -->
+    <div class="header">Life Pro Tips</div>
 
-    <div class="error-image-container">
-        <img src="{% static 'images/error_symbol.png' %}" alt="Error Symbol" class="error-image">
-    </div>
+    <!-- "Oops!!!" Message -->
+    <div class="oops">Oops!!!</div>
+
+    <!-- Error Symbol -->
+    <div class="error-symbol">❌</div>
+
+    <!-- Error Message -->
+    <p>We are sorry, an error has occurred.</p>
+    <p>Please check the URL or return to the homepage.</p>
+
+    <!-- Button to go back to the Home Page -->
+    <a href="/">Go to Home</a>
 </body>
 </html>

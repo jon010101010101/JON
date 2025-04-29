@@ -14,9 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+<<<<<<< HEAD
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+=======
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf.urls import handler404  # Importa handler404
+from tips import views as tips_views  # Agrega las vistas principales aquí
+>>>>>>> aa7cf094 (Remove unused files and clean up project)
+
+# Configuración del manejador de errores 404
+handler404 = 'tips.views.custom_404_view'
 
 urlpatterns = [
     path('', views.home, name='home'),

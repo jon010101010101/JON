@@ -68,6 +68,19 @@
             font-size: 0.85em;
             color: #dc3545;
         }
+
+        .forgot-password {
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -137,6 +150,11 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Login</button>
             </form>
+
+            <!-- Enlace de recuperación de contraseña -->
+            <div class="forgot-password">
+                <a href="{% url 'password_reset' %}">Forgot your password?</a>
+            </div>
         </div>
     </div>
 

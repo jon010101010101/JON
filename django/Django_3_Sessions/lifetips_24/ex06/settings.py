@@ -22,6 +22,10 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = '/login/'  # Redirección para vistas protegidas
 
+# Configuración del Test Runner personalizado
+TEST_RUNNER = "custom_test_runner.CustomTestRunner"
+
+
 # Configuración de aplicaciones
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,7 +65,7 @@ AXES_RESET_ON_SUCCESS = True  # Restablecer en inicio exitoso
 
 # Configuración de URLs
 ROOT_URLCONF = 'ex06.urls'
-handler404 = 'tips.views.custom_404_view'
+#handler404 = 'tips.views.custom_404_view'
 
 # Configuración de plantillas
 TEMPLATES = [
@@ -110,7 +114,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Esto debe apuntar al directorio donde está tu carpeta "static"
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos con collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos 
+# con collectstatic. ejecutamos python manage.py collectstatic
 
 # Configuración del correo gmail (desde .env)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -122,3 +127,26 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 # Configuración de claves automáticas
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Eliminar mensajes de deuración
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'WARNING',  # Cambiar los mensajes DEBUG a WARNING
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
+        'tips.signals': {  # Configuración específica para tips.signals
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}

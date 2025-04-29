@@ -1,9 +1,8 @@
 from django.apps import AppConfig
 
-
 class TipsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'tips'
+    name = 'tips'  # Debe coincidir con INSTALLED_APPS
 
     def ready(self):
-        import tips.signals  # Importa las señales cuando la aplicación esté lista
+        import tips.signals  # Ajusta la ruta si estás utilizando señales

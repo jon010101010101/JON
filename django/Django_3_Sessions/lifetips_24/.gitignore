@@ -30,7 +30,7 @@ build/
 media/
 staticfiles/
 static/
-#.env  # Archivo de entorno con credenciales sensibles
+.env  # Archivo de entorno con credenciales sensibles
 
 # Django cache files
 *.cache/
