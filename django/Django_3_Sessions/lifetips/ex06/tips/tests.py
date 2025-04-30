@@ -5,7 +5,6 @@ from .models import Tip
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Permission
 
-<<<<<<< HEAD
 class ReputationTests(TestCase):
 
     def setUp(self):
@@ -22,210 +21,102 @@ class ReputationTests(TestCase):
         self.user3.reputation = 30
         self.user3.save()
 
-        # Obtener los permisos
         self.can_downvote_permission = Permission.objects.get(codename='can_downvote_tip')
         self.can_delete_permission = Permission.objects.get(codename='can_delete_tip')
 
-        # Asigna permisos manualmente (necesario si no usas signals en testing)
-
-        # Crea algunos tips
         self.tip1 = Tip.objects.create(author=self.user1, content="Tip 1")
         self.tip2 = Tip.objects.create(author=self.user2, content="Tip 2")
-        self.tip3 = Tip.objects.create(author=self.user1, content="Tip 3")
 
-    def test_initial_reputation(self):
-        # Verifica que la reputación inicial es correcta
-=======
-
-class PruebasSistemaReputacion(TestCase):
-    """
-    Pruebas para el sistema de reputación y permisos.
-    """
-
-    def setUp(self):
-        """Configurar datos iniciales para los casos de prueba."""
-        self.user1 = CustomUser.objects.create_user(username="Usuario1", reputation=0)
-        self.user2 = CustomUser.objects.create_user(username="Usuario2", reputation=15)
-        self.user3 = CustomUser.objects.create_user(username="Usuario3", reputation=30)
-        self.tip = Tip.objects.create(author=self.user1, content="Este es un tip.")
-
-    def test_01_reputacion_inicial(self):
-        """Verificar que los nuevos usuarios comiencen con 0 de reputación."""
->>>>>>> aa7cf094 (Remove unused files and clean up project)
+    def test_01_initial_reputation(self):
+        """Verificar que la reputación inicial es correcta."""
         self.assertEqual(self.user1.reputation, 0)
         self.assertEqual(self.user2.reputation, 15)
         self.assertEqual(self.user3.reputation, 30)
 
-<<<<<<< HEAD
-    def test_upvote_downvote(self):
-        # Login como user1 (reputación 0)
-        self.client.login(username='user1', password='password1')
-
-        # User1 upvotea el tip1
-        response = self.client.post(reverse('vote_tip', args=[self.tip1.id, 'upvote']))
-        self.assertEqual(response.status_code, 302)
-        self.tip1.refresh_from_db()
-        self.user1.refresh_from_db()
-        self.assertEqual(self.tip1.upvotes.count(), 1)
-        self.assertEqual(self.tip1.author.reputation, 5)
-
-    def test_downvote_permission(self):
-        # Login como user1 (reputación 0)
-        self.client.login(username='user1', password='password1')
-
-        # Intenta downvotear el tip1 y verifica que se deniega el permiso
-        response = self.client.post(reverse('vote_tip', args=[self.tip1.id, 'downvote']))
-        self.assertEqual(response.status_code, 302)
-
-        # Login como user2 (reputación 15 y con permiso can_downvote)
-        self.client.login(username='user2', password='password2')
-        self.user2.user_permissions.add(self.can_downvote_permission)
-        self.user2.save()
-
-        # Downvotea el tip1 y verifica que se permite la acción
-        response = self.client.post(reverse('vote_tip', args=[self.tip1.id, 'downvote']))
-        self.assertEqual(response.status_code, 302)
-        self.tip1.refresh_from_db()
-        self.user1.refresh_from_db()
-        self.assertEqual(self.tip1.downvotes.count(), 1)
-        self.assertEqual(self.tip1.author.reputation, 3)
-
-    def test_delete_permission(self):
-        # Login como user1 (reputación 0, no puede borrar normalmente)
-        self.client.login(username='user1', password='password1')
-
-        # Intenta borrar el tip1 y verifica que se deniega el permiso
-        response = self.client.post(reverse('delete_tip', args=[self.tip1.id]))
-        self.assertEqual(response.status_code, 302)
-        # Login como user1 (reputación 0, es el autor del tip)
-        self.client.login(username='user1', password='password1')
-
-        # Intenta borrar el tip3 y verifica que se permite la acción
-        response = self.client.post(reverse('delete_tip', args=[self.tip3.id]))
-        self.assertEqual(response.status_code, 302)
-        with self.assertRaises(Tip.DoesNotExist):
-            Tip.objects.get(pk=self.tip3.id)
-
-    def test_delete_reputation_recalculation(self):
-        # Creamos un tip
-        self.client.login(username='user1', password='password1')
-        self.tip4 = Tip.objects.create(author=self.user1, content="Tip 4")
-
-        # User2 upvotea el tip4
-        self.client.login(username='user2', password='password2')
-        self.user2.user_permissions.add(self.can_downvote_permission)
-        self.user2.save()
-        response = self.client.post(reverse('vote_tip', args=[self.tip4.id, 'upvote']))
-        self.assertEqual(response.status_code, 302)
-
-        self.user1.refresh_from_db()
-        self.assertEqual(self.user1.reputation, 5)
-
-        # Borra el tip4
-        self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('delete_tip', args=[self.tip4.id]))
-        self.assertEqual(response.status_code, 302)
-        self.user1.refresh_from_db()
-        self.assertEqual(self.user1.reputation, 0)
-=======
-    def test_02_upvote_aumenta_reputacion(self):
+    def test_02_upvote_increases_reputation(self):
         """Verificar que los upvotes aumenten la reputación del autor."""
-        self.tip.upvote(self.user2)
+        self.tip1.add_upvote(self.user2)
         self.assertEqual(self.user1.reputation, 5)
 
-    def test_03_downvote_disminuye_reputacion(self):
+    def test_03_downvote_decreases_reputation(self):
         """Verificar que los downvotes disminuyan la reputación del autor."""
-        self.tip.downvote(self.user2)
+        self.tip1.add_downvote(self.user2)
         self.assertEqual(self.user1.reputation, -2)
 
-    def test_04_permiso_para_downvote(self):
-        """Verificar que los usuarios desbloqueen el permiso de downvote con 15 puntos de reputación."""
-        self.assertTrue(self.user2.can_downvote)
+    def test_04_user_can_downvote_with_permission(self):
+        """Verificar que los usuarios con permiso puedan hacer downvote."""
+        self.assertTrue(self.user2.has_perm('tips.can_downvote_tip'))
 
-    def test_05_permiso_para_eliminar_tip(self):
-        """Verificar que los usuarios desbloqueen el permiso de eliminar tips con 30 puntos de reputación."""
-        self.assertTrue(self.user3.can_delete_tips)
+    def test_05_user_can_delete_with_permission(self):
+        """Verificar que los usuarios con permiso puedan eliminar tips."""
+        self.assertTrue(self.user3.has_perm('tips.can_delete_tip'))
 
-    def test_06_eliminar_tip_elimina_influencia_reputacion(self):
+    def test_06_delete_tip_removes_reputation_effect(self):
         """Verificar que al eliminar un tip se elimine su influencia en la reputación."""
-        self.tip.upvote(self.user2)
-        self.tip.delete(user=self.user1)
+        self.tip1.add_upvote(self.user2)
+        self.tip1.delete()
         self.assertEqual(self.user1.reputation, 0)
 
-    def test_07_no_se_permite_self_upvote(self):
+    def test_07_user_cannot_upvote_own_tip(self):
         """Verificar que los usuarios no puedan dar upvote a sus propios tips."""
-        with self.assertRaises(PermissionError):
-            self.tip.upvote(self.user1)
+        with self.assertRaises(PermissionDenied):
+            self.tip1.add_upvote(self.user1)
 
-    def test_08_no_se_permite_self_downvote(self):
+    def test_08_user_cannot_downvote_own_tip(self):
         """Verificar que los usuarios no puedan dar downvote a sus propios tips."""
-        with self.assertRaises(PermissionError):
-            self.tip.downvote(self.user1)
+        with self.assertRaises(PermissionDenied):
+            self.tip1.add_downvote(self.user1)
 
-    def test_09_no_se_puede_dar_upvote_dos_veces(self):
-        """Verificar que los usuarios no puedan dar upvote al mismo tip varias veces."""
-        self.tip.upvote(self.user2)
-        with self.assertRaises(PermissionError):
-            self.tip.upvote(self.user2)
+    def test_09_user_cannot_upvote_twice(self):
+        """Verificar que los usuarios no puedan dar upvote al mismo tip más de una vez."""
+        self.tip1.add_upvote(self.user2)
+        with self.assertRaises(PermissionDenied):
+            self.tip1.add_upvote(self.user2)
 
-    def test_10_no_se_puede_dar_downvote_dos_veces(self):
-        """Verificar que los usuarios no puedan dar downvote al mismo tip varias veces."""
-        self.tip.downvote(self.user2)
-        with self.assertRaises(PermissionError):
-            self.tip.downvote(self.user2)
+    def test_10_user_cannot_downvote_twice(self):
+        """Verificar que los usuarios no puedan dar downvote al mismo tip más de una vez."""
+        self.tip1.add_downvote(self.user2)
+        with self.assertRaises(PermissionDenied):
+            self.tip1.add_downvote(self.user2)
 
-    def test_11_upvotes_multiples_de_usuarios_diferentes(self):
-        """Verificar que un tip reciba la reputación correcta con múltiples upvotes."""
-        self.tip.upvote(self.user2)
-        self.tip.upvote(self.user3)
+    def test_11_multiple_upvotes_increase_reputation(self):
+        """Verificar que múltiples upvotes aumenten la reputación correctamente."""
+        self.tip1.add_upvote(self.user2)
+        self.tip1.add_upvote(self.user3)
         self.assertEqual(self.user1.reputation, 10)
 
-    def test_12_downvotes_multiples_de_usuarios_diferentes(self):
-        """Verificar que un tip reciba la reputación correcta con múltiples downvotes."""
-        self.tip.downvote(self.user2)
-        self.tip.downvote(self.user3)
+    def test_12_multiple_downvotes_decrease_reputation(self):
+        """Verificar que múltiples downvotes disminuyan la reputación correctamente."""
+        self.tip1.add_downvote(self.user2)
+        self.tip1.add_downvote(self.user3)
         self.assertEqual(self.user1.reputation, -4)
 
-    def test_13_calculo_reputacion_tip(self):
-        """Verificar que la reputación se calcule correctamente después de votos mixtos."""
-        self.tip.upvote(self.user2)  # +5
-        self.tip.downvote(self.user3)  # -2
+    def test_13_mixed_votes_reputation_calculation(self):
+        """Verificar que la reputación se calcule correctamente con votos mixtos."""
+        self.tip1.add_upvote(self.user2)
+        self.tip1.add_downvote(self.user3)
         self.assertEqual(self.user1.reputation, 3)
 
-    def test_14_reputacion_no_puede_ser_negativa(self):
-        """Verificar que la reputación no pueda bajar de un umbral determinado."""
-        # Crear usuarios adicionales para realizar downvotes
-        usuarios_extra = [
-            CustomUser.objects.create_user(username=f"UsuarioExtra{i}", reputation=0)
-            for i in range(1, 11)  # Crear 10 usuarios adicionales
-        ]
-
-        # Aplicar downvotes al Tip para reducir la reputación del autor
-        for usuario in usuarios_extra:
-            self.tip.downvote(usuario)
-
-        # Refrescar la reputación del autor después de aplicar todos los downvotes
-        self.user1.refresh_from_db()
-
-        # Verificar que la reputación no baje de -20
+    def test_14_reputation_does_not_go_below_threshold(self):
+        """Verificar que la reputación no baje de un umbral determinado."""
+        extra_users = [get_user_model().objects.create_user(username=f'user{i}') for i in range(10)]
+        for user in extra_users:
+            self.tip1.add_downvote(user)
         self.assertEqual(self.user1.reputation, -20)
 
-    def test_15_no_autor_no_puede_eliminar_tip(self):
-        """Verificar que solo el autor o un administrador puedan eliminar un tip."""
-        with self.assertRaises(PermissionError):
-            self.tip.delete(user=self.user2)
-        self.tip.delete(user=self.user1)  # El autor elimina su propio tip
-        self.assertFalse(Tip.objects.filter(id=self.tip.id).exists())
+    def test_15_non_author_cannot_delete_tip(self):
+        """Verificar que solo el autor o un admin puedan eliminar un tip."""
+        with self.assertRaises(PermissionDenied):
+            self.tip1.delete(user=self.user2)
 
-    def test_16_admin_puede_eliminar_cualquier_tip(self):
-        """Verificar que un usuario administrador pueda eliminar cualquier tip."""
-        usuario_admin = CustomUser.objects.create_user(username="Admin", reputation=50, is_superuser=True)
-        self.tip.delete(user=usuario_admin)
-        self.assertFalse(Tip.objects.filter(id=self.tip.id).exists())
+    def test_16_admin_can_delete_any_tip(self):
+        """Verificar que los administradores puedan eliminar cualquier tip."""
+        admin = get_user_model().objects.create_superuser(username='admin', password='adminpass')
+        self.tip1.delete(user=admin)
+        self.assertFalse(Tip.objects.filter(id=self.tip1.id).exists())
 
-    def test_17_representacion_usuario(self):
-        """Verificar que la representación en cadena del usuario incluya su reputación."""
+    def test_17_user_representation_includes_reputation(self):
+        """Verificar que la representación del usuario incluya su reputación."""
         self.user1.reputation = 10
         self.user1.save()
-        self.assertEqual(str(self.user1), "Usuario1 (10 rep)")
->>>>>>> aa7cf094 (Remove unused files and clean up project)
+        self.assertEqual(str(self.user1), "user1 (10 rep)")

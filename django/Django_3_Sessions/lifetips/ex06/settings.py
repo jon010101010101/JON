@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'tips',
     'bootstrap5',
     'axes',  # Protección contra ataques de fuerza bruta
+    'django_extensions',
 ]
 
 # Middleware
@@ -111,8 +112,9 @@ USE_TZ = True
 # Archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Esto debe apuntar al directorio donde está tu carpeta "static"
+    BASE_DIR / "static",  # Carpeta para tus propios archivos estáticos (si existe)
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Carpeta donde `collectstatic` recopila los archivos estáticos
 
 # Configuración del correo usando SendGrid
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
