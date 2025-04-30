@@ -1,21 +1,21 @@
 from pathlib import Path
 import os
-from decouple import config, Csv
-import environ
+from dotenv import load_dotenv
 
 # Rutas base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Cargar las variables de entorno desde el archivo .env_lifetips
+load_dotenv('/sgoinfre/.env_lifetips')
+
 # Clave secreta (no exponer en producción)
-SECRET_KEY = config('SECRET_KEY', default='clave_secreta_de_respaldo')
+SECRET_KEY = os.getenv('SECRET_KEY', default='clave_secreta_de_respaldo')
 
 # Depuración (cambiar a False en producción)
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-print(f"DEBUG={DEBUG}")  # Esto imprimirá el valor de DEBUG en la consola
-
-# Hosts permitidos (desde .env)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+# Hosts permitidos
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Configuración del usuario
 AUTH_USER_MODEL = 'tips.CustomUser'
@@ -26,8 +26,7 @@ LOGIN_URL = '/login/'  # Redirección para vistas protegidas
 # Configuración del Test Runner personalizado
 TEST_RUNNER = "custom_test_runner.CustomTestRunner"
 
-
-# Configuración de aplicaciones
+# Aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,7 +51,7 @@ MIDDLEWARE = [
     'axes.middleware.AxesMiddleware',  # Integración con django-axes
 ]
 
-# Configuración de backends de autenticación
+# Backends de autenticación
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesStandaloneBackend',  # Requerido por django-axes
     'django.contrib.auth.backends.ModelBackend',  # Backend predeterminado de Django
@@ -66,7 +65,6 @@ AXES_RESET_ON_SUCCESS = True  # Restablecer en inicio exitoso
 
 # Configuración de URLs
 ROOT_URLCONF = 'ex06.urls'
-#handler404 = 'tips.views.custom_404_view'
 
 # Configuración de plantillas
 TEMPLATES = [
@@ -115,39 +113,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Esto debe apuntar al directorio donde está tu carpeta "static"
 ]
-#STATIC_ROOT = BASE_DIR / "staticfiles"  # Esto define dónde se copiarán los archivos 
-# con collectstatic. ejecutamos python manage.py collectstatic
 
-# Inicializar django-environ
-env = environ.Env()
-environ.Env.read_env()  # Cargar variables desde .env
+# Configuración del correo usando SendGrid
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'apikey')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'lifetipsdjango@gmail.com')
 
-# Configurar el dominio
-DOMAIN = env("DOMAIN", default="127.0.0.1:8000")  # Usar 127.0.0.1:8000 por defecto en desarrollo
-
-
-# Configuración del correo gmail (desde .env)
-from decouple import config  # Importar la función config de python-decouple
-
-# Backend para enviar correos
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Configuración del servidor SMTP de SendGrid
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  # Siempre 'apikey' para SendGrid
-EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')  # Leer clave API desde el archivo .env
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Leer correo desde el archivo .env
-
-# Opcional: Configuración de correo alternativo
-EMAIL_HOST_USER_ALT = config('EMAIL_HOST_USER', default=None)
-EMAIL_HOST_PASSWORD_ALT = config('EMAIL_HOST_PASSWORD', default=None)
-
-# Configuración de claves automáticas
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Eliminar mensajes de deuración
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -169,3 +145,6 @@ LOGGING = {
         },
     },
 }
+
+# Configuración de claves automáticas
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
