@@ -2,7 +2,7 @@ import smtplib
 
 # Configuración del servidor SMTP
 smtp_server = "smtp.sendgrid.net"
-smtp_port = 587
+smtp_port = 465
 smtp_user = "apikey"  # Nombre de usuario siempre es "apikey"
 smtp_password = "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"
 
