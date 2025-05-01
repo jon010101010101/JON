@@ -10,7 +10,6 @@ handler404 = 'tips.views.custom_404_view'
 
 # Configuración de las URLs principales
 urlpatterns = [
-
     # Ruta para el panel de administración
     path('admin/', admin.site.urls, name='admin'),
 
@@ -32,16 +31,6 @@ urlpatterns = [
     path('reset_done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
 ]
 
-# Agregar archivos estáticos si corresponde
-
-    # Incluye las rutas de la aplicación 'tips'
-    path('tips/', include('tips.urls')),
-
-    # Panel de administración
-    path('admin/', admin.site.urls),
-]
-
 # Configuración para servir archivos estáticos en desarrollo
-
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

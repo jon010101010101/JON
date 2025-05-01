@@ -10,10 +10,11 @@ from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
 
 
 # Vista para la página de inicio (Home)
@@ -27,7 +28,7 @@ def home(request):
     return render(request, 'home.html', {'tips': tips})
 
 
-# Vista para el inicio de sesión (Login)
+# Vista para iniciar sesión (Login)
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -43,7 +44,7 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
-# Vista para el registro de usuarios (Register)
+# Vista para registrar usuarios (Register)
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -130,7 +131,7 @@ def delete_tip(request, tip_id):
 # Vista para listar todos los tips
 def tips_list(request):
     try:
-        tips = Tip.objects.all()  # Obtén todos los tips
+        tips = Tip.objects.all()
     except Exception as e:
         tips = []  # Si ocurre un error, se pasa una lista vacía
         messages.error(request, f"An error occurred while loading the tips list: {str(e)}")
@@ -170,9 +171,9 @@ def custom_404_view(request, exception):
 
 # Clase personalizada para recuperación de contraseñas
 class CustomPasswordResetView(PasswordResetView):
-    email_template_name = 'registration/password_reset_email.txt'  # Para texto plano
-    html_email_template_name = 'registration/password_reset_email.html'  # Para HTML
-    subject_template_name = 'registration/password_reset_subject.txt'  # Asunto del correo
+    email_template_name = 'registration/password_reset_email.txt'
+    html_email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
 
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
