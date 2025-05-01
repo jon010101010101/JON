@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -13,6 +14,11 @@ from django.template.loader import render_to_string
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordResetView
+from .models import Tip, CustomUser
+from .forms import TipForm, CustomUserCreationForm
+from django.conf import settings
 
 
 # Vista para la página de inicio (Home)
@@ -87,11 +93,11 @@ def create_tip(request):
 
 
 # Vista para votar por un tip (Vote Tip)
+# Vista para votar por un tip (Upvote/Downvote)
 @login_required
 def vote_tip(request, tip_id, vote_type):
     try:
         tip = get_object_or_404(Tip, id=tip_id)
-
         if vote_type == 'upvote':
             tip.add_upvote(request.user)
             messages.success(request, "You have upvoted the tip.")
@@ -106,7 +112,12 @@ def vote_tip(request, tip_id, vote_type):
         messages.error(request, f"Permission error: {str(pd)}")
     except Exception as e:
         messages.error(request, f"An error occurred while voting: {str(e)}")
-
+    if vote_type == 'upvote':
+        tip.upvotes.add(request.user)
+        messages.success(request, "You have upvoted this tip.")
+    elif vote_type == 'downvote':
+        tip.downvotes.add(request.user)
+        messages.success(request, "You have downvoted this tip.")
     return redirect('home')
 
 
@@ -159,19 +170,28 @@ def password_reset_request(request):
                     return redirect('login')
                 except Exception as e:
                     messages.error(request, f"Failed to send email: {str(e)}")
+                for user in associated_users:
+                    send_mail(
+                        subject="Password Reset Requested",
+                        message="Click the link below to reset your password.",
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email]
+                    )
+                messages.success(request, "An email has been sent with instructions to reset your password.")
+                return redirect('login')
             else:
                 messages.error(request, "No user is associated with this email address.")
     else:
         form = PasswordResetForm()
     return render(request, 'registration/password_reset_form.html', {'form': form})
 
-
 # Vista personalizada para 404
+# Vista personalizada para errores 404 (Página no encontrada)
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
 
-
 # Clase personalizada para recuperación de contraseñas
+# Clase personalizada para la recuperación de contraseñas
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'registration/password_reset_email.txt'  # Para texto plano
     html_email_template_name = 'registration/password_reset_email.html'  # Para HTML
@@ -201,3 +221,13 @@ class CustomPasswordResetView(PasswordResetView):
             msg.send()
         except Exception as e:
             messages.error(context['request'], f"Failed to send email: {str(e)}")
+        # Enviar el correo
+        msg = EmailMultiAlternatives(
+            subject,
+            text_content,
+            from_email,
+            [to_email]
+        )
+        if html_content:
+            msg.attach_alternative(html_content, "text/html")
+        msg.send()

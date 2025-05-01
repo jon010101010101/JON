@@ -8,17 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class CustomUser(AbstractUser):
-    """
-    Modelo de usuario personalizado que extiende AbstractUser.
-    Incluye un campo adicional de reputación y lógica para manejar cambios.
-    """
     reputation = models.IntegerField(default=0)  # Campo para la reputación
     reputation_changed = False  # Atributo para rastrear cambios en la reputación
 
     def save(self, *args, **kwargs):
-        """
-        Detecta cambios en la reputación antes de guardar.
-        """
         if self.pk:  # Si el usuario ya existe
             old_reputation = CustomUser.objects.get(pk=self.pk).reputation
             self.reputation_changed = old_reputation != self.reputation
@@ -28,22 +21,16 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
 
     def update_reputation(self, delta_upvotes=0, delta_downvotes=0):
-        """
-        Actualiza la reputación incrementalmente.
-        delta_upvotes y delta_downvotes son los cambios en los votos.
-        """
         new_reputation = self.reputation + delta_upvotes * 5 - delta_downvotes * 2
         self.reputation = max(new_reputation, -20)  # Límite inferior de reputación
         self.save(update_fields=['reputation'])
 
     @property
     def can_downvote(self):
-        """Determina si el usuario puede hacer downvote."""
         return self.reputation >= 15
 
     @property
     def can_delete_tips(self):
-        """Determina si el usuario puede eliminar Tips."""
         return self.reputation >= 30
 
     def __str__(self):
@@ -51,10 +38,6 @@ class CustomUser(AbstractUser):
 
 
 class Tip(models.Model):
-    """
-    Modelo de Tip que representa un contenido creado por un usuario.
-    Incluye lógica para manejar votos y eliminación.
-    """
     content = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -74,21 +57,15 @@ class Tip(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        """
-        Asegura que la reputación del autor se actualice al crear un Tip.
-        """
-        is_new = self.pk is None  # Verifica si el Tip es nuevo
+        is_new = self.pk is None
         super().save(*args, **kwargs)
         if is_new:
             self.author.update_reputation()
 
-    def delete(self, user, *args, **kwargs):
-        """
-        Recalcula la reputación del autor al eliminar un Tip.
-        Verifica si el usuario tiene permiso para eliminar el Tip.
-        """
+    def delete(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         if user != self.author and not user.is_superuser:
-            raise PermissionError("No tienes permiso para eliminar este tip.")
+            raise PermissionError("You don't have permission to delete this tip.")
 
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
@@ -97,17 +74,12 @@ class Tip(models.Model):
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
 
     def upvote(self, user):
-        """
-        Maneja la lógica de agregar un upvote.
-        """
         with transaction.atomic():
             if user == self.author:
-                raise PermissionError("No puedes votar tu propio tip.")
-
+                raise PermissionError("You cannot upvote your own tip.")
             if self.upvotes.filter(id=user.id).exists():
-                raise PermissionError("Ya has votado positivamente este tip.")
-
-            if self.downvotes.filter(id=user.id).exists():  # Revertir un downvote previo
+                raise PermissionError("You have already upvoted this tip.")
+            if self.downvotes.filter(id=user.id).exists():
                 self.downvotes.remove(user)
                 self.author.update_reputation(delta_downvotes=-1)
 
@@ -117,17 +89,12 @@ class Tip(models.Model):
             logger.info(f"User {user} upvoted Tip {self.id}")
 
     def downvote(self, user):
-        """
-        Maneja la lógica de agregar un downvote.
-        """
         with transaction.atomic():
             if user == self.author:
-                raise PermissionError("No puedes votar tu propio tip.")
-
+                raise PermissionError("You cannot downvote your own tip.")
             if self.downvotes.filter(id=user.id).exists():
-                raise PermissionError("Ya has votado negativamente este tip.")
-
-            if self.upvotes.filter(id=user.id).exists():  # Revertir un upvote previo
+                raise PermissionError("You have already downvoted this tip.")
+            if self.upvotes.filter(id=user.id).exists():
                 self.upvotes.remove(user)
                 self.author.update_reputation(delta_upvotes=-1)
 
@@ -137,17 +104,12 @@ class Tip(models.Model):
             logger.info(f"User {user} downvoted Tip {self.id}")
 
     def upvotes_count(self):
-        """Devuelve el número total de upvotes."""
         return self.upvotes.count()
 
     def downvotes_count(self):
-        """Devuelve el número total de downvotes."""
         return self.downvotes.count()
 
     def score(self):
-        """
-        Devuelve el puntaje total del tip (upvotes - downvotes).
-        """
         return self.upvotes_count() - self.downvotes_count()
 
     class Meta:

@@ -116,9 +116,18 @@ Inicio de Sesión: http://127.0.0.1:8000/login/
 Registro de Usuarios: http://127.0.0.1:8000/register/
 Crear un Tip: http://127.0.0.1:8000/tips/create/
 Ver Tips Creados: http://127.0.0.1:8000/tips/list/
-Página de Inicio: http://127.0.0.1:8000/admin
+Página de Administracion: http://127.0.0.1:8000/admin
 
 Pagina no existe http://localhost:8000/nonexistent-page
+
+
+Vuelta de correo
+http://127.0.0.1:8000/reset/%3Cuid%3E/%3Ctoken%3E/
+
+Passsword reset 
+http://127.0.0.1:8000/password_reset/
+
+
 
 export PYTHONPATH=/sgoinfre/students/jurrutia/42_otrogitjon/django/Django_3_Sessions/lifetips:$PYTHONPATH
 

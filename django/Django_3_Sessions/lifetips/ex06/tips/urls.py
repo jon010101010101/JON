@@ -8,7 +8,9 @@ from tips import views  # Importa las vistas desde el módulo tips
 # Configuración del manejador de errores 404
 handler404 = 'tips.views.custom_404_view'
 
+# Configuración de las URLs principales
 urlpatterns = [
+
     # Ruta para el panel de administración
     path('admin/', admin.site.urls, name='admin'),
 
@@ -31,5 +33,15 @@ urlpatterns = [
 ]
 
 # Agregar archivos estáticos si corresponde
+
+    # Incluye las rutas de la aplicación 'tips'
+    path('tips/', include('tips.urls')),
+
+    # Panel de administración
+    path('admin/', admin.site.urls),
+]
+
+# Configuración para servir archivos estáticos en desarrollo
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
