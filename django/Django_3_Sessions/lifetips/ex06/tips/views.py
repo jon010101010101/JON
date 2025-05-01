@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
 
@@ -44,16 +43,18 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
-# Vista para registrar usuarios (Register)
+# Vista para registrar un usuario nuevo (Register)
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            user = form.save()  # Guarda al usuario
+            # Especifica el backend de autenticación al iniciar sesión
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome, {user.username}! Your account has been created successfully.')
-            return redirect('home')
+            return redirect('home')  # Redirige al home
         else:
+            print(form.errors)  # Imprime los errores del formulario en la consola
             messages.error(request, 'There was an error in your registration form. Please try again.')
     else:
         form = CustomUserCreationForm()
@@ -77,36 +78,41 @@ def create_tip(request):
                 tip = form.save(commit=False)
                 tip.author = request.user
                 tip.save()
-                messages.success(request, 'Tip created successfully!')
+                # Agrega una etiqueta específica al mensaje
+                messages.success(request, 'Tip created successfully!', extra_tags='tip_creation')
                 return redirect('home')
             except Exception as e:
-                messages.error(request, f"An error occurred while creating the tip: {str(e)}")
+                messages.error(request, f"An error occurred while creating the tip: {str(e)}", extra_tags='tip_creation')
         else:
-            messages.error(request, 'Form is invalid. Please correct the errors.')
+            messages.error(request, 'Form is invalid. Please correct the errors.', extra_tags='tip_creation')
     else:
         form = TipForm()
     return render(request, 'create_tip.html', {'form': form})
 
 
-# Vista para votar por un tip (Vote Tip)
+# Vista para manejar los votos positivos (Upvote)
 @login_required
-def vote_tip(request, tip_id, vote_type):
-    try:
-        tip = get_object_or_404(Tip, id=tip_id)
-        if vote_type == 'upvote':
-            tip.upvote(request.user)
-            messages.success(request, "You have upvoted the tip.")
-        elif vote_type == 'downvote':
-            if not request.user.has_perm('tips.can_downvote_tip') and request.user != tip.author:
-                raise PermissionDenied("You do not have permission to downvote this tip.")
-            tip.downvote(request.user)
-            messages.success(request, "You have downvoted the tip.")
-        else:
-            messages.error(request, "Invalid vote type.")
-    except PermissionDenied as pd:
-        messages.error(request, f"Permission error: {str(pd)}")
-    except Exception as e:
-        messages.error(request, f"An error occurred while voting: {str(e)}")
+def upvote_tip(request, tip_id):
+    tip = get_object_or_404(Tip, id=tip_id)
+    user = request.user
+    if user in tip.upvotes.all():  # Cambiado de "upvoted_by" a "upvotes"
+        tip.upvotes.remove(user)  # Elimina el voto positivo si ya existe
+    else:
+        tip.upvotes.add(user)  # Agrega el voto positivo si no existe
+        tip.downvotes.remove(user)  # Asegúrate de que no haya votos negativos simultáneamente
+    return redirect('home')
+
+
+# Vista para manejar los votos negativos (Downvote)
+@login_required
+def downvote_tip(request, tip_id):
+    tip = get_object_or_404(Tip, id=tip_id)
+    user = request.user
+    if user in tip.downvotes.all():  # Cambiado de "downvoted_by" a "downvotes"
+        tip.downvotes.remove(user)  # Elimina el voto negativo si ya existe
+    else:
+        tip.downvotes.add(user)  # Agrega el voto negativo si no existe
+        tip.upvotes.remove(user)  # Asegúrate de que no haya votos positivos simultáneamente
     return redirect('home')
 
 
@@ -115,7 +121,8 @@ def vote_tip(request, tip_id, vote_type):
 def delete_tip(request, tip_id):
     try:
         tip = get_object_or_404(Tip, id=tip_id)
-        if request.user != tip.author and not request.user.has_perm('tips.can_delete_tip'):
+        # Permitir que superusuarios eliminen cualquier tip
+        if not request.user.is_superuser and request.user != tip.author and not request.user.has_perm('tips.can_delete_tip'):
             raise PermissionDenied("You don't have permission to delete this tip.")
 
         tip.delete()
@@ -137,31 +144,6 @@ def tips_list(request):
         messages.error(request, f"An error occurred while loading the tips list: {str(e)}")
 
     return render(request, 'tips/tips_list.html', {'tips': tips})
-
-
-# Vista para recuperación de contraseñas (Password Reset)
-def password_reset_request(request):
-    if request.method == 'POST':
-        form = PasswordResetForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            associated_users = User.objects.filter(email=email)
-            if associated_users.exists():
-                try:
-                    for user in associated_users:
-                        send_mail(
-                            subject="Password Reset Requested",
-                            message="Click the link below to reset your password.",
-                            from_email=None,
-                            recipient_list=[user.email]
-                        )
-                    messages.success(request, "An email has been sent with instructions to reset your password.")
-                    return redirect('login')
-                except Exception as e:
-                    messages.error(request, f"Failed to send email: {str(e)}")
-    else:
-        form = PasswordResetForm()
-    return render(request, 'registration/password_reset_form.html', {'form': form})
 
 
 # Vista personalizada para errores 404 (Página no encontrada)

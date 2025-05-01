@@ -1,42 +1,38 @@
-"""
-URL configuration for the 'tips' app.
-
-This file routes URLs specific to the 'tips' app to their respective views.
-"""
-
-from django.urls import path
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from tips.views import (  # Importamos explícitamente solo las vistas necesarias
-    home,
-    create_tip,
-    tips_list,
-    vote_tip,
-    delete_tip,
-    register,
-    CustomPasswordResetView,
-)
+from django.shortcuts import render
+from tips import views  # Importa las vistas desde el módulo tips
 
+# Configuración del manejador de errores 404
+def test_404_view(request):
+    return render(request, '404.html', status=404)
+
+# Configuración de las URLs principales
 urlpatterns = [
-    # Página principal de la app (listado o inicio)
-    path('', home, name='home'),
+    # Ruta para el panel de administración
+    path('admin/', admin.site.urls, name='admin'),
 
-    # Funciones relacionadas con los tips
-    path('create/', create_tip, name='create_tip'),  # Crear un nuevo tip
-    path('list/', tips_list, name='tips_list'),  # Listar todos los tips
-    path('<int:tip_id>/vote/<str:vote_type>/', vote_tip, name='vote_tip'),  # Votar por un tip (upvote o downvote)
-    path('<int:tip_id>/delete/', delete_tip, name='delete_tip'),  # Eliminar un tip
+    # Página de inicio (Home)
+    path('', views.home, name='home'),
 
-    # Registro de usuarios
-    path("register/", register, name="register"),
+    # Incluir las rutas de tips
+    path('tips/', include('tips.urls')),
 
-    # Funciones de Login y Logout
-    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
-    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
+    # Ruta para probar la página 404
+    path('test-404/', test_404_view, name='test_404'),
 
-    # Recuperación de contraseña con vistas personalizadas
+    # Rutas de autenticación
+    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),  # Login
+    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),  # Logout
+    path("register/", views.register, name="register"),  # Registro de usuarios
+
+    # Rutas para restablecimiento de contraseñas
     path(
         'password_reset/',
-        CustomPasswordResetView.as_view(template_name='registration/password_reset.html'),
+        auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'),
         name='password_reset'
     ),
     path(
@@ -55,3 +51,7 @@ urlpatterns = [
         name='password_reset_complete'
     ),
 ]
+
+# Configuración para servir archivos estáticos en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

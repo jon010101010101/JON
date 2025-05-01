@@ -38,22 +38,26 @@ class CustomUser(AbstractUser):
 
 
 class Tip(models.Model):
-    content = models.TextField()
+    title = models.CharField(max_length=200, verbose_name="Title", default="Default Title")
+    content = models.TextField(verbose_name="Content")  # Campo para el contenido del tip
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='tips'
+        related_name='tips',
+        verbose_name="Author"
     )
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name="Date Created")
     upvotes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='upvoted_tips',
-        blank=True
+        blank=True,
+        verbose_name="Upvoted By"
     )
     downvotes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='downvoted_tips',
-        blank=True
+        blank=True,
+        verbose_name="Downvoted By"
     )
 
     def save(self, *args, **kwargs):

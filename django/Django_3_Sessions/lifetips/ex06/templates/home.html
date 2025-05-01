@@ -96,6 +96,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        .alert {
+            margin-top: 15px;
+        }
     </style>
 </head>
 
@@ -138,7 +142,12 @@
             {% if tips %}
             {% for tip in tips %}
             <div class="tip-item">
-                <div class="tip-author">{{ tip.author.username }}</div>
+                <div class="tip-author">
+                    {{ tip.author.username }}
+                    {% if tip.author.is_superuser %}
+                        (superuser)
+                    {% endif %}
+                </div>
                 <div class="tip-date">{{ tip.created_at|date:"Y-m-d H:i" }}</div>
                 <div>{{ tip.content|linebreaks }}</div>
                 <div class="vote-buttons">
@@ -154,7 +163,7 @@
                             ▼ Downvote ({{ tip.downvotes.count }})
                         </button>
                     </form>
-                    {% if user == tip.author or perms.tips.can_delete_tip %}
+                    {% if user.is_superuser or user == tip.author or perms.tips.can_delete_tip %}
                     <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-secondary btn-sm">

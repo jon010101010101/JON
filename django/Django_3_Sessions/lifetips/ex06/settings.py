@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from decouple import Config, RepositoryEnv
-import environ
 
 # Rutas base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,21 +9,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Cargar las variables de entorno desde el archivo .env_lifetips
 load_dotenv('/sgoinfre/.env_lifetips')
 
-# Cargar variables de entorno desde un archivo externo
-# Ruta personalizada al archivo .env
+# Cargar variables de entorno desde un archivo externo usando python-decouple
 ENV_FILE = os.path.expanduser('/home/jurrutia/sgoinfre/.env_lifetips')
-
-# Usar decouple para leer el archivo de entorno
 config = Config(RepositoryEnv(ENV_FILE))
 
 # Clave secreta (no exponer en producción)
-SECRET_KEY = os.getenv('SECRET_KEY', default='clave_secreta_de_respaldo')
+SECRET_KEY = os.getenv('SECRET_KEY', config("SECRET_KEY", default='clave_secreta_de_respaldo'))
 
 # Depuración (cambiar a False en producción)
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG', config("DEBUG", default='False')) == 'True'
 
 # Hosts permitidos
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', config("ALLOWED_HOSTS", default='127.0.0.1,localhost')).split(',')
 
 # Configuración del usuario
 AUTH_USER_MODEL = 'tips.CustomUser'
@@ -36,8 +32,6 @@ LOGIN_URL = '/login/'  # Redirección para vistas protegidas
 TEST_RUNNER = "custom_test_runner.CustomTestRunner"
 
 # Aplicaciones instaladas
-
-# Configuración de aplicaciones
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -128,31 +122,15 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"  # Carpeta donde `collectstatic` recopila los archivos estáticos
 
 # Configuración del correo usando SendGrid
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.sendgrid.net')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'apikey')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'lifetipsdjango@gmail.com')
-
-# Logging
-# Configurar el dominio
-DOMAIN = config("DOMAIN", default="127.0.0.1:8000")  # Usar 127.0.0.1:8000 por defecto en desarrollo
-
-# Configuración de correo (desde .env)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'  # Siempre 'apikey' para SendGrid
-EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')  # Leer clave API desde el archivo .env
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Leer correo desde el archivo .env
+EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='lifetipsdjango@gmail.com')
 
-# Configuración de claves automáticas
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Eliminar mensajes de depuración
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

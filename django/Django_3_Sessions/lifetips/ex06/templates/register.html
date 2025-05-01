@@ -40,16 +40,16 @@
 
         .form-group small {
             display: block;
-            font-size: 0.85em; /* Smaller size for the helper text */
+            font-size: 0.85em;
             color: #555;
             margin-top: 0.25em;
         }
 
         .password-hint {
-            font-size: 0.75em; /* Much smaller text for password hints */
+            font-size: 0.75em;
             color: #888;
             margin-top: 0.5em;
-            text-align: center; /* Centered password hints */
+            text-align: center;
         }
 
         .btn-lg-custom {
@@ -88,12 +88,30 @@
     <div class="container">
         <div class="form-content">
             <div class="form-title">Register</div>
+
+            <!-- Mostrar mensajes de éxito o error -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="id_username">Username</label>
                     {{ form.username }}
                     <small>Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ form.email }}
+                    <small>Required. Please enter a valid email address.</small>
                 </div>
 
                 <div class="form-group">
