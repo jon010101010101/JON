@@ -93,12 +93,12 @@ def vote_tip(request, tip_id, vote_type):
     try:
         tip = get_object_or_404(Tip, id=tip_id)
         if vote_type == 'upvote':
-            tip.add_upvote(request.user)
+            tip.upvote(request.user)
             messages.success(request, "You have upvoted the tip.")
         elif vote_type == 'downvote':
             if not request.user.has_perm('tips.can_downvote_tip') and request.user != tip.author:
                 raise PermissionDenied("You do not have permission to downvote this tip.")
-            tip.add_downvote(request.user)
+            tip.downvote(request.user)
             messages.success(request, "You have downvoted the tip.")
         else:
             messages.error(request, "Invalid vote type.")
@@ -158,17 +158,6 @@ def password_reset_request(request):
                     return redirect('login')
                 except Exception as e:
                     messages.error(request, f"Failed to send email: {str(e)}")
-                for user in associated_users:
-                    send_mail(
-                        subject="Password Reset Requested",
-                        message="Click the link below to reset your password.",
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[user.email]
-                    )
-                messages.success(request, "An email has been sent with instructions to reset your password.")
-                return redirect('login')
-            else:
-                messages.error(request, "No user is associated with this email address.")
     else:
         form = PasswordResetForm()
     return render(request, 'registration/password_reset_form.html', {'form': form})
