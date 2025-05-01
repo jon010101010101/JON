@@ -10,14 +10,9 @@ from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
-from django.template.loader import render_to_string
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import PasswordResetView
-from .models import Tip, CustomUser
-from .forms import TipForm, CustomUserCreationForm
 from django.conf import settings
 
 
@@ -93,7 +88,6 @@ def create_tip(request):
 
 
 # Vista para votar por un tip (Vote Tip)
-# Vista para votar por un tip (Upvote/Downvote)
 @login_required
 def vote_tip(request, tip_id, vote_type):
     try:
@@ -112,12 +106,6 @@ def vote_tip(request, tip_id, vote_type):
         messages.error(request, f"Permission error: {str(pd)}")
     except Exception as e:
         messages.error(request, f"An error occurred while voting: {str(e)}")
-    if vote_type == 'upvote':
-        tip.upvotes.add(request.user)
-        messages.success(request, "You have upvoted this tip.")
-    elif vote_type == 'downvote':
-        tip.downvotes.add(request.user)
-        messages.success(request, "You have downvoted this tip.")
     return redirect('home')
 
 
@@ -185,13 +173,13 @@ def password_reset_request(request):
         form = PasswordResetForm()
     return render(request, 'registration/password_reset_form.html', {'form': form})
 
-# Vista personalizada para 404
+
 # Vista personalizada para errores 404 (Página no encontrada)
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
 
+
 # Clase personalizada para recuperación de contraseñas
-# Clase personalizada para la recuperación de contraseñas
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'registration/password_reset_email.txt'  # Para texto plano
     html_email_template_name = 'registration/password_reset_email.html'  # Para HTML
@@ -200,16 +188,13 @@ class CustomPasswordResetView(PasswordResetView):
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
         try:
-            # Agregar el dominio y protocolo al contexto
             context['protocol'] = 'https' if not settings.DEBUG else 'http'
-            context['domain'] = settings.DOMAIN  # Define el dominio en settings.py o .env
+            context['domain'] = settings.DOMAIN
 
-            # Renderizar las plantillas para texto plano y HTML
             subject = render_to_string(subject_template_name, context).strip()
             text_content = render_to_string(email_template_name, context)
             html_content = render_to_string(html_email_template_name, context) if html_email_template_name else None
 
-            # Enviar el correo
             msg = EmailMultiAlternatives(
                 subject,
                 text_content,
@@ -221,13 +206,3 @@ class CustomPasswordResetView(PasswordResetView):
             msg.send()
         except Exception as e:
             messages.error(context['request'], f"Failed to send email: {str(e)}")
-        # Enviar el correo
-        msg = EmailMultiAlternatives(
-            subject,
-            text_content,
-            from_email,
-            [to_email]
-        )
-        if html_content:
-            msg.attach_alternative(html_content, "text/html")
-        msg.send()

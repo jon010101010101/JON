@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum
 from .models import CustomUser, Tip
 
+
 @receiver(post_save, sender=CustomUser)
 def assign_permissions_on_user_creation(sender, instance, created, **kwargs):
     """Asigna permisos automáticamente al crear un nuevo usuario."""

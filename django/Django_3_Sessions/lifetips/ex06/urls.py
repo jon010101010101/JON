@@ -13,8 +13,6 @@ from tips.views import (  # Importamos explícitamente solo las vistas necesaria
     vote_tip,
     delete_tip,
     register,
-    upvote_tip,  # Nueva vista
-    downvote_tip,  # Nueva vista
     CustomPasswordResetView,
 )
 
@@ -25,10 +23,8 @@ urlpatterns = [
     # Funciones relacionadas con los tips
     path('create/', create_tip, name='create_tip'),  # Crear un nuevo tip
     path('list/', tips_list, name='tips_list'),  # Listar todos los tips
-    path('<int:tip_id>/vote/<str:vote_type>/', vote_tip, name='vote_tip'),  # Votar por un tip
+    path('<int:tip_id>/vote/<str:vote_type>/', vote_tip, name='vote_tip'),  # Votar por un tip (upvote o downvote)
     path('<int:tip_id>/delete/', delete_tip, name='delete_tip'),  # Eliminar un tip
-    path('<int:tip_id>/upvote/', upvote_tip, name='upvote_tip'),  # Nueva ruta para "Upvote"
-    path('<int:tip_id>/downvote/', downvote_tip, name='downvote_tip'),  # Nueva ruta para "Downvote"
 
     # Registro de usuarios
     path("register/", register, name="register"),
