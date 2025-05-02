@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Pro Tips</title>
+    <title>Tip List</title> <!-- Título actualizado -->
     <style>
         /* Diseño general del cuerpo */
         body {
@@ -57,16 +57,20 @@
 <body>
     <div class="header">
         <div class="branding">Life Pro Tips</div>
-        <div class="title">Life Pro Tips</div>
+        <div class="title">Tip List</div> <!-- Nueva etiqueta de título -->
         <a href="/" class="home-button">Go to Home</a>
     </div>
     {% if tips %}
         {% for tip in tips %}
             <div class="tip">
-                <!-- Encabezado del tip mostrando el autor y su reputación -->
+                <!-- Encabezado del tip mostrando el autor, reputación y si es superusuario -->
                 <div class="tip-header">
                     <strong>ID:</strong> {{ tip.id }} |
-                    <strong>Author:</strong> {{ tip.author.username }} (Reputation: {{ tip.author.reputation }})
+                    <strong>Author:</strong> {{ tip.author.username }}
+                    {% if tip.author.is_superuser %}
+                        (superuser)
+                    {% endif %}
+                    (Reputation: {{ tip.author.reputation }})
                 </div>
                 <!-- Contenido del tip -->
                 <div class="tip-content">
@@ -83,7 +87,7 @@
         <p style="text-align: center;">No tips found.</p>
     {% endif %}
     <div class="footer">
-        &copy; 2025 LifeTips. All rights reserved.
+        &copy; 2025 LifeTips Jon,S.A. All rights reserved.
     </div>
 </body>
 </html>

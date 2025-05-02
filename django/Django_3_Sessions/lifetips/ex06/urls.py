@@ -16,10 +16,10 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
 
     # Página de inicio (Home)
-    path('', views.home, name='home'),
+    path('', views.home, name='home'),  # La raíz del sitio ahora es 'home'
 
     # Incluir las rutas de tips
-    path('tips/', include('tips.urls')),
+    path('tips/', include('tips.urls')),  # Incluye las rutas de 'tips'
 
     # Ruta para probar la página 404
     path('test-404/', test_404_view, name='test_404'),

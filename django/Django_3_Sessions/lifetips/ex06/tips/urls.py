@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.shortcuts import render
@@ -10,7 +9,8 @@ from tips.views import (
     downvote_tip,
     delete_tip,
     register,
-    CustomPasswordResetView
+    CustomPasswordResetView,
+    users_list  # Importamos la vista users_list
 )
 
 # Vista para probar la página 404
@@ -19,7 +19,7 @@ def test_404_view(request):
 
 urlpatterns = [
     # Página principal de la app (listado o inicio)
-    path('', home, name='home'),
+    path('', home, name='tips_home'),  # Cambié el nombre a 'tips_home' para evitar conflictos con la raíz
 
     # Funciones relacionadas con los tips
     path('create/', create_tip, name='create_tip'),  # Crear un nuevo tip
@@ -56,6 +56,9 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
         name='password_reset_complete'
     ),
+
+    # Listado de usuarios con reputación
+    path('users/list/', users_list, name='users_list'),  # Nueva ruta añadida
 
     # Ruta para probar la página 404
     path('test-404/', test_404_view, name='test_404'),

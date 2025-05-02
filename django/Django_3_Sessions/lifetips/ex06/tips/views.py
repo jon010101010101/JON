@@ -135,12 +135,23 @@ def delete_tip(request, tip_id):
     return redirect('home')
 
 
+# Vista para listar usuarios con email y reputación
+@login_required
+def users_list(request):
+    # Obtener todos los usuarios ordenados por reputación en orden descendente
+    users = CustomUser.objects.all().order_by('-reputation')
+    return render(request, 'tips/users_list.html', {'users': users})
+
+
 # Vista para listar todos los tips
 def tips_list(request):
     try:
         tips = Tip.objects.all()
+        # Asegurarse de que la reputación del autor esté actualizada
+        for tip in tips:
+            tip.author.update_reputation(delta_upvotes=tip.upvotes.count(), delta_downvotes=tip.downvotes.count())
     except Exception as e:
-        tips = []  # Si ocurre un error, se pasa una lista vacía
+        tips = []
         messages.error(request, f"An error occurred while loading the tips list: {str(e)}")
 
     return render(request, 'tips/tips_list.html', {'tips': tips})

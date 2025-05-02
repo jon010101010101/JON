@@ -100,6 +100,14 @@
         .alert {
             margin-top: 15px;
         }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 10px 0;
+        }
     </style>
 </head>
 
@@ -111,6 +119,7 @@
                 {% if user.is_authenticated %}
                 <span class="me-3">Hello, {{ user.username }}!</span>
                 <a href="{% url 'tips_list' %}" class="btn btn-outline-info btn-sm me-2">View Tips</a>
+                <a href="{% url 'users_list' %}" class="btn btn-outline-success btn-sm me-2">Users List</a>
                 <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
                 {% else %}
                 <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
@@ -185,6 +194,11 @@
         <a href="{% url 'register' %}" class="btn btn-primary btn-lg btn-lg-custom mb-2">Register</a>
         <a href="{% url 'login' %}" class="btn btn-success btn-lg btn-lg-custom">Login</a>
         {% endif %}
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        &copy; 2025 LifeTips Jon,S.A. All rights reserved.
     </div>
 </body>
 
