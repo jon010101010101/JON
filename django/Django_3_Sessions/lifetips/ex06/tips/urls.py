@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.shortcuts import render
+from tips.views import delete_tip
 from tips.views import (  
     home,
     create_tip,

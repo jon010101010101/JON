@@ -3,10 +3,8 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
@@ -94,12 +92,11 @@ def create_tip(request):
 @login_required
 def upvote_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    user = request.user
-    if user in tip.upvotes.all():  # Cambiado de "upvoted_by" a "upvotes"
-        tip.upvotes.remove(user)  # Elimina el voto positivo si ya existe
-    else:
-        tip.upvotes.add(user)  # Agrega el voto positivo si no existe
-        tip.downvotes.remove(user)  # Asegúrate de que no haya votos negativos simultáneamente
+    try:
+        tip.upvote(request.user)
+        messages.success(request, 'You upvoted the tip!')
+    except PermissionDenied as e:
+        messages.error(request, str(e))
     return redirect('home')
 
 
@@ -107,38 +104,37 @@ def upvote_tip(request, tip_id):
 @login_required
 def downvote_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    user = request.user
-    if user in tip.downvotes.all():  # Cambiado de "downvoted_by" a "downvotes"
-        tip.downvotes.remove(user)  # Elimina el voto negativo si ya existe
-    else:
-        tip.downvotes.add(user)  # Agrega el voto negativo si no existe
-        tip.upvotes.remove(user)  # Asegúrate de que no haya votos positivos simultáneamente
+    try:
+        tip.downvote(request.user)
+        messages.success(request, 'You downvoted the tip!')
+    except PermissionDenied as e:
+        messages.error(request, str(e))
     return redirect('home')
 
 
 # Vista para eliminar un tip (Delete Tip)
 @login_required
 def delete_tip(request, tip_id):
+    tip = get_object_or_404(Tip, id=tip_id)
+    if request.user != tip.author and not request.user.is_superuser:
+        raise PermissionDenied("You don't have permission to delete this tip.")
     try:
-        tip = get_object_or_404(Tip, id=tip_id)
-        # Permitir que superusuarios eliminen cualquier tip
-        if not request.user.is_superuser and request.user != tip.author and not request.user.has_perm('tips.can_delete_tip'):
-            raise PermissionDenied("You don't have permission to delete this tip.")
+        # Ajustar la reputación del autor eliminando la influencia de los votos
+        upvotes_count = tip.upvotes.count()
+        downvotes_count = tip.downvotes.count()
+        tip.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
 
+        # Eliminar el tip
         tip.delete()
-        messages.success(request, "The tip has been deleted successfully.")
-    except PermissionDenied as pd:
-        messages.error(request, f"Permission error: {str(pd)}")
+        messages.success(request, 'Tip deleted successfully.')
     except Exception as e:
         messages.error(request, f"An error occurred while deleting the tip: {str(e)}")
-
     return redirect('home')
 
 
 # Vista para listar usuarios con email y reputación
 @login_required
 def users_list(request):
-    # Obtener todos los usuarios ordenados por reputación en orden descendente
     users = CustomUser.objects.all().order_by('-reputation')
     return render(request, 'tips/users_list.html', {'users': users})
 

@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
         Actualiza la reputación del usuario basado en los deltas de votos positivos y negativos.
         """
         new_reputation = self.reputation + delta_upvotes * 5 - delta_downvotes * 2
-        self.reputation = max(new_reputation, 0)  # Límite inferior de reputación a 0
+        self.reputation = max(new_reputation, -20)  # Límite inferior de reputación a -20
         self.save(update_fields=['reputation'])
 
     @property
@@ -92,11 +92,15 @@ class Tip(models.Model):
         if user != self.author and not user.is_superuser:
             raise PermissionError("You don't have permission to delete this tip.")
 
+        # Contar los votos antes de eliminar
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
 
-        super().delete(*args, **kwargs)
+        # Ajustar la reputación del autor
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
+
+        # Eliminar el tip
+        super().delete(*args, **kwargs)
 
     def upvote(self, user):
         """
