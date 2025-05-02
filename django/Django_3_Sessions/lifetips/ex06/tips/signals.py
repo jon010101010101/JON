@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum
+from django.core.mail import send_mail
 from .models import CustomUser, Tip
 
 
@@ -85,3 +86,18 @@ def tip_saved(sender, instance, **kwargs):
     author.reputation = (upvotes * 5) - (downvotes * 2)
     author.save()
     update_user_permissions(author)  # Actualizar permisos
+
+
+@receiver(post_save, sender=CustomUser)
+def notify_password_reset(sender, instance, update_fields=None, **kwargs):
+    """Envía un correo cuando se restablece la contraseña del usuario."""
+    if update_fields and 'password' in update_fields:
+        send_mail(
+            subject='Your password has been reset',
+            message=(
+                'Hello, your password has just been reset. '
+                'If this was not you, please contact support immediately.'
+            ),
+            from_email='support@lifetips.com',
+            recipient_list=[instance.email],
+        )

@@ -5,4 +5,5 @@ class TipsConfig(AppConfig):
     name = 'tips'  # Debe coincidir con INSTALLED_APPS
 
     def ready(self):
-        import tips.signals  # Ajusta la ruta si estás utilizando señales
+        # Importa el archivo donde definiste la señal
+        import tips.signals  # Ajusta la ruta según tu estructura de proyecto

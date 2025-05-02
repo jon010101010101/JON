@@ -39,7 +39,11 @@ urlpatterns = [
     # Recuperación de contraseña con vistas personalizadas
     path(
         'password_reset/',
-        CustomPasswordResetView.as_view(template_name='registration/password_reset.html'),
+        CustomPasswordResetView.as_view(
+            template_name='registration/password_reset.html',
+            email_template_name='registration/password_reset_email.txt',
+            html_email_template_name='registration/password_reset_email.html'  # Aseguramos el uso de HTML
+        ),
         name='password_reset'
     ),
     path(

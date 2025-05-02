@@ -158,11 +158,16 @@ def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
 
 
-# Clase personalizada para recuperación de contraseñas
+# Clase personalizada para recuperación de contraseñas con simulación
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'registration/password_reset_email.txt'
     html_email_template_name = 'registration/password_reset_email.html'
     subject_template_name = 'registration/password_reset_subject.txt'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['simulation_enabled'] = True  # Controla si el botón de simulación aparece
+        return context
 
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):

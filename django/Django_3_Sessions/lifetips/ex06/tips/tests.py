@@ -289,6 +289,6 @@ class PruebasSistemaReputacion(TestCase):
             print(f"  {description}: {status}")
 
         if failed_tests == 0:
-            print(f"\n✅ {total_tests} pruebas pasaron exitosamente.\n")
+            print(f"\n✅ {total_tests} pruebas pasaron con éxito.\n")
         else:
             print(f"\n❌ {failed_tests} de {total_tests} pruebas fallaron.\n")

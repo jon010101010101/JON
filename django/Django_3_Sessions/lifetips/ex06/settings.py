@@ -108,6 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Configuración del tiempo de expiración del token de restablecimiento de contraseña
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 24 * 365 * 10  # 10 años en segundos
+
 # Internacionalización
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -122,13 +125,18 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"  # Carpeta donde `collectstatic` recopila los archivos estáticos
 
 # Configuración del correo usando SendGrid
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'  # Siempre 'apikey' para SendGrid
 EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='lifetipsdjango@gmail.com')
+
+# Configuración del dominio y protocolo para correos electrónicos
+EMAIL_PROTOCOL = os.getenv('EMAIL_PROTOCOL', config('EMAIL_PROTOCOL', default='http'))  # Puede ser 'http' o 'https'
+EMAIL_DOMAIN = os.getenv('EMAIL_DOMAIN', config('EMAIL_DOMAIN', default='127.0.0.1:8000'))
 
 # Logging
 LOGGING = {
