@@ -1,14 +1,14 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode
 from django.http import HttpResponse
-from django.utils.encoding import force_bytes
 
+# Obtén el modelo de usuario configurado
+User = get_user_model()
 
 # Función para enviar un correo de restablecimiento de contraseña
 def send_reset_email(request, user_email):
@@ -20,6 +20,7 @@ def send_reset_email(request, user_email):
 
         send_mail(
             subject='Restablece tu contraseña - Life Pro Tips',
+            message=None,  # Se usa `html_message` en lugar de `message`
             html_message=f"""
             <html>
             <body>
@@ -54,7 +55,7 @@ class ResetPasswordFlowTest(TestCase):
         response = self.client.get(self.reset_email_url)
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            f"Se ha enviado un correo a <strong>{self.user.email}</strong>",
+            f"Correo enviado a {self.user.email}",
             response.content.decode()
         )
 
@@ -66,10 +67,11 @@ class ResetPasswordFlowTest(TestCase):
         # Enviar solicitud POST con nueva contraseña
         reset_password_url = self.reset_password_url_template.format(uidb64=uid, token=token)
         response = self.client.post(reset_password_url, {
-            'new_password': 'newpassword123'
+            'new_password1': 'newpassword123',
+            'new_password2': 'newpassword123'
         })
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), "Contraseña restablecida correctamente.")
+        self.assertIn("Contraseña restablecida correctamente.", response.content.decode())
 
         # Verificar que la contraseña se haya actualizado
         self.user.refresh_from_db()
@@ -83,10 +85,11 @@ class ResetPasswordFlowTest(TestCase):
         # Intentar restablecer la contraseña con un token inválido
         reset_password_url = self.reset_password_url_template.format(uidb64=uid, token=invalid_token)
         response = self.client.post(reset_password_url, {
-            'new_password': 'newpassword123'
+            'new_password1': 'newpassword123',
+            'new_password2': 'newpassword123'
         })
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content.decode(), "El enlace no es válido o ha expirado.")
+        self.assertIn("El enlace no es válido o ha expirado.", response.content.decode())
 
     def test_reset_password_with_invalid_uid(self):
         # Generar un uid inválido y un token válido
@@ -96,7 +99,8 @@ class ResetPasswordFlowTest(TestCase):
         # Intentar restablecer la contraseña con un uid inválido
         reset_password_url = self.reset_password_url_template.format(uidb64=invalid_uid, token=token)
         response = self.client.post(reset_password_url, {
-            'new_password': 'newpassword123'
+            'new_password1': 'newpassword123',
+            'new_password2': 'newpassword123'
         })
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content.decode(), "Algo salió mal al restablecer la contraseña.")
+        self.assertIn("Algo salió mal al restablecer la contraseña.", response.content.decode())

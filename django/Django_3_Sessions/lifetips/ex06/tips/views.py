@@ -10,6 +10,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
 
@@ -158,7 +161,7 @@ def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
 
 
-# Clase personalizada para recuperación de contraseñas con simulación
+# Clase personalizada para recuperación de contraseñas con simulación y redirección automática
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'registration/password_reset_email.txt'
     html_email_template_name = 'registration/password_reset_email.html'
@@ -166,8 +169,29 @@ class CustomPasswordResetView(PasswordResetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['simulation_enabled'] = True  # Controla si el botón de simulación aparece
+        context['simulation_enabled'] = True  # Asegúrate de pasar esta variable al contexto
         return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # Obtener el usuario asociado al formulario
+        user_email = form.cleaned_data.get('email')
+        try:
+            user = User.objects.get(email=user_email)
+
+            # Generar el enlace de restablecimiento
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_url = self.request.build_absolute_uri(
+                reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+            )
+
+            # Redirigir automáticamente al enlace generado
+            return redirect(reset_url)
+        except User.DoesNotExist:
+            messages.error(self.request, "No user found with the provided email address.")
+            return redirect('password_reset')
 
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
