@@ -5,7 +5,6 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.shortcuts import render
 from tips import views  # Importa las vistas desde el módulo tips
-from tips.reset_password_flow_test import send_reset_email
 
 # Configuración del manejador de errores 404
 def test_404_view(request):
@@ -50,9 +49,7 @@ urlpatterns = [
     ),
     path(
         'reset/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='registration/password_reset_confirm.html'
-        ),
+        views.reset_password,  # Se usa `reset_password` para manejar la lógica personalizada
         name='password_reset_confirm',
     ),
     path(
@@ -62,9 +59,6 @@ urlpatterns = [
         ),
         name='password_reset_complete',
     ),
-
-    # Ruta para enviar correos de restablecimiento de contraseña
-    path('send-reset-email/<str:user_email>/', send_reset_email, name='send_reset_email'),
 ]
 
 # Configuración para servir archivos estáticos en desarrollo

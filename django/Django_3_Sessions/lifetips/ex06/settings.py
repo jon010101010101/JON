@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'axes',  # Protección contra ataques de fuerza bruta
     'django_extensions',
-]
+    ]
 
 # Middleware
 MIDDLEWARE = [

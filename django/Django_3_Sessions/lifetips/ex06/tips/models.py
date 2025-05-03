@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import transaction
+from django.utils.timezone import now
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 class CustomUser(AbstractUser):
     reputation = models.IntegerField(default=0)  # Campo para la reputación
     reputation_changed = False  # Atributo para rastrear cambios en la reputación
+    last_password_reset_request = models.DateTimeField(null=True, blank=True)  # Nuevo campo para rastrear solicitudes de restablecimiento
 
     def save(self, *args, **kwargs):
         """

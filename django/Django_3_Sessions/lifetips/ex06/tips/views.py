@@ -6,16 +6,20 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model  # Cambio aquí
 from django.contrib.auth.views import PasswordResetView
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.http import HttpResponse
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
+from django.utils.timezone import now
 
+# Usar el modelo de usuario personalizado
+User = get_user_model()  # Cambio aquí
 
 # Vista para la página de inicio (Home)
 def home(request):
@@ -138,7 +142,7 @@ def delete_tip(request, tip_id):
 # Vista para listar usuarios con email y reputación
 @login_required
 def users_list(request):
-    users = CustomUser.objects.all().order_by('-reputation')
+    users = User.objects.all().order_by('-reputation')  # Cambio aquí
     return render(request, 'tips/users_list.html', {'users': users})
 
 
@@ -173,44 +177,60 @@ class CustomPasswordResetView(PasswordResetView):
         return context
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        for user in form.get_users(form.cleaned_data["email"]):
+            # Actualizar el campo para forzar un nuevo token
+            user.last_password_reset_request = now()
+            user.save()
 
-        # Obtener el usuario asociado al formulario
-        user_email = form.cleaned_data.get('email')
-        try:
-            user = User.objects.get(email=user_email)
-
-            # Generar el enlace de restablecimiento
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            # Generar un nuevo token para el usuario
             token = default_token_generator.make_token(user)
-            reset_url = self.request.build_absolute_uri(
-                reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-            )
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = f"http://127.0.0.1:8000/reset/{uidb64}/{token}/"
 
-            # Redirigir automáticamente al enlace generado
-            return redirect(reset_url)
-        except User.DoesNotExist:
-            messages.error(self.request, "No user found with the provided email address.")
-            return redirect('password_reset')
+            # Enviar el correo con el enlace generado
+            self.send_reset_email(user, reset_link)
 
-    def send_mail(self, subject_template_name, email_template_name,
-                  context, from_email, to_email, html_email_template_name=None):
+        messages.success(self.request, "Si el email existe, se ha enviado un correo de recuperación.")
+        return redirect('password_reset_done')
+
+    def send_reset_email(self, user, reset_link):
+        subject = "Reset your password"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to_email = user.email
+        text_content = f"Use this link to reset your password: {reset_link}"
+        html_content = f"<p>Use this link to reset your password:</p><p><a href='{reset_link}'>{reset_link}</a></p>"
+
         try:
-            context['protocol'] = 'https' if not settings.DEBUG else 'http'
-            context['domain'] = settings.DOMAIN
-
-            subject = render_to_string(subject_template_name, context).strip()
-            text_content = render_to_string(email_template_name, context)
-            html_content = render_to_string(html_email_template_name, context) if html_email_template_name else None
-
-            msg = EmailMultiAlternatives(
-                subject,
-                text_content,
-                from_email,
-                [to_email]
-            )
-            if html_content:
-                msg.attach_alternative(html_content, "text/html")
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+            msg.attach_alternative(html_content, "text/html")
             msg.send()
         except Exception as e:
-            messages.error(context['request'], f"Failed to send email: {str(e)}")
+            messages.error(self.request, f"Failed to send email: {str(e)}")
+
+
+# Vista personalizada para manejar el restablecimiento de contraseñas
+def reset_password(request, uidb64, token):
+    try:
+        # Decodificar el UID y obtener el usuario
+        user_id = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=user_id)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return HttpResponse("El enlace no es válido o ha expirado.", status=400)
+
+    # Validar el token
+    if not default_token_generator.check_token(user, token):
+        return HttpResponse("El enlace no es válido o ha expirado.", status=400)
+
+    # Lógica de restablecimiento de contraseña
+    if request.method == 'POST':
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+
+        if new_password1 != new_password2:
+            return HttpResponse("Las contraseñas no coinciden.", status=400)
+
+        user.set_password(new_password1)
+        user.save()
+        return redirect('password_reset_complete')
+
+    return render(request, 'registration/password_reset_confirm.html', {'uidb64': uidb64, 'token': token})

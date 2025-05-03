@@ -2,10 +2,10 @@ import os
 import sys
 import django
 import logging
+import inspect
 from django.test.runner import DiscoverRunner
 from termcolor import colored
 from unittest import TextTestRunner, TextTestResult
-
 
 # Configurar el entorno de Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ex06.settings")
@@ -14,55 +14,55 @@ django.setup()
 # Suprimir mensajes de INFO
 logging.getLogger("tips.models").setLevel(logging.WARNING)
 
-
 class CustomTestResult(TextTestResult):
     """
-    Clase personalizada para mostrar resultados claros y concisos de cada test,
-    sin tracebacks ni mensajes adicionales.
+    TestResult personalizado que muestra la docstring y el código fuente de cada test.
     """
 
     def addSuccess(self, test):
-        """Manejar tests exitosos."""
         super().addSuccess(test)
+        doc = test.shortDescription() or ""
+        code = self._get_test_source(test)
         print(
             f"{self.testsRun}. ✅ {test}: PASSED\n"
-            f"    Expected: -20\n"
-            f"    Real: -20\n"
+            f"    Descripción: {doc}\n"
+            f"    Código de comprobación:\n{code}\n"
         )
 
     def addFailure(self, test, err):
-        """Manejar tests fallidos."""
         super().addFailure(test, err)
+        doc = test.shortDescription() or ""
+        code = self._get_test_source(test)
         print(
             f"{self.testsRun}. ❌ {test}: FAILED\n"
-            f"    Expected: -20\n"
-            f"    Real: -15\n"
+            f"    Descripción: {doc}\n"
+            f"    Código de comprobación:\n{code}\n"
             f"    Error: {self._get_error_message(err)}\n"
         )
 
     def addError(self, test, err):
-        """Manejar errores inesperados."""
         super().addError(test, err)
+        doc = test.shortDescription() or ""
+        code = self._get_test_source(test)
         print(
             f"{self.testsRun}. ❌ {test}: ERROR\n"
+            f"    Descripción: {doc}\n"
+            f"    Código de comprobación:\n{code}\n"
             f"    Error: {self._get_error_message(err)}\n"
         )
 
+    def _get_test_source(self, test):
+        try:
+            method = getattr(test, test._testMethodName)
+            return inspect.getsource(method)
+        except Exception as e:
+            return f"No se pudo obtener el código fuente: {e}"
+
     def _get_error_message(self, err):
-        """Obtener mensaje de error sin traceback completo."""
         return str(err[1])
 
-
 class CustomTestRunner(DiscoverRunner):
-    """
-    Test runner personalizado para mostrar resultados claros y concisos,
-    sin tracebacks ni mensajes de INFO.
-    """
-
     def run_suite(self, suite, **kwargs):
-        """
-        Ejecuta las pruebas con resultados detallados y claros.
-        """
         print(colored(f"\nFound {suite.countTestCases()} test(s).\n", "cyan"))
         runner = TextTestRunner(
             stream=sys.stdout, verbosity=self.verbosity, resultclass=CustomTestResult
@@ -70,9 +70,6 @@ class CustomTestRunner(DiscoverRunner):
         return runner.run(suite)
 
     def suite_result(self, suite, result, **kwargs):
-        """
-        Mostrar un resumen final de resultados.
-        """
         total = result.testsRun
         failed = len(result.failures)
         errored = len(result.errors)
@@ -83,7 +80,6 @@ class CustomTestRunner(DiscoverRunner):
         print(colored(f"❌ {failed} pruebas fallaron", "red"))
         print(colored(f"🟡 {errored} errores", "yellow"))
         return super().suite_result(suite, result, **kwargs)
-
 
 if __name__ == "__main__":
     test_runner = CustomTestRunner(verbosity=2)

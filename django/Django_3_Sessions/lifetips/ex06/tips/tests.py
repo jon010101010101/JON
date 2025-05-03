@@ -1,13 +1,12 @@
 from django.test import TestCase
 from tips.models import CustomUser, Tip
 
-
 class PruebasSistemaReputacion(TestCase):
     """
     Pruebas para el sistema de reputación y permisos.
     """
 
-    test_results = []  # Mover test_results a un atributo de clase
+    test_results = []
 
     def setUp(self):
         """Configurar datos iniciales para los casos de prueba."""
@@ -17,9 +16,6 @@ class PruebasSistemaReputacion(TestCase):
         self.tip = Tip.objects.create(author=self.user1, content="Este es un tip.")
 
     def print_test_details(self, description, before, action, after, passed):
-        """
-        Imprime los detalles de cada prueba y almacena los resultados.
-        """
         status = "PASSED ✅" if passed else "FAILED ❌"
         print(f"\n🔍 {description}")
         print(f"    Antes: {before}")
@@ -219,15 +215,13 @@ class PruebasSistemaReputacion(TestCase):
         before = f"Reputación inicial: {self.user1.reputation}"
         action = "Intentar reducir la reputación por debajo del límite con múltiples usuarios."
         try:
-            # Creamos usuarios adicionales para simular múltiples downvotes
             extra_users = [
                 CustomUser.objects.create_user(username=f"UsuarioExtra{i}", reputation=0)
                 for i in range(10)
             ]
             for user in extra_users:
                 self.tip.downvote(user)
-
-            self.assertGreaterEqual(self.user1.reputation, -20)  # La reputación no debe bajar de -20
+            self.assertGreaterEqual(self.user1.reputation, -20)
             passed = True
         except AssertionError:
             passed = False
@@ -277,7 +271,6 @@ class PruebasSistemaReputacion(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Imprimir un resumen al final de todas las pruebas."""
         super().tearDownClass()
         print("\nResumen Final:")
         total_tests = len(cls.test_results)
@@ -292,3 +285,8 @@ class PruebasSistemaReputacion(TestCase):
             print(f"\n✅ {total_tests} pruebas pasaron con éxito.\n")
         else:
             print(f"\n❌ {failed_tests} de {total_tests} pruebas fallaron.\n")
+
+
+
+# python manage.py test                              
+
