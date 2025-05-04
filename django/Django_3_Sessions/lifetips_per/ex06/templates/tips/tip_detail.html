@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tip Detail - Life Pro Tips</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body { background-color: #f4f4f4; padding-top: 40px; }
+        .main-content {
+            max-width: 600px;
+            margin: 60px auto 0 auto;
+            background-color: #fff;
+            padding: 40px 30px 30px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        .tip-title { font-size: 2em; color: #007bff; margin-bottom: 10px; }
+        .tip-author { font-weight: bold; color: #007bff; }
+        .tip-date { color: #888; font-size: 0.95em; margin-bottom: 5px; }
+        .tip-content { margin: 20px 0; font-size: 1.2em; }
+        .vote-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        .footer { margin-top: 50px; text-align: center; color: #555; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
+            <div>
+                {% if user.is_authenticated %}
+                    <span class="me-3">Hello, {{ user }}!</span>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm me-2">Login</a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">Home</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="tip-title">{{ tip.title|default:"Tip" }}</div>
+        <div class="tip-author">
+            {{ tip.author }}
+            {% if tip.author.is_superuser %}
+                (superuser)
+            {% endif %}
+        </div>
+        <div class="tip-date">{{ tip.date_created|date:"Y-m-d H:i" }}</div>
+        <div class="tip-content">{{ tip.content|linebreaks }}</div>
+        <div>
+            <strong>Upvotes:</strong> {{ tip.upvotes.count }} | 
+            <strong>Downvotes:</strong> {{ tip.downvotes.count }}
+        </div>
+        <div class="vote-buttons mt-3">
+            <!-- Upvote -->
+            <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-success btn-sm"
+                    {% if user == tip.author or user in tip.upvotes.all %}disabled{% endif %}>
+                    ▲ Upvote
+                </button>
+            </form>
+            <!-- Downvote -->
+            <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm"
+                    {% if user == tip.author or not user.can_downvote or user in tip.downvotes.all %}disabled{% endif %}
+                    title="{% if not user.can_downvote %}Necesitas 15 de reputación para downvote{% endif %}">
+                    ▼ Downvote
+                </button>
+            </form>
+            <!-- Delete -->
+            {% if user.is_superuser or (user == tip.author and user.can_delete_tips) %}
+            <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    Delete
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        <a href="{% url 'tips_list' %}" class="btn btn-link mt-4">← Back to Tips List</a>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LifeTips Jon,S.A. All rights reserved.
+    </div>
+</body>
+</html>

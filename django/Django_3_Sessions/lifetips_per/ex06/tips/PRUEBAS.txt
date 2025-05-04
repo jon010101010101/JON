@@ -1,0 +1,112 @@
+ Ejemplos de pruebas para verificar el cumplimiento del enunciado
+1. Gestión de reputación
+Reputación inicial de un usuario:
+
+Escenario: Crear un usuario nuevo.
+Resultado esperado: Su reputación inicial debe ser 0.
+Ejemplo: Usuario user1 tiene reputation = 0 inmediatamente después de ser creado.
+Incremento de reputación por upvotes:
+
+Escenario: Un usuario recibe un upvote en su tip.
+Resultado esperado: Su reputación aumenta en 5 puntos por cada upvote.
+Ejemplo: Usuario user1 tiene reputation = 5 después de recibir 1 upvote.
+Reducción de reputación por downvotes:
+
+Escenario: Un usuario recibe un downvote en su tip.
+Resultado esperado: Su reputación disminuye en 2 puntos por cada downvote.
+Ejemplo: Usuario user1 tiene reputation = -2 después de recibir 1 downvote.
+Cálculo combinado de votos:
+
+Escenario: Un tip recibe tanto upvotes como downvotes.
+Resultado esperado: La reputación del autor refleja la suma de los efectos de ambos tipos de votos.
+Ejemplo: Un tip con 3 upvotes y 2 downvotes → Reputation = (3*5) - (2*2) = 11.
+Eliminación de un tip con votos:
+
+Escenario: Un tip con votos es eliminado.
+Resultado esperado: La reputación del autor debe ajustarse para que los votos de ese tip ya no afecten su reputación.
+Ejemplo: Usuario user1 tiene reputation = 10, elimina un tip con 2 upvotes → Reputation = 10 - (2*5) = 0.
+2. Gestión de permisos
+Permiso para downvote (15 puntos de reputación):
+
+Escenario: Un usuario alcanza exactamente 15 puntos de reputación.
+Resultado esperado: Se le concede el permiso para hacer downvotes (excepto en sus propios tips).
+Ejemplo: Usuario user1 tiene reputation = 15, ahora puede hacer downvotes.
+Permiso para eliminar tips (30 puntos de reputación):
+
+Escenario: Un usuario alcanza exactamente 30 puntos de reputación.
+Resultado esperado: Se le concede el permiso para eliminar tips.
+Ejemplo: Usuario user1 tiene reputation = 30, ahora puede eliminar tips.
+Revocación de permisos por pérdida de reputación:
+
+Escenario: Un usuario pierde reputación y cae por debajo de los umbrales de 15 o 30 puntos.
+Resultado esperado: Los permisos asociados a esos niveles de reputación son eliminados.
+Ejemplo: Usuario user1 tiene reputation = 12 después de bajar de 15, ya no puede hacer downvotes.
+Permisos para superusuarios:
+
+Escenario: Un superusuario realiza acciones de downvote y eliminación.
+Resultado esperado: Un superusuario siempre puede realizar estas acciones, independientemente de su reputación.
+Ejemplo: Usuario admin puede hacer downvotes y eliminar tips, incluso si su reputación es 0.
+3. Restricciones en votaciones
+Restricción de votación en el propio tip:
+
+Escenario: Un usuario intenta votar (upvote o downvote) en su propio tip.
+Resultado esperado: El sistema no permite que los usuarios voten en sus propios tips.
+Ejemplo: Usuario user1 no puede votar en su propio tip.
+Votación duplicada:
+
+Escenario: Un usuario intenta votar (upvote o downvote) dos veces en el mismo tip.
+Resultado esperado: El sistema no permite votos duplicados.
+Ejemplo: Usuario user2 hace un upvote en el Tip 1, intenta hacerlo de nuevo, pero no se registra.
+Cambio de voto:
+
+Escenario: Un usuario cambia un voto existente (por ejemplo, de upvote a downvote).
+Resultado esperado: El sistema permite el cambio y ajusta la reputación del autor en consecuencia.
+Ejemplo: Usuario user2 cambia un upvote a un downvote en el Tip 1 → reputación del autor disminuye en 7 puntos (de +5 a -2).
+4. Apariencia de usuarios en las páginas
+Mostrar reputación junto al nombre del usuario:
+
+Escenario: Un usuario aparece en una página.
+Resultado esperado: Su nombre se muestra con su reputación entre corchetes.
+Ejemplo: user1 [15] aparece en la página.
+Actualización dinámica de la reputación:
+
+Escenario: La reputación de un usuario cambia.
+Resultado esperado: La reputación mostrada junto a su nombre también se actualiza.
+Ejemplo: user1 [10] después de un cambio de reputación.
+5. Casos límite y excepcionales
+Reputación negativa:
+
+Escenario: Un usuario recibe suficientes downvotes para que su reputación sea negativa.
+Resultado esperado: El sistema permite reputaciones negativas sin errores.
+Ejemplo: Usuario user1 tiene reputation = -10.
+Umbrales exactos:
+
+Escenario: Un usuario alcanza exactamente 15 o 30 puntos de reputación.
+Resultado esperado: Los permisos se otorgan correctamente.
+Ejemplo: Usuario user1 tiene reputation = 15, obtiene el permiso para downvotes.
+Intentar votar en un tip inexistente:
+
+Escenario: Un usuario intenta votar en un tip que no existe.
+Resultado esperado: El sistema maneja la operación de forma controlada y no produce errores.
+Ejemplo: Usuario user2 intenta votar en un Tip con ID inválido → "Error: Tip no encontrado".
+Eliminar un usuario con tips y votos existentes:
+
+Escenario: Se elimina un usuario que ha publicado tips y/o realizado votos.
+Resultado esperado: Los tips y votos asociados al usuario se eliminan o se manejan adecuadamente.
+Ejemplo: Usuario user1 es eliminado y todos sus tips y votos desaparecen.
+Eliminar un tip con votos existentes:
+
+Escenario: Se elimina un tip que tiene votos.
+Resultado esperado: El sistema ajusta la reputación del autor correctamente.
+Ejemplo: Usuario user2 elimina un tip con 3 upvotes → reputación disminuye en 15.
+6. Escenarios adicionales
+Simulación masiva de votos:
+
+Escenario: Se aplican 100 upvotes y 50 downvotes a un tip.
+Resultado esperado: La reputación del autor se calcula correctamente.
+Ejemplo: Reputation = (100*5) - (50*2) = 500 - 100 = 400.
+Usuarios con reputación extrema:
+
+Escenario: Un usuario tiene reputación extremadamente alta o baja (por ejemplo, 1000 o -100).
+Resultado esperado: El sistema maneja correctamente los valores extremos.
+Ejemplo: Usuario user1 con reputation = 1000 sigue funcionando correctamente.

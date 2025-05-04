@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Life Pro Tips</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding-top: 40px;
+        }
+
+        .main-content {
+            max-width: 700px;
+            margin: 60px auto 0 auto;
+            background-color: #fff;
+            padding: 40px 30px 30px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .hello-big {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .btn-lg-custom {
+            font-size: 1.2em;
+            padding: 12px 0;
+            width: 60%;
+            margin: 10px auto;
+            display: block;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .lead {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        nav .navbar-brand {
+            font-weight: bold;
+            color: #007bff !important;
+        }
+
+        .tips-list {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .tip-item {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 20px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .tip-author {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .tip-date {
+            color: #888;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .vote-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .vote-buttons button,
+        .vote-buttons span {
+            flex: 1;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .alert {
+            margin-top: 15px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
+            <div>
+                {% if user.is_authenticated %}
+                <span class="me-3">Hello, {{ user }}!</span>
+                <a href="{% url 'tips_list' %}" class="btn btn-outline-info btn-sm me-2">View Tips</a>
+                <a href="{% url 'users_list' %}" class="btn btn-outline-success btn-sm me-2">Users List</a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="main-content">
+        <!-- Mostrar mensajes de Django -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <div class="hello-big">Welcome back, {{ user }}!</div>
+        <h1>Your Life Pro Tips</h1>
+        <p class="lead">Discover and share the best tips for daily life.</p>
+
+        <!-- Botón para redirigir a la página de creación de tips -->
+        <a href="{% url 'create_tip' %}" class="btn btn-primary btn-lg btn-lg-custom">Post Tip</a>
+
+        <div class="tips-list">
+            <h3 class="mb-3" style="text-align:center;">Latest Tips</h3>
+            {% if tips %}
+            {% for tip in tips %}
+            <div class="tip-item">
+                <div class="tip-author">
+                    {{ tip.author }}
+                    {% if tip.author.is_superuser %}
+                        (superuser)
+                    {% endif %}
+                </div>
+                <div class="tip-date">{{ tip.created_at|date:"Y-m-d H:i" }}</div>
+                <div>{{ tip.content|linebreaks }}</div>
+                <div class="vote-buttons">
+                    <!-- Upvote -->
+                    <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success btn-sm"
+                            {% if user == tip.author or user in tip.upvotes.all %}disabled{% endif %}>
+                            ▲ Upvote ({{ tip.upvotes.count }})
+                        </button>
+                    </form>
+                    <!-- Downvote -->
+                    <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                            {% if user == tip.author or not user.can_downvote or user in tip.downvotes.all %}disabled{% endif %}
+                            title="{% if not user.can_downvote %}Necesitas 15 de reputación para downvote{% endif %}">
+                            ▼ Downvote ({{ tip.downvotes.count }})
+                        </button>
+                    </form>
+                    <!-- Delete -->
+                    {% if user.is_superuser or (user == tip.author and user.can_delete_tips) %}
+                    <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                            Delete
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="text-align:center;">No tips yet. Be the first to share one!</p>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="hello-big">Welcome to Life Pro Tips!</div>
+        <h1>Discover & Share Tips</h1>
+        <p class="lead">Join our community to share and discover amazing tips that make life easier.</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg btn-lg-custom mb-2">Register</a>
+        <a href="{% url 'login' %}" class="btn btn-success btn-lg btn-lg-custom">Login</a>
+        {% endif %}
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        &copy; 2025 LifeTips Jon,S.A. All rights reserved.
+    </div>
+</body>
+
+</html>
