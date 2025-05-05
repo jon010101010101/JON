@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Tip, CustomUser
 
 class TipForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class TipForm(forms.ModelForm):
 
     def clean_content(self):
         content = self.cleaned_data.get('content')
-        if not content or len(content.strip()) < 5:  # Longitud mínima de 10 caracteres
+        if not content or len(content.strip()) < 5:
             raise forms.ValidationError("The tip content must be at least 10 characters long.")
         return content
 
@@ -23,3 +23,8 @@ class CustomUserCreationForm(UserCreationForm):
         if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("This email is already registered. Please use a different one.")
         return email
+
+class CustomAuthenticationForm(AuthenticationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'password']

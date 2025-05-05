@@ -13,7 +13,9 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from tips.forms import CustomUserCreationForm
 from tips.forms import TipForm
+from tips.forms import CustomAuthenticationForm
 from django.contrib.auth.views import (
     PasswordResetView, PasswordResetDoneView,
     PasswordResetConfirmView, PasswordResetCompleteView
@@ -27,7 +29,7 @@ User = get_user_model()
 
 # Página principal (home)
 def home(request):
-    tips = Tip.objects.all().order_by('-created_at')
+    tips = Tip.objects.all().order_by('-date_created')
     return render(request, 'home.html', {'tips': tips})
 
 # Registro de usuario
