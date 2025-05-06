@@ -117,8 +117,8 @@ Registro de Usuarios: http://127.0.0.1:8000/register/
 Crear un Tip: http://127.0.0.1:8000/tips/create/
 Ver Tips Creados: http://127.0.0.1:8000/tips/list/
 Página de Administracion: http://127.0.0.1:8000/admin
-Listado de ususarios con reputacion http://127.0.0.1:8000/users/list/
-Pagina no existe http://localhost:8000/nonexistent-page
+Listado de ususarios con reputacion cd  
+Pagina no existe http://localhost:8000/tips/test-404/
 
 
 Vuelta de correo

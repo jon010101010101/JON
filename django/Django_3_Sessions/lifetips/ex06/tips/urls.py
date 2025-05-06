@@ -1,8 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.shortcuts import render
-from tips.views import delete_tip
-from tips.views import (  
+from tips.views import (
     home,
     create_tip,
     tips_list,
@@ -11,7 +10,8 @@ from tips.views import (
     delete_tip,
     register,
     CustomPasswordResetView,
-    users_list  # Importamos la vista users_list
+    reset_password,  # Vista personalizada para password_reset_confirm
+    users_list,
 )
 
 # Vista para probar la página 404
@@ -20,14 +20,14 @@ def test_404_view(request):
 
 urlpatterns = [
     # Página principal de la app (listado o inicio)
-    path('', home, name='tips_home'),  # Cambié el nombre a 'tips_home' para evitar conflictos con la raíz
+    path('', home, name='tips_home'),
 
     # Funciones relacionadas con los tips
-    path('create/', create_tip, name='create_tip'),  # Crear un nuevo tip
-    path('list/', tips_list, name='tips_list'),  # Listar todos los tips
-    path('<int:tip_id>/delete/', delete_tip, name='delete_tip'),  # Eliminar un tip
-    path('<int:tip_id>/upvote/', upvote_tip, name='upvote_tip'),  # Ruta para upvote
-    path('<int:tip_id>/downvote/', downvote_tip, name='downvote_tip'),  # Ruta para downvote
+    path('create/', create_tip, name='create_tip'),
+    path('list/', tips_list, name='tips_list'),
+    path('<int:tip_id>/delete/', delete_tip, name='delete_tip'),
+    path('<int:tip_id>/upvote/', upvote_tip, name='upvote_tip'),
+    path('<int:tip_id>/downvote/', downvote_tip, name='downvote_tip'),
 
     # Registro de usuarios
     path("register/", register, name="register"),
@@ -42,7 +42,7 @@ urlpatterns = [
         CustomPasswordResetView.as_view(
             template_name='registration/password_reset.html',
             email_template_name='registration/password_reset_email.txt',
-            html_email_template_name='registration/password_reset_email.html'  # Aseguramos el uso de HTML
+            html_email_template_name='registration/password_reset_email.html'
         ),
         name='password_reset'
     ),
@@ -53,7 +53,7 @@ urlpatterns = [
     ),
     path(
         'reset/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
+        reset_password,  # Vista personalizada para password_reset_confirm
         name='password_reset_confirm'
     ),
     path(
@@ -63,7 +63,7 @@ urlpatterns = [
     ),
 
     # Listado de usuarios con reputación
-    path('users/list/', users_list, name='users_list'),  # Nueva ruta añadida
+    path('users/list/', users_list, name='tips/users_list'),
 
     # Ruta para probar la página 404
     path('test-404/', test_404_view, name='test_404'),

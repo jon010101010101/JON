@@ -1,22 +1,37 @@
+import os
+import logging
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash, get_user_model
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    UserCreationForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+)
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import get_user_model  # Cambio aquí
 from django.contrib.auth.views import PasswordResetView
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.http import HttpResponse
+from django.contrib.auth.tokens import default_token_generator
+from django.http import HttpResponse, JsonResponse, Http404, HttpResponseForbidden
+from django.db.models import Count, Q
+from django.views.decorators.http import require_POST
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
 from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
-from django.utils.timezone import now
+from django.utils.http import urlsafe_base64_decode
+from .forms import CustomPasswordResetForm
+
+
+logger = logging.getLogger(__name__)
 
 # Usar el modelo de usuario personalizado
 User = get_user_model()  # Cambio aquí
@@ -167,14 +182,45 @@ def custom_404_view(request, exception):
 
 # Clase personalizada para recuperación de contraseñas con simulación y redirección automática
 class CustomPasswordResetView(PasswordResetView):
-    email_template_name = 'registration/password_reset_email.txt'
-    html_email_template_name = 'registration/password_reset_email.html'
-    subject_template_name = 'registration/password_reset_subject.txt'
+    template_name = 'registration/password_reset.html'
+    form_class = CustomPasswordResetForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['simulation_enabled'] = True  # Asegúrate de pasar esta variable al contexto
-        return context
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        action = request.POST.get('action')
+
+        if not form.is_valid():
+            # Si el campo está vacío, Django añade el error automáticamente
+            return self.render_to_response(self.get_context_data(form=form))
+
+        email = form.cleaned_data['email']
+        users = list(User.objects.filter(email=email))
+
+        if not users:
+            # Añade el error al campo email
+            form.add_error('email', "No user with this email was found.")
+            return self.render_to_response(self.get_context_data(form=form))
+
+        user = users[0]
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_link = request.build_absolute_uri(
+            reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        )
+
+        if action == 'real':
+            return super().post(request, *args, **kwargs)
+        elif action == 'simulado':
+            context = self.get_context_data(form=form)
+            context['simulated_email'] = {
+                'to': user.email,
+                'reset_link': reset_link,
+                'username': user.username,
+            }
+            return self.render_to_response(context)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
 
     def form_valid(self, form):
         for user in form.get_users(form.cleaned_data["email"]):
@@ -234,3 +280,40 @@ def reset_password(request, uidb64, token):
         return redirect('password_reset_complete')
 
     return render(request, 'registration/password_reset_confirm.html', {'uidb64': uidb64, 'token': token})
+
+def custom_password_reset(request):
+    simulated_reset_url = None
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(
+                request=request,
+                use_https=False,
+                email_template_name="registration/password_reset_email.html",
+            )
+            # Solo para desarrollo: extraer el enlace del email en consola
+            if settings.EMAIL_BACKEND == 'django.core.mail.backends.console.EmailBackend':
+                # No se puede extraer automáticamente de la consola,
+                # pero puedes mostrar un mensaje indicando que revises la consola.
+                simulated_reset_url = "Consulta la consola para ver el enlace de restablecimiento."
+            # Si usas filebased backend, puedes extraer el enlace del archivo:
+            elif settings.EMAIL_BACKEND == 'django.core.mail.backends.filebased.EmailBackend':
+                import glob
+                files = sorted(
+                    glob.glob(os.path.join(settings.EMAIL_FILE_PATH, '*')),
+                    key=os.path.getmtime
+                )
+                if files:
+                    with open(files[-1]) as f:
+                        for line in f:
+                            if '/reset/' in line:
+                                simulated_reset_url = line.strip()
+                                break
+            return render(request, "registration/password_reset_done.html", {
+                "simulated_reset_url": simulated_reset_url,
+            })
+    else:
+        form = PasswordResetForm()
+    return render(request, "registration/password_reset.html", {
+        "form": form,
+    })
