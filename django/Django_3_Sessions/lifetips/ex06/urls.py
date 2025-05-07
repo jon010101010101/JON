@@ -26,10 +26,15 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
+
+    # Ruta para la verificación de 2FA
+    path('verify-2fa/', views.verify_2fa, name='verify_2fa'),
+
+    # Ruta de captcha
+    path('captcha/', include('captcha.urls')),
 ]
 
 handler404 = 'tips.views.custom_404_view'
-
 
 # Configuración para servir archivos estáticos en desarrollo
 if settings.DEBUG:

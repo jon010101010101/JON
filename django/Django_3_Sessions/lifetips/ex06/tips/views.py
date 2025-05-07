@@ -29,6 +29,7 @@ from .models import Tip, CustomUser
 from .forms import TipForm, CustomUserCreationForm
 from django.utils.http import urlsafe_base64_decode
 from .forms import CustomPasswordResetForm
+from .forms import CustomAuthenticationForm
 
 
 logger = logging.getLogger(__name__)
@@ -92,7 +93,7 @@ def profile_edit(request):
         if new_email:
             user.email = new_email
         user.save()
-        messages.success(request, 'Perfil actualizado correctamente.')
+        messages.success(request, "Profile updated successfully.")
         return redirect('profile_edit')
     return render(request, 'profile_edit.html')
 
@@ -336,3 +337,64 @@ def custom_password_reset(request):
     return render(request, "registration/password_reset.html", {
         "form": form,
     })
+
+import random
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login
+from django.core.mail import send_mail
+from .forms import CustomAuthenticationForm
+from django.contrib.auth import get_user_model
+
+def login_view(request):
+    failed_attempts = request.session.get('failed_login_attempts', 0)
+    show_captcha = True
+    #show_captcha = failed_attempts >= 3
+
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, data=request.POST, show_captcha=show_captcha)
+        if form.is_valid():
+            request.session['failed_login_attempts'] = 0
+            user = form.get_user()
+            if user.is_superuser:
+                # Genera y guarda código 2FA en sesión
+                code = f"{random.randint(100000, 999999)}"
+                request.session['2fa_code'] = code
+                request.session['2fa_user_id'] = user.id
+                # Envía el código por email
+                send_mail(
+                    subject='Your 2FA Code',
+                    message=f'Your Life Pro Tips 2FA code is: {code}',
+                    from_email='noreply@lifeprotips.com',
+                    recipient_list=[user.email],
+                )
+                # Redirige a la página de verificación de 2FA
+                return redirect('verify_2fa')
+            else:
+                # Login normal para otros usuarios
+                login(request, user)
+                return redirect('home')
+        else:
+            request.session['failed_login_attempts'] = failed_attempts + 1
+    else:
+        form = CustomAuthenticationForm(request, show_captcha=show_captcha)
+
+    return render(request, 'login.html', {'form': form})
+
+
+def verify_2fa(request):
+    error = None
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        if code == request.session.get('2fa_code'):
+            user_id = request.session.get('2fa_user_id')
+            user = get_object_or_404(get_user_model(), id=user_id)
+            # Aquí indicamos el backend explícitamente
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            # Limpia la sesión
+            del request.session['2fa_code']
+            del request.session['2fa_user_id']
+            return redirect('home')
+        else:
+            error = "Invalid code. Please try again."
+    return render(request, 'verify_2fa.html', {'error': error})
+

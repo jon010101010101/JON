@@ -141,8 +141,8 @@ python manage.py list_tips
 # Para hacer test
 python manage.py test
 
-
-
+# Desbloqueo cont
+python manage.py axes_reset
 
 
 

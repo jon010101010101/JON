@@ -1,6 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Tip, CustomUser
+
+# SOLO SI INSTALASTE django-simple-captcha
+from captcha.fields import CaptchaField
 
 class TipForm(forms.ModelForm):
     class Meta:
@@ -34,7 +37,16 @@ class CustomPasswordResetForm(forms.Form):
         email = self.cleaned_data.get('email')
         if not email:
             raise forms.ValidationError("The email field is required.")
-        # Verifica si el email no está registrado
         if not CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("No user with this email was found.")
         return email
+
+# --- FORMULARIO DE LOGIN CON CAPTCHA OPCIONAL ---
+class CustomAuthenticationForm(AuthenticationForm):
+    captcha = CaptchaField(required=False, label="Por favor resuelve el captcha")
+
+    def __init__(self, *args, **kwargs):
+        show_captcha = kwargs.pop('show_captcha', False)
+        super().__init__(*args, **kwargs)
+        if not show_captcha:
+            self.fields.pop('captcha')
