@@ -80,6 +80,21 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
 
+# Vista de edición de perfil
+@login_required
+def profile_edit(request):
+    if request.method == 'POST':
+        user = request.user
+        new_username = request.POST.get('username')
+        new_email = request.POST.get('email')
+        if new_username:
+            user.username = new_username
+        if new_email:
+            user.email = new_email
+        user.save()
+        messages.success(request, 'Perfil actualizado correctamente.')
+        return redirect('profile_edit')
+    return render(request, 'profile_edit.html')
 
 # Vista para cerrar sesión (Logout)
 def logout_view(request):

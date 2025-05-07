@@ -14,7 +14,6 @@
             color: #333;
             padding-top: 40px;
         }
-
         .main-content {
             max-width: 700px;
             margin: 60px auto 0 auto;
@@ -24,14 +23,12 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
-
         .hello-big {
             font-size: 2.5em;
             font-weight: bold;
             color: #007bff;
             margin-bottom: 15px;
         }
-
         .btn-lg-custom {
             font-size: 1.2em;
             padding: 12px 0;
@@ -39,29 +36,24 @@
             margin: 10px auto;
             display: block;
         }
-
         h1 {
             color: #007bff;
             font-size: 1.8em;
             margin-bottom: 15px;
         }
-
         .lead {
             margin-bottom: 20px;
             font-size: 1.1em;
             color: #555;
         }
-
         nav .navbar-brand {
             font-weight: bold;
             color: #007bff !important;
         }
-
         .tips-list {
             margin-top: 30px;
             text-align: left;
         }
-
         .tip-item {
             background: #f8f9fa;
             border-radius: 6px;
@@ -69,25 +61,21 @@
             margin-bottom: 18px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-
         .tip-author {
             font-weight: bold;
             color: #007bff;
         }
-
         .tip-date {
             color: #888;
             font-size: 0.95em;
             margin-bottom: 5px;
         }
-
         .vote-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-top: 10px;
         }
-
         .vote-buttons button,
         .vote-buttons span {
             flex: 1;
@@ -96,22 +84,19 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
         .alert {
             margin-top: 15px;
         }
-
         .alert-success {
-            background-color: #d1f7d6 !important;  /* Verde pastel */
+            background-color: #d1f7d6 !important;
             color: #256029 !important;
             border-color: #b6e7c9 !important;
         }
         .alert-danger, .alert-error {
-            background-color: #ffe0e0 !important;  /* Rojo pastel */
+            background-color: #ffe0e0 !important;
             color: #a94442 !important;
             border-color: #f5c6cb !important;
         }
-
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -123,18 +108,23 @@
 </head>
 
 <body>
+    <!-- Barra de navegación principal -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
             <div>
                 {% if user.is_authenticated %}
-                <span class="me-3">Hello, {{ user.username }}!</span>
-                <a href="{% url 'tips_list' %}" class="btn btn-outline-info btn-sm me-2">View Tips</a>
-                <a href="{% url 'users_list' %}" class="btn btn-outline-success btn-sm me-2">Users List</a>
-                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                    <span class="me-3">Hello, {{ user.username }}!</span>
+                    <a href="{% url 'tips_list' %}" class="btn btn-outline-info btn-sm me-2">View Tips</a>
+                    <a href="{% url 'users_list' %}" class="btn btn-outline-success btn-sm me-2">Users List</a>
+                    <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm me-2">Edit Profile</a>
+                    {% if user.is_superuser %}
+                        <a href="/admin/" class="btn btn-outline-dark btn-sm me-2">Admin</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
                 {% else %}
-                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
-                <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -154,7 +144,7 @@
         <h1>Your Life Pro Tips</h1>
         <p class="lead">Discover and share the best tips for daily life.</p>
 
-        <!-- Botón para redirigir a la página de creación de tips -->
+        <!-- Botón para crear un nuevo tip -->
         <a href="{% url 'create_tip' %}" class="btn btn-primary btn-lg btn-lg-custom">Post Tip</a>
 
         <div class="tips-list">
@@ -172,19 +162,22 @@
                 <div class="tip-date">{{ tip.created_at|date:"Y-m-d H:i" }}</div>
                 <div>{{ tip.content|linebreaks }}</div>
                 <div class="vote-buttons">
+                    <!-- Botón de upvote -->
                     <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-success btn-sm">
                             ▲ Upvote ({{ tip.upvotes.count }})
                         </button>
                     </form>
+                    <!-- Botón de downvote -->
                     <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-danger btn-sm">
                             ▼ Downvote ({{ tip.downvotes.count }})
                         </button>
                     </form>
-                    {% if user.is_authenticated and user.is_superuser or user.is_authenticated and user == tip.author or user.is_authenticated and user.can_delete_tips %}
+                    <!-- Botón de borrar tip (solo para superuser, autor o usuarios con reputación >= 30) -->
+                    {% if user.is_authenticated and user.is_superuser or user.is_authenticated and user == tip.author or user.is_authenticated and user.reputation >= 30 %}
                     <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-secondary btn-sm">
@@ -200,6 +193,7 @@
             {% endif %}
         </div>
         {% else %}
+        <!-- Mensaje de bienvenida para visitantes no autenticados -->
         <div class="hello-big">Welcome to Life Pro Tips!</div>
         <h1>Discover & Share Tips</h1>
         <p class="lead">Join our community to share and discover amazing tips that make life easier.</p>
@@ -215,4 +209,3 @@
 </body>
 
 </html>
-

@@ -2,7 +2,6 @@ import os
 import sys
 import django
 import logging
-import inspect
 from django.test.runner import DiscoverRunner
 from termcolor import colored
 from unittest import TextTestRunner, TextTestResult
@@ -16,47 +15,34 @@ logging.getLogger("tips.models").setLevel(logging.WARNING)
 
 class CustomTestResult(TextTestResult):
     """
-    TestResult personalizado que muestra la docstring y el código fuente de cada test.
+    TestResult personalizado que muestra solo el estado y la descripción de cada test.
     """
 
     def addSuccess(self, test):
         super().addSuccess(test)
         doc = test.shortDescription() or ""
-        code = self._get_test_source(test)
         print(
-            f"{self.testsRun}. ✅ {test}: PASSED\n"
-            f"    Descripción: {doc}\n"
-            f"    Código de comprobación:\n{code}\n"
+            colored(f"{self.testsRun}. ✅ {test}: PASSED", "green")
+            + (f"\n    Descripción: {doc}\n" if doc else "\n")
         )
 
     def addFailure(self, test, err):
         super().addFailure(test, err)
         doc = test.shortDescription() or ""
-        code = self._get_test_source(test)
         print(
-            f"{self.testsRun}. ❌ {test}: FAILED\n"
-            f"    Descripción: {doc}\n"
-            f"    Código de comprobación:\n{code}\n"
-            f"    Error: {self._get_error_message(err)}\n"
+            colored(f"{self.testsRun}. ❌ {test}: FAILED", "red")
+            + (f"\n    Descripción: {doc}\n" if doc else "\n")
+            + f"    Error: {self._get_error_message(err)}\n"
         )
 
     def addError(self, test, err):
         super().addError(test, err)
         doc = test.shortDescription() or ""
-        code = self._get_test_source(test)
         print(
-            f"{self.testsRun}. ❌ {test}: ERROR\n"
-            f"    Descripción: {doc}\n"
-            f"    Código de comprobación:\n{code}\n"
-            f"    Error: {self._get_error_message(err)}\n"
+            colored(f"{self.testsRun}. ❌ {test}: ERROR", "yellow")
+            + (f"\n    Descripción: {doc}\n" if doc else "\n")
+            + f"    Error: {self._get_error_message(err)}\n"
         )
-
-    def _get_test_source(self, test):
-        try:
-            method = getattr(test, test._testMethodName)
-            return inspect.getsource(method)
-        except Exception as e:
-            return f"No se pudo obtener el código fuente: {e}"
 
     def _get_error_message(self, err):
         return str(err[1])

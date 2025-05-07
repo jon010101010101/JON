@@ -12,6 +12,7 @@ from tips.views import (
     CustomPasswordResetView,
     reset_password,  # Vista personalizada para password_reset_confirm
     users_list,
+    profile_edit,    # <-- ¡IMPORTANTE! Añade tu nueva vista aquí
 )
 
 # Vista para probar la página 404
@@ -47,7 +48,7 @@ urlpatterns = [
         name='password_reset'
     ),
     path(
-        'password_reset_done/',
+        'password_reset/done/',  # <-- URL estándar de Django
         auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
         name='password_reset_done'
     ),
@@ -57,13 +58,16 @@ urlpatterns = [
         name='password_reset_confirm'
     ),
     path(
-        'reset_done/',
+        'reset/done/',  # <-- URL estándar de Django
         auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
         name='password_reset_complete'
     ),
 
     # Listado de usuarios con reputación
     path('users/list/', users_list, name='users_list'),
+
+    # Edición de perfil de usuario autenticado
+    path('profile/edit/', profile_edit, name='profile_edit'),  # <-- NUEVA RUTA
 
     # Ruta para probar la página 404
     path('test-404/', test_404_view, name='test_404'),

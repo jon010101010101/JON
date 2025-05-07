@@ -88,13 +88,18 @@ class Tip(models.Model):
         if is_new:
             self.author.update_reputation()
 
-    def delete(self, *args, **kwargs):
+    def delete(self, *args, user=None, **kwargs):
         """
         Elimina la instancia del Tip y ajusta la reputación del autor en función de los votos recibidos.
 
+        - Solo el autor o un administrador pueden eliminar el tip.
         - Resta la reputación obtenida por los votos positivos y negativos de este tip.
         - Luego elimina el tip de la base de datos.
         """
+        # Comprobar permisos
+        if user is not None and user != self.author and not user.is_superuser:
+            raise PermissionDenied("Solo el autor o un administrador pueden eliminar este tip.")
+
         # Contar los votos antes de eliminar
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
@@ -102,8 +107,13 @@ class Tip(models.Model):
         # Ajustar la reputación del autor restando la influencia de los votos de este tip
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
 
+        # Quitar 'user' de kwargs si está presente
+        if 'user' in kwargs:
+            kwargs.pop('user')
+
         # Llamar al método delete original para eliminar el tip
         super().delete(*args, **kwargs)
+
 
     def upvote(self, user):
         """
