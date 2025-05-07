@@ -114,39 +114,42 @@ def create_tip(request):
 @login_required
 def upvote_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
+    user = request.user
     try:
-        tip.upvote(request.user)
-        messages.success(request, 'You upvoted the tip!')
+        tip.upvote(user)
+        messages.success(request, 'You have upvoted this tip!')
     except PermissionDenied as e:
         messages.error(request, str(e))
     return redirect('home')
 
-
-# Vista para manejar los votos negativos (Downvote)
 @login_required
 def downvote_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
+    user = request.user
+
+    # Only allow downvote if user has permission (15+ rep or is superuser)
+    if not user.can_downvote and not user.is_superuser:
+        messages.error(request, "You need at least 15 reputation points to downvote tips.")
+        return redirect('home')
+
     try:
-        tip.downvote(request.user)
-        messages.success(request, 'You downvoted the tip!')
+        tip.downvote(user)
+        messages.success(request, 'You have downvoted this tip!')
     except PermissionDenied as e:
         messages.error(request, str(e))
     return redirect('home')
 
 
-# Vista para eliminar un tip (Delete Tip)
 @login_required
 def delete_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    if request.user != tip.author and not request.user.is_superuser:
-        raise PermissionDenied("You don't have permission to delete this tip.")
-    try:
-        # Ajustar la reputación del autor eliminando la influencia de los votos
-        upvotes_count = tip.upvotes.count()
-        downvotes_count = tip.downvotes.count()
-        tip.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
+    user = request.user
 
-        # Eliminar el tip
+    # Permitir que el superusuario borre cualquier tip
+    if not user.is_superuser and tip.author != user:
+        raise PermissionDenied("You don't have permission to delete this tip.")
+
+    try:
         tip.delete()
         messages.success(request, 'Tip deleted successfully.')
     except Exception as e:
@@ -184,24 +187,22 @@ def custom_404_view(request, exception):
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'registration/password_reset.html'
     form_class = CustomPasswordResetForm
+    email_template_name = 'registration/password_reset_email.txt'
+    html_email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_url = '/tips/password_reset_done/'
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         action = request.POST.get('action')
 
         if not form.is_valid():
-            # Si el campo está vacío, Django añade el error automáticamente
+            # Si hay errores de validación, los muestra en el template
+            print("Errores del formulario:", form.errors)
             return self.render_to_response(self.get_context_data(form=form))
 
         email = form.cleaned_data['email']
-        users = list(User.objects.filter(email=email))
-
-        if not users:
-            # Añade el error al campo email
-            form.add_error('email', "No user with this email was found.")
-            return self.render_to_response(self.get_context_data(form=form))
-
-        user = users[0]
+        user = User.objects.get(email=email)
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
         reset_link = request.build_absolute_uri(
@@ -209,8 +210,10 @@ class CustomPasswordResetView(PasswordResetView):
         )
 
         if action == 'real':
+            # Usa el flujo estándar de Django para enviar el email real
             return super().post(request, *args, **kwargs)
         elif action == 'simulado':
+            # Genera el email simulado y lo muestra en el template
             context = self.get_context_data(form=form)
             context['simulated_email'] = {
                 'to': user.email,
@@ -219,6 +222,7 @@ class CustomPasswordResetView(PasswordResetView):
             }
             return self.render_to_response(context)
         else:
+            # Por defecto, vuelve a mostrar el formulario
             return self.render_to_response(self.get_context_data(form=form))
 
 

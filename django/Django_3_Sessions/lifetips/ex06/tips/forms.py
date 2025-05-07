@@ -10,7 +10,7 @@ class TipForm(forms.ModelForm):
     def clean_content(self):
         content = self.cleaned_data.get('content')
         if not content or len(content.strip()) < 5:
-            raise forms.ValidationError("The tip content must be at least 10 characters long.")
+            raise forms.ValidationError("The tip content must be at least 5 characters long.")
         return content
 
 class CustomUserCreationForm(UserCreationForm):
@@ -29,3 +29,12 @@ class CustomPasswordResetForm(forms.Form):
         label="Email",
         widget=forms.EmailInput(attrs={'autocomplete': 'email'})
     )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError("The email field is required.")
+        # Verifica si el email no está registrado
+        if not CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("No user with this email was found.")
+        return email

@@ -101,6 +101,17 @@
             margin-top: 15px;
         }
 
+        .alert-success {
+            background-color: #d1f7d6 !important;  /* Verde pastel */
+            color: #256029 !important;
+            border-color: #b6e7c9 !important;
+        }
+        .alert-danger, .alert-error {
+            background-color: #ffe0e0 !important;  /* Rojo pastel */
+            color: #a94442 !important;
+            border-color: #f5c6cb !important;
+        }
+
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -131,11 +142,11 @@
     <div class="main-content">
         <!-- Mostrar mensajes de Django -->
         {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} text-center" role="alert">
-            {{ message }}
-        </div>
-        {% endfor %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
         {% endif %}
 
         {% if user.is_authenticated %}
@@ -156,6 +167,7 @@
                     {% if tip.author.is_superuser %}
                         (superuser)
                     {% endif %}
+                    ({{ tip.author.reputation }} rep)
                 </div>
                 <div class="tip-date">{{ tip.created_at|date:"Y-m-d H:i" }}</div>
                 <div>{{ tip.content|linebreaks }}</div>
@@ -172,7 +184,7 @@
                             ▼ Downvote ({{ tip.downvotes.count }})
                         </button>
                     </form>
-                    {% if user.is_superuser or user == tip.author or perms.tips.can_delete_tip %}
+                    {% if user.is_authenticated and user.is_superuser or user.is_authenticated and user == tip.author or user.is_authenticated and user.can_delete_tips %}
                     <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-secondary btn-sm">
@@ -203,3 +215,4 @@
 </body>
 
 </html>
+

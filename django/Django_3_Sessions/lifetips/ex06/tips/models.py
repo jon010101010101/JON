@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import now
+from django.core.exceptions import PermissionDenied
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,8 +38,9 @@ class CustomUser(AbstractUser):
     def can_downvote(self):
         """
         Verifica si el usuario puede emitir votos negativos.
+        El superusuario siempre puede.
         """
-        return self.reputation >= 15
+        return self.is_superuser or self.reputation >= 15
 
     @property
     def can_delete_tips(self):
@@ -88,56 +90,76 @@ class Tip(models.Model):
 
     def delete(self, *args, **kwargs):
         """
-        Elimina un Tip y ajusta la reputación del autor basado en los votos.
-        """
-        user = kwargs.pop("user", None)
-        if user != self.author and not user.is_superuser:
-            raise PermissionError("You don't have permission to delete this tip.")
+        Elimina la instancia del Tip y ajusta la reputación del autor en función de los votos recibidos.
 
+        - Resta la reputación obtenida por los votos positivos y negativos de este tip.
+        - Luego elimina el tip de la base de datos.
+        """
         # Contar los votos antes de eliminar
         upvotes_count = self.upvotes.count()
         downvotes_count = self.downvotes.count()
 
-        # Ajustar la reputación del autor
+        # Ajustar la reputación del autor restando la influencia de los votos de este tip
         self.author.update_reputation(delta_upvotes=-upvotes_count, delta_downvotes=-downvotes_count)
 
-        # Eliminar el tip
+        # Llamar al método delete original para eliminar el tip
         super().delete(*args, **kwargs)
 
     def upvote(self, user):
         """
-        Permite a un usuario emitir un voto positivo en este tip.
+        Permite a un usuario emitir un voto positivo (upvote) en este tip.
+
+        - Un usuario no puede votar a favor de su propio tip.
+        - Un usuario no puede votar a favor el mismo tip más de una vez.
+        - Si el usuario había votado en contra previamente, se elimina ese downvote y se ajusta la reputación.
+        - Solo se permite un voto por usuario por tip.
         """
         with transaction.atomic():
+            # Verifica que el usuario no sea el autor del tip
             if user == self.author:
-                raise PermissionError("You cannot upvote your own tip.")
+                raise PermissionDenied("You cannot upvote your own tip.")
+
+            # Verifica que el usuario no haya votado a favor previamente
             if self.upvotes.filter(id=user.id).exists():
-                raise PermissionError("You have already upvoted this tip.")
+                raise PermissionDenied("You have already upvoted this tip.")
+
+            # Si el usuario tenía un voto en contra, lo elimina y ajusta la reputación
             if self.downvotes.filter(id=user.id).exists():
                 self.downvotes.remove(user)
                 self.author.update_reputation(delta_downvotes=-1)
 
+            # Añade el voto a favor y actualiza la reputación
             self.upvotes.add(user)
             self.author.update_reputation(delta_upvotes=1)
 
+            # Registra la acción en el log
             logger.info(f"User {user} upvoted Tip {self.id}")
+
+
+
 
     def downvote(self, user):
         """
         Permite a un usuario emitir un voto negativo en este tip.
+        El usuario solo puede votar en contra si tiene al menos 15 puntos de reputación,
+        excepto si es superusuario.
+        Si ya había votado a favor, se elimina ese voto.
+        Solo se permite un voto por usuario por tip.
         """
         with transaction.atomic():
             if user == self.author:
-                raise PermissionError("You cannot downvote your own tip.")
+                raise PermissionDenied("You cannot downvote your own tip.")
+            # Permitir al superusuario downvotar siempre
+            if not user.can_downvote and not user.is_superuser:
+                raise PermissionDenied("You need at least 15 reputation points to downvote tips.")
             if self.downvotes.filter(id=user.id).exists():
-                raise PermissionError("You have already downvoted this tip.")
+                raise PermissionDenied("You have already downvoted this tip.")
             if self.upvotes.filter(id=user.id).exists():
+                # Si tenía un upvote, lo quitamos y ajustamos reputación
                 self.upvotes.remove(user)
                 self.author.update_reputation(delta_upvotes=-1)
-
             self.downvotes.add(user)
             self.author.update_reputation(delta_downvotes=1)
-
             logger.info(f"User {user} downvoted Tip {self.id}")
 
     def upvotes_count(self):

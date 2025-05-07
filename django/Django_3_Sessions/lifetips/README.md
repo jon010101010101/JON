@@ -142,61 +142,6 @@ python manage.py list_tips
 python manage.py test
 
 
-from django.core.mail import send_mail
-import time
-
-# Mide el tiempo antes del envío
-start_time = time.time()
-
-# Enviar correo
-send_mail(
-    subject='Password Reset Request',
-    message='Hello, this is a test email to simulate password reset functionality.',
-    from_email='lifetipsdjango@gmail.com',
-    recipient_list=['jonurrutia10@gmail.com'],
-    fail_silently=False,
-)
-
-# Mide el tiempo después del envío
-end_time = time.time()
-
-# Calcula el tiempo transcurrido
-elapsed_time = end_time - start_time
-print(f"Correo enviado en {elapsed_time:.2f} segundos")
-
-# en consola 
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Reset your password
-From: lifetipsdjango@gmail.com
-To: jonurrutia10@gmail.com
-Date: Fri, 02 May 2025 17:58:29 -0000
-Message-ID: <174620870961.1294413.4704177014260522708@c4r6s6.42urduliz.com>
-
-Hello,
-
-We received a request to reset your password for your account at Life Pro Tips.
-
-Click the link below to reset your password:
-http://127.0.0.1:8000/reset/MQ/cp6slh-ff68147822cc29abb57b663f10bf9eb2/
-
-If you didn’t request this, you can safely ignore this email.
-
-Thanks,  
-The Life Pro Tips Team  
-
----
-
-© 2025 LifeTips Jon,S.A. All rights reserved.
--------------------------------------------------------------------------------
-
-
-
-
-# Simular el click al boton del mail
-curl -X GET "http://127.0.0.1:8000/reset/MQ/cp6slh-ff68147822cc29abb57b663f10bf9eb2/"
-
 
 
 

@@ -63,7 +63,7 @@ urlpatterns = [
     ),
 
     # Listado de usuarios con reputación
-    path('users/list/', users_list, name='tips/users_list'),
+    path('users/list/', users_list, name='users_list'),
 
     # Ruta para probar la página 404
     path('test-404/', test_404_view, name='test_404'),
