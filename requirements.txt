@@ -1,6 +1,6 @@
 asgiref==3.8.1
 beautifulsoup4==4.13.4
-Django==4.2.20
+Django==4.2.21
 django-axes==7.1.0
 django-bootstrap-v5==1.0.11
 django-bootstrap4==25.1
