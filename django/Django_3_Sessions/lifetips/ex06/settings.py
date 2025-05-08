@@ -1,26 +1,23 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 from decouple import Config, RepositoryEnv
 
 # Rutas base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Cargar las variables de entorno desde el archivo .env_lifetips
-load_dotenv('/sgoinfre/.env_lifetips')
 
 # Cargar variables de entorno desde un archivo externo usando python-decouple
 ENV_FILE = os.path.expanduser('/home/jurrutia/sgoinfre/.env_lifetips')
 config = Config(RepositoryEnv(ENV_FILE))
 
 # Clave secreta (no exponer en producción)
-SECRET_KEY = os.getenv('SECRET_KEY', config("SECRET_KEY", default='clave_secreta_de_respaldo'))
+SECRET_KEY = config("SECRET_KEY", default='clave_secreta_de_respaldo')
 
 # Depuración (cambiar a False en producción)
-DEBUG = os.getenv('DEBUG', config("DEBUG", default='False')) == 'True'
+DEBUG = config("DEBUG", default=False, cast=bool)
+print("DEBUG =", DEBUG)
 
 # Hosts permitidos
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', config("ALLOWED_HOSTS", default='127.0.0.1,localhost')).split(',')
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default='127.0.0.1,localhost').split(',')
 
 # Configuración del usuario
 AUTH_USER_MODEL = 'tips.CustomUser'
@@ -44,7 +41,7 @@ INSTALLED_APPS = [
     'axes',  # Protección contra ataques de fuerza bruta
     'django_extensions',
     'captcha',
-    ]
+]
 
 # Middleware
 MIDDLEWARE = [
@@ -77,7 +74,7 @@ ROOT_URLCONF = 'ex06.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'ex06', 'templates')],  # Incluye la ruta correcta
+        'DIRS': [os.path.join(BASE_DIR, 'ex06', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,9 +118,9 @@ USE_TZ = True
 # Archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Carpeta para tus propios archivos estáticos (si existe)
+    BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Carpeta donde `collectstatic` recopila los archivos estáticos
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Configuración del correo usando SendGrid
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -131,13 +128,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  # Siempre 'apikey' para SendGrid
+EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='lifetipsdjango@gmail.com')
 
 # Configuración del dominio y protocolo para correos electrónicos
-EMAIL_PROTOCOL = os.getenv('EMAIL_PROTOCOL', config('EMAIL_PROTOCOL', default='http'))  # Puede ser 'http' o 'https'
-EMAIL_DOMAIN = os.getenv('EMAIL_DOMAIN', config('EMAIL_DOMAIN', default='127.0.0.1:8000'))
+EMAIL_PROTOCOL = config('EMAIL_PROTOCOL', default='http')
+EMAIL_DOMAIN = config('EMAIL_DOMAIN', default='127.0.0.1:8000')
 
 # Logging
 LOGGING = {
@@ -145,7 +142,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'WARNING',  # Cambiar los mensajes DEBUG a WARNING
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
         },
     },
@@ -154,7 +151,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'WARNING',
         },
-        'tips.signals': {  # Configuración específica para tips.signals
+        'tips.signals': {
             'handlers': ['console'],
             'level': 'WARNING',
             'propagate': False,

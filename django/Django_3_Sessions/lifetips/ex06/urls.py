@@ -39,3 +39,5 @@ handler404 = 'tips.views.custom_404_view'
 # Configuración para servir archivos estáticos en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
