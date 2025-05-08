@@ -33,11 +33,13 @@
         }
 
         .btn-lg-custom {
-            font-size: 1.5em;
-            padding: 16px 0;
-            width: 50%;
+            font-size: 1.1em;
+            padding: 8px 0;
+            width: 80%;
             margin: 10px auto;
             display: block;
+            border-radius: 0;
+            letter-spacing: 0.5px;
         }
 
         h1 {
@@ -104,7 +106,7 @@
         }
 
         .vote-buttons button, .vote-buttons span {
-            flex: 1; /* distribute available space equally */
+            flex: 1;
             max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
@@ -161,13 +163,13 @@
                                 <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-success btn-sm {% if user in tip.upvoted_by.all %}active{% endif %}">
-                                        ▲ Upvote ({{ tip.upvotes }})
+                                        ▲ Upvote ({{ tip.upvoted_by.count }})
                                     </button>
                                 </form>
                                 <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger btn-sm {% if user in tip.downvoted_by.all %}active{% endif %}">
-                                        ▼ Downvote ({{ tip.downvotes }})
+                                        ▼ Downvote ({{ tip.downvoted_by.count }})
                                     </button>
                                 </form>
                                 {% if user == tip.author %}
@@ -177,8 +179,8 @@
                                     </form>
                                 {% endif %}
                             {% else %}
-                                <span class="text-muted">▲ Upvote ({{ tip.upvotes }})</span>
-                                <span class="text-muted">▼ Downvote ({{ tip.downvotes }})</span>
+                                <span class="text-muted">▲ Upvote ({{ tip.upvoted_by.count }})</span>
+                                <span class="text-muted">▼ Downvote ({{ tip.downvoted_by.count }})</span>
                             {% endif %}
                         </div>
                     </div>
@@ -189,5 +191,4 @@
         </div>
     </div>
 </body>
-
 </html>

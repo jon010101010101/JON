@@ -2,13 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Life Pro Tips</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,11 +33,13 @@
         }
 
         .btn-lg-custom {
-            font-size: 1.5em;
-            padding: 16px 0;
-            width: 50%;
+            font-size: 1.1em;
+            padding: 8px 0;
+            width: 80%;
             margin: 10px auto;
             display: block;
+            border-radius: 0;
+            letter-spacing: 0.5px;
         }
 
         h1 {
@@ -84,7 +84,7 @@
             border-radius: 6px;
             padding: 15px 18px;
             margin-bottom: 18px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
 
         .tip-author {
@@ -105,14 +105,20 @@
             margin-top: 10px;
         }
 
-        .vote-buttons button,
-        .vote-buttons span {
+        .vote-buttons button, .vote-buttons span {
             flex: 1;
-            /* distribute available space equally */
             max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        footer.footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -123,102 +129,93 @@
             <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
             <div>
                 {% if is_authenticated %}
-                <span class="me-3">{{ username }}</span>
-                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                    <span class="me-3">{{ username }}</span>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
                 {% else %}
-                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
-                <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
                 {% endif %}
             </div>
         </div>
     </nav>
     <div class="main-content">
+        {# Django messages block #}
         {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} text-center" role="alert">
-            {{ message }}
-        </div>
-        {% endfor %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert" style="font-size:1.1em;">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endif %}
         <div class="hello-big">Hello {{ username }}!</div>
         <h1>Welcome to Life Pro Tips</h1>
         <p class="lead">Discover and share the best tips for daily life!</p>
 
         {% if is_authenticated %}
-        <div class="tip-form-title">Share a new tip</div>
-        <form method="post" class="mb-4 text-start">
-            {% csrf_token %}
-            {{ tip_form.as_p }}
-            {% if error %}
-            <div class="error">{{ error }}</div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary btn-lg btn-lg-custom">Post Tip</button>
-        </form>
+            <div class="tip-form-title">Share a new tip</div>
+            <form method="post" class="mb-4 text-start">
+                {% csrf_token %}
+                {{ tip_form.as_p }}
+                {% if error %}
+                    <div class="error">{{ error }}</div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary btn-lg btn-lg-custom">Post Tip</button>
+            </form>
         {% else %}
-        <a href="{% url 'register' %}" class="btn btn-primary btn-lg btn-lg-custom mb-2">Register</a>
-        <a href="{% url 'login' %}" class="btn btn-success btn-lg btn-lg-custom">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg btn-lg-custom mb-2">Register</a>
+            <a href="{% url 'login' %}" class="btn btn-success btn-lg btn-lg-custom">Login</a>
         {% endif %}
 
         <div class="tips-list">
             <h3 class="mb-3" style="text-align:center;">Latest Tips</h3>
-
             {% if tips %}
-            {% for tip in tips %}
-            <div class="tip-item">
-                <div class="tip-author">{{ tip.author.username }}</div>
-                <div class="tip-date">{{ tip.date|date:"Y-m-d H:i" }}</div>
-                <div>{{ tip.content|linebreaks }}</div>
-
-                <!-- Voting and Delete Buttons -->
-                <div class="vote-buttons">
-                    {% if is_authenticated %}
-                    <!-- Upvote Button -->
-                    <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit"
-                            class="btn btn-outline-success btn-sm {% if user in tip.upvoted_by.all %}active{% endif %}">
-                            ▲ Upvote ({{ tip.upvotes }})
-                        </button>
-                    </form>
-
-                    <!-- Downvote Button -->
-                    <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        {% if user == tip.author or perms.tips.can_downvote_tip %}
-                        <button type="submit"
-                            class="btn btn-outline-danger btn-sm {% if user in tip.downvoted_by.all %}active{% endif %}">
-                            ▼ Downvote ({{ tip.downvotes }})
-                        </button>
-                        {% else %}
-                        <button type="button" class="btn btn-outline-danger btn-sm" disabled
-                            title="You don't have permission to downvote">
-                            ▼ Downvote ({{ tip.downvotes }})
-                        </button>
-                        {% endif %}
-                    </form>
-
-                    <!-- Delete Button (Author or Permission Required) -->
-                    {% if user == tip.author or perms.tips.can_delete_tip %}
-                    <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">
-                            Delete
-                        </button>
-                    </form>
-                    {% endif %}
-                    {% else %}
-                    <!-- Display votes for unauthenticated users -->
-                    <span class="text-muted">▲ Upvote ({{ tip.upvotes }})</span>
-                    <span class="text-muted">▼ Downvote ({{ tip.downvotes }})</span>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
+                {% for tip in tips %}
+                    <div class="tip-item">
+                        <div class="tip-author">{{ tip.author.username }}</div>
+                        <div class="tip-date">{{ tip.date|date:"Y-m-d H:i" }}</div>
+                        <div>{{ tip.content|linebreaks }}</div>
+                        <div class="vote-buttons">
+                            {% if is_authenticated %}
+                                <form method="post" action="{% url 'upvote_tip' tip.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-success btn-sm {% if user in tip.upvoted_by.all %}active{% endif %}">
+                                        ▲ Upvote ({{ tip.upvoted_by.count }})
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'downvote_tip' tip.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    {% if user == tip.author or perms.tips.can_downvote_tip %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm {% if user in tip.downvoted_by.all %}active{% endif %}">
+                                            ▼ Downvote ({{ tip.downvoted_by.count }})
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-outline-danger btn-sm" disabled
+                                            title="You don't have permission to downvote">
+                                            ▼ Downvote ({{ tip.downvoted_by.count }})
+                                        </button>
+                                    {% endif %}
+                                </form>
+                                {% if user == tip.author or perms.tips.can_delete_tip %}
+                                    <form method="post" action="{% url 'delete_tip' tip.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm">Delete</button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">▲ Upvote ({{ tip.upvoted_by.count }})</span>
+                                <span class="text-muted">▼ Downvote ({{ tip.downvoted_by.count }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
             {% else %}
-            <p style="text-align:center;">No tips yet. Be the first to share one!</p>
+                <p style="text-align:center;">No tips yet. Be the first to share one!</p>
             {% endif %}
         </div>
     </div>
+    <footer class="footer">
+        &copy; 2025 LifeTips Jon, S.A. All rights reserved.
+    </footer>
 </body>
-
 </html>
+

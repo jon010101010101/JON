@@ -90,6 +90,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
+            <div>
+                <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm me-2">Login</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">Home</a>
+            </div>
         </div>
     </nav>
 

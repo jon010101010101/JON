@@ -3,12 +3,18 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 from .forms import RegisterForm, LoginForm, TipForm
 from .models import Tip
 from django.conf import settings
-import random, time
+import random
+import time
 
 def home(request):
+    """
+    Muestra la página principal con la lista de tips y el formulario para crear uno nuevo.
+    Si el usuario no está autenticado, le asigna un nombre anónimo temporal.
+    """
     tips = Tip.objects.select_related('author').order_by('-date')
     tip_form = None
     error = None
@@ -32,9 +38,10 @@ def home(request):
             'tips': tips,
             'tip_form': tip_form,
             'error': error,
-            'user': request.user,  # For use in the template
+            'user': request.user,  # Para usar en el template
         })
     else:
+        # Asignar nombre anónimo temporal si no está autenticado
         now = time.time()
         anonymous_name = request.session.get('anonymous_name')
         timestamp = request.session.get('anonymous_name_timestamp', 0)
@@ -49,6 +56,9 @@ def home(request):
         })
 
 def register(request):
+    """
+    Permite a un usuario registrarse. Si ya está autenticado, lo redirige al home.
+    """
     if request.user.is_authenticated:
         return redirect('home')
     error = None
@@ -68,6 +78,9 @@ def register(request):
     return render(request, 'register.html', {'form': form, 'error': error})
 
 def login_view(request):
+    """
+    Permite a un usuario iniciar sesión. Si ya está autenticado, lo redirige al home.
+    """
     if request.user.is_authenticated:
         return redirect('home')
     error = None
@@ -87,11 +100,18 @@ def login_view(request):
     return render(request, 'login.html', {'form': form, 'error': error})
 
 def logout_view(request):
+    """
+    Cierra la sesión del usuario y lo redirige al home.
+    """
     logout(request)
     return redirect('home')
 
 @login_required
 def upvote_tip(request, tip_id):
+    """
+    Permite al usuario dar upvote a un tip.
+    Si ya lo ha hecho, lo quita; si no, lo añade y elimina el downvote si existía.
+    """
     tip = get_object_or_404(Tip, id=tip_id)
     user = request.user
     if user in tip.upvoted_by.all():
@@ -103,11 +123,15 @@ def upvote_tip(request, tip_id):
 
 @login_required
 def downvote_tip(request, tip_id):
+    """
+    Permite al usuario downvotear un tip si es el autor o tiene el permiso especial.
+    Si no tiene permiso, muestra un mensaje de error amigable y redirige al home.
+    """
     tip = get_object_or_404(Tip, id=tip_id)
-
-    # Permitir al autor downvotear su propio tip o si tiene el permiso
+    # Comprobar si el usuario es el autor o tiene el permiso personalizado
     if request.user == tip.author or request.user.has_perm('tips.can_downvote_tip'):
         user = request.user
+        # Alternar el downvote: si ya lo hizo, lo quita; si no, lo añade y elimina el upvote
         if user in tip.downvoted_by.all():
             tip.downvoted_by.remove(user)
         else:
@@ -116,14 +140,22 @@ def downvote_tip(request, tip_id):
         tip.save()
         return redirect('home')
     else:
-        return HttpResponseForbidden("You do not have permission to downvote this tip.")
+        # Mensaje de error amigable si no tiene permiso
+        messages.error(request, "You do not have permission to downvote this tip.")
+        return redirect('home')
 
 @login_required
 def delete_tip(request, tip_id):
+    """
+    Permite eliminar un tip si el usuario es el autor o tiene el permiso especial.
+    Si no tiene permiso, muestra un mensaje de error amigable y redirige al home.
+    """
     tip = get_object_or_404(Tip, id=tip_id)
-    # Only the author or a user with the special permission can delete
+    # Comprobar si el usuario es el autor o tiene el permiso personalizado
     if request.user == tip.author or request.user.has_perm('tips.can_delete_tip'):
         tip.delete()
         return redirect('home')
     else:
-        return HttpResponseForbidden("You do not have permission to delete this tip.")
+        # Mensaje de error amigable si no tiene permiso
+        messages.error(request, "You do not have permission to delete this tip.")
+        return redirect('home')

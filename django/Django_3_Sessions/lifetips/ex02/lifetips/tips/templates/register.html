@@ -1,53 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Register - Life Pro Tips</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             color: #333;
-            padding-top: 40px;
+            padding-top: 60px;
         }
         .form-content {
             max-width: 500px;
-            margin: 60px auto 0 auto;
+            margin: 60px auto;
             background-color: #fff;
-            padding: 40px 30px 30px 30px;
+            padding: 40px 30px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             text-align: center;
         }
-        h2 {
+        h1 {
             color: #007bff;
+            text-align: center;
             margin-bottom: 30px;
-            font-size: 2.2em;
-            font-weight: bold;
         }
-        .btn-lg-custom {
-            font-size: 1.5em;
-            padding: 16px 0;
-            width: 50%;
-            margin: 20px auto 10px auto;
+        .form-group {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .form-group input {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+        .form-text.username-help {
+            margin-bottom: 18px;
             display: block;
         }
-        .error {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            text-align: center;
+        .btn-lg {
+            font-size: 1.2em;
+            padding: 12px 0;
         }
         nav .navbar-brand {
             font-weight: bold;
             color: #007bff !important;
+        }
+        .text-danger {
+            font-size: 0.85em;
+            color: #dc3545;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 10px 0;
         }
         .login-link {
             display: block;
@@ -55,72 +77,97 @@
             font-size: 1.1em;
             text-align: center;
         }
-        label.form-label {
-            font-weight: 500;
-            display: block;
-            margin-bottom: 8px;
-            text-align: center; /* Centrar etiquetas */
-        }
-        small.form-text {
-            display: block;
-            margin-top: -8px;
-            margin-bottom: 15px;
-            text-align: center; /* Centrar textos de ayuda */
-            color: #6c757d;
-        }
-        input.form-control {
-            height: 48px;
-            font-size: 1.1em;
-            max-width: 100%;
-            margin: 0 auto 20px auto;
-            display: block;
-        }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
-        </div>
-    </nav>
-    <div class="form-content">
-        <h2>Register</h2>
-        <form method="post" autocomplete="off">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required maxlength="150" />
-                <small class="form-text">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
-                 {% for error in form.username.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required />
-                 {% for error in form.password.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                <label for="password_confirm" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="password_confirm" name="password_confirm" required />
-                 {% for error in form.password_confirm.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            </div>
-           {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary btn-lg btn-lg-custom">Register</button>
-        </form>
-        <a href="{% url 'login' %}" class="login-link">Already have an account? Log in</a>
-    </div>
-</body>
-</html>
 
+<body>
+    <div class="container">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
+                <div>
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm me-2">Login</a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">Home</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Formulario de Registro -->
+        <div class="form-content">
+            <h1>Register</h1>
+
+            <!-- Mensajes generales -->
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Errores generales del formulario -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger text-center mt-3" role="alert">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" novalidate autocomplete="off">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    {{ form.username }}
+                    <small class="form-text username-help">
+                        Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+                    </small>
+                    {% if form.username.errors %}
+                    <div class="text-danger">
+                        {% for error in form.username.errors %}
+                        <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <div class="text-danger">
+                        {% for error in form.password.errors %}
+                        <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password_confirm">Confirm Password</label>
+                    {{ form.password_confirm }}
+                    {% if form.password_confirm.errors %}
+                    <div class="text-danger">
+                        {% for error in form.password_confirm.errors %}
+                        <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Register</button>
+            </form>
+            <a href="{% url 'login' %}" class="login-link">Already have an account? Log in</a>
+        </div>
+    </div>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        &copy; 2025 LifeTips Jon, S.A. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

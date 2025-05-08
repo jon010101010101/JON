@@ -91,29 +91,32 @@ def logout_view(request):
 
 @login_required
 def upvote_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
-    user = request.user
-    if user in tip.upvoted_by.all():
-        tip.upvoted_by.remove(user)
-    else:
-        tip.upvoted_by.add(user)
-        tip.downvoted_by.remove(user)
+    if request.method == 'POST':
+        tip = get_object_or_404(Tip, id=tip_id)
+        user = request.user
+        if user in tip.upvoted_by.all():
+            tip.upvoted_by.remove(user)
+        else:
+            tip.upvoted_by.add(user)
+            tip.downvoted_by.remove(user)
     return redirect('home')
 
 @login_required
 def downvote_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
-    user = request.user
-    if user in tip.downvoted_by.all():
-        tip.downvoted_by.remove(user)
-    else:
-        tip.downvoted_by.add(user)
-        tip.upvoted_by.remove(user)
+    if request.method == 'POST':
+        tip = get_object_or_404(Tip, id=tip_id)
+        user = request.user
+        if user in tip.downvoted_by.all():
+            tip.downvoted_by.remove(user)
+        else:
+            tip.downvoted_by.add(user)
+            tip.upvoted_by.remove(user)
     return redirect('home')
 
 @login_required
 def delete_tip(request, tip_id):
-    tip = get_object_or_404(Tip, id=tip_id)
-    if request.user == tip.author:
-        tip.delete()
+    if request.method == 'POST':
+        tip = get_object_or_404(Tip, id=tip_id)
+        if request.user == tip.author:
+            tip.delete()
     return redirect('home')

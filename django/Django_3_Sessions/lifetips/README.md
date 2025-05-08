@@ -108,6 +108,27 @@ Archivos estáticos: Gestionar la colección de archivos estáticos del sitio.
 Caché: Limpiar la caché del sitio.
 
 
+python manage.py shell
+
+
+# ver usuarios activos
+from django.contrib.auth.models import User
+print(User.objects.count())
+
+# verr que usuarios hay
+from django.contrib.auth.models import User
+for user in User.objects.all():
+    print(user.username)
+
+# Cambio contraseña
+from django.contrib.auth.models import User
+user = User.objects.get(username='jurrutia')
+user.set_password('DKLUsf10')
+user.save()
+
+
+
+
 
 # EJERCICIO EX06
 

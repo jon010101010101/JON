@@ -13,10 +13,13 @@
             background-color: #f4f4f4;
             color: #333;
             padding-top: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .main-content {
-            max-width: 500px;
+            max-width: 600px;
             margin: 60px auto 0 auto;
             background-color: #fff;
             padding: 40px 30px 30px 30px;
@@ -26,27 +29,29 @@
         }
 
         .hello-big {
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: bold;
             color: #007bff;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .btn-lg-custom {
-            font-size: 1.5em;
-            padding: 16px 0;
-            width: 50%;
+            font-size: 1.2em;
+            padding: 8px 0;
+            width: 80%;
             margin: 10px auto;
             display: block;
+            border-radius: 0;
+            letter-spacing: 0.5px;
         }
 
         h1 {
             color: #007bff;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .lead {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         nav .navbar-brand {
@@ -55,7 +60,7 @@
         }
 
         .tip-form-title {
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: 500;
             margin-bottom: 10px;
             color: #007bff;
@@ -94,6 +99,14 @@
             color: #888;
             font-size: 0.95em;
             margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 0.95rem;
+            margin-top: 60px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -148,5 +161,8 @@
             {% endif %}
         </div>
     </div>
+    <footer class="bg-light text-center text-muted py-3 mt-auto">
+        &copy; 2025 LifeTips Jon, S.A. All rights reserved.
+    </footer>
 </body>
 </html>

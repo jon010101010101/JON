@@ -115,9 +115,13 @@ def downvote_tip(request, tip_id):
 @login_required
 def delete_tip(request, tip_id):
     tip = get_object_or_404(Tip, id=tip_id)
-    # Only the author or a user with the special permission can delete
-    if request.user == tip.author or request.user.has_perm('tips.can_delete_tip'):
-        tip.delete()
-        return redirect('home')
-    else:
-        return HttpResponseForbidden("You do not have permission to delete this tip.")
+    user = request.user
+    # Solo permitir borrar si es POST y es el autor o tiene el permiso especial
+    if request.method == 'POST':
+        if user == tip.author or user.has_perm('tips.can_delete_tip'):
+            tip.delete()
+            return redirect('home')
+        else:
+            return HttpResponseForbidden("You do not have permission to delete this tip.")
+    # Si no es POST, redirige sin hacer nada
+    return redirect('home')
