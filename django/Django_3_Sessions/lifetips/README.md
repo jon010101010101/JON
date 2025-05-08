@@ -115,7 +115,7 @@ python manage.py shell
 from django.contrib.auth.models import User
 print(User.objects.count())
 
-# verr que usuarios hay
+# ver que usuarios hay
 from django.contrib.auth.models import User
 for user in User.objects.all():
     print(user.username)

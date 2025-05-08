@@ -1,0 +1,59 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Add to Favourites" %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .menu-bar { background: #222; border-radius: 5px; padding: 0 10px; }
+        .menu-bar .nav-link, .menu-bar .navbar-text, .menu-bar .btn { color: #fff !important; }
+        .menu-bar .nav-link.active { background: #111; border-radius: 3px; }
+        .menu-bar .form-control { min-width: 120px; }
+        .menu-bar .btn-outline-light { color: #fff; border-color: #fff; }
+        .menu-bar .btn-outline-light:hover { background: #fff; color: #222; }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="display-5">{% trans "Add to Favourites" %}</h1>
+        <div>
+            <a href="/en/add-favourite/" class="text-primary me-2" style="text-decoration: none;">English</a>
+            <a href="/es/add-favourite/" class="text-primary" style="text-decoration: none;">Español</a>
+        </div>
+    </div>
+    <nav class="menu-bar d-flex align-items-center mb-4">
+        <ul class="nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'articles' %}">{% trans "Articles" %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'favourites' %}">{% trans "Favourites" %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'publications' %}">{% trans "Publications" %}</a>
+            </li>
+        </ul>
+        <ul class="nav ms-auto align-items-center">
+            <li class="nav-item">
+                <span class="navbar-text me-3">{% trans "Logged as" %} {{ user.username }}</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+            </li>
+        </ul>
+    </nav>
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">{% trans "Add to Favourites" %}</button>
+    </form>
+    <footer class="text-center mt-5 mb-3 text-muted">
+        &copy; 2025 FruitArticles Jon S.A. All rights reserved.
+    </footer>
+</div>
+</body>
+</html>
+
+
+
