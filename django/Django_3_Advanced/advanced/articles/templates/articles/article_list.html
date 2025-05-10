@@ -18,13 +18,21 @@
 <body>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="display-5">{% trans "Articles" %} <small class="text-secondary">{% trans "Share your writings" %}</small></h1>
+            <h1 class="display-5">
+                {% trans "Articles" %} <small class="text-secondary">{% trans "Share your writings" %}</small>
+            </h1>
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
             <div>
-                <a href="/en/articles/" class="text-primary me-2" style="text-decoration: none;">English</a>
-                <a href="/es/articles/" class="text-primary" style="text-decoration: none;">Español</a>
+                {% for lang in LANGUAGES %}
+                    {% if lang.0 != LANGUAGE_CODE %}
+                        <a href="/{{ lang.0 }}{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">
+                            {{ lang.1 }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        <!-- Menú barra negra -->
         <nav class="menu-bar d-flex align-items-center mb-4">
             <ul class="nav me-auto">
                 <li class="nav-item">
@@ -68,16 +76,15 @@
                 {% endif %}
             </ul>
         </nav>
-
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>{% trans "Title" %}</th>
-                    <th>{% trans "Synopsis" %}</th>
-                    <th>{% trans "Writer" %}</th>
-                    <th>{% trans "Created" %}</th>
-                    <th>{% trans "When" %}</th>
-                    <th></th>
+                    <th scope="col">{% trans "Title" %}</th>
+                    <th scope="col">{% trans "Synopsis" %}</th>
+                    <th scope="col">{% trans "Writer" %}</th>
+                    <th scope="col">{% trans "Created" %}</th>
+                    <th scope="col">{% trans "When" %}</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -86,11 +93,15 @@
                     <td>{{ article.title }}</td>
                     <td>{{ article.synopsis|truncate_synopsis }}</td>
                     <td>{{ article.author.username }}</td>
-                    <td>{{ article.created|date:"M d, Y, H:i a" }}</td>
+                    <td>{{ article.created|date:"M. d, Y, P" }}</td>
                     <td>{{ article.created|ago }}</td>
                     <td>
                         <a href="{% url 'article-detail' article.pk %}" class="btn btn-info">{% trans "Read" %}</a>
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">{% trans "No articles found." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

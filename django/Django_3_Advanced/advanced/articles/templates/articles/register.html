@@ -18,9 +18,16 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="display-5">{% trans "Register" %}</h1>
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
             <div>
-                <a href="/en/register/" class="text-primary me-2" style="text-decoration: none;">English</a>
-                <a href="/es/register/" class="text-primary" style="text-decoration: none;">Español</a>
+                {% for lang in LANGUAGES %}
+                    {% if lang.0 != LANGUAGE_CODE %}
+                        <a href="/{{ lang.0 }}{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">
+                            {{ lang.1 }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
         <nav class="menu-bar d-flex align-items-center mb-4">
@@ -33,9 +40,50 @@
                 </li>
             </ul>
             <ul class="nav ms-auto align-items-center">
-                <form class="d-flex align-items-center" method="post" action="">
-                    {% csrf_token %}
-                    <input class="form-control me-2" type="text" name="username" placeholder="{% trans 'username' %}" required>
-                    <input class="form-control me-2" type="password" name="password" placeholder="{% tran
-
-
+                {% if not user.is_authenticated %}
+                    <form class="d-flex align-items-center" method="post" action="">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="text" name="username" placeholder="{% trans 'username' %}" required>
+                        <input class="form-control me-2" type="password" name="password" placeholder="{% trans 'password' %}" required>
+                        <input type="hidden" name="login_menu" value="1">
+                        <button class="btn btn-outline-light" type="submit">{% trans "Login" %}</button>
+                    </form>
+                    {% if error_message %}
+                        <div class="alert alert-danger alert-dismissible fade show mb-0 ms-3" role="alert" style="height:38px;padding:6px 12px;">
+                            {{ error_message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding:8px 10px;"></button>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">{% trans "Logged as" %} {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" class="mb-3">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">{% trans "Register" %}</button>
+        </form>
+        <footer class="text-center mt-5 mb-3 text-muted">
+            &copy; 2025 FruitArticles Jon S.A. All rights reserved.
+        </footer>
+    </div>
+</body>
+</html>

@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from .models import Article, UserFavouriteArticle
 from .forms import ArticleForm
+from django.shortcuts import redirect
+
 
 # Mixin para login en menú de todas las vistas
 class LoginMenuMixin:
@@ -82,6 +84,11 @@ class RegisterView(LoginMenuMixin, CreateView):
     form_class = UserCreationForm
     template_name = 'articles/register.html'
     success_url = reverse_lazy('articles')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('articles')
+        return super().dispatch(request, *args, **kwargs)
 
 class AddFavouriteView(LoginMenuMixin, LoginRequiredMixin, CreateView):
     model = UserFavouriteArticle

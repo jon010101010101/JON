@@ -19,26 +19,33 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="display-5">{% trans "Welcome to Articles" %}</h1>
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
         <div>
-            <a href="/en/articles/" class="text-primary me-2" style="text-decoration: none;">English</a>
-            <a href="/es/articles/" class="text-primary" style="text-decoration: none;">Español</a>
+            {% for lang in LANGUAGES %}
+                {% if lang.0 != LANGUAGE_CODE %}
+                    <a href="/{{ lang.0 }}{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">
+                        {{ lang.1 }}
+                    </a>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
     <nav class="menu-bar d-flex align-items-center mb-4">
         <ul class="nav me-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'articles' %}">{% trans "Articles" %}</a>
+                <a class="nav-link{% if request.resolver_match.url_name == 'articles' %} active{% endif %}" href="{% url 'articles' %}">{% trans "Articles" %}</a>
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'favourites' %}">{% trans "Favourites" %}</a>
+                    <a class="nav-link{% if request.resolver_match.url_name == 'favourites' %} active{% endif %}" href="{% url 'favourites' %}">{% trans "Favourites" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'publications' %}">{% trans "Publications" %}</a>
+                    <a class="nav-link{% if request.resolver_match.url_name == 'publications' %} active{% endif %}" href="{% url 'publications' %}">{% trans "Publications" %}</a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
+                    <a class="nav-link{% if request.resolver_match.url_name == 'register' %} active{% endif %}" href="{% url 'register' %}">{% trans "Register" %}</a>
                 </li>
             {% endif %}
         </ul>
@@ -76,4 +83,3 @@
 </div>
 </body>
 </html>
-
