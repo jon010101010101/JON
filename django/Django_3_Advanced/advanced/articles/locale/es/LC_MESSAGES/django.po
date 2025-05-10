@@ -1,0 +1,263 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-10 17:36+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/articles/add_favourite.html:6
+#: templates/articles/add_favourite.html:20
+#: templates/articles/add_favourite.html:79
+#: templates/articles/article_detail.html:89
+msgid "Add to Favourites"
+msgstr "Añadir a favoritos"
+
+#: templates/articles/add_favourite.html:36
+#: templates/articles/already_favourite.html:36
+#: templates/articles/article_detail.html:36
+#: templates/articles/article_list.html:6
+#: templates/articles/article_list.html:22
+#: templates/articles/article_list.html:39
+#: templates/articles/error.html:36
+#: templates/articles/favourite_added.html:36
+#: templates/articles/favourites_list.html:36
+#: templates/articles/home.html:37
+#: templates/articles/login.html:36
+#: templates/articles/logout.html:36
+#: templates/articles/publications_list.html:36
+#: templates/articles/publish.html:36
+#: templates/articles/register.html:36
+msgid "Articles"
+msgstr "Artículos"
+
+#: templates/articles/article_list.html:6
+#: templates/articles/article_list.html:22
+msgid "Share your writings"
+msgstr "Comparte tus escritos"
+
+#: templates/articles/add_favourite.html:39
+#: templates/articles/already_favourite.html:39
+#: templates/articles/article_detail.html:40
+#: templates/articles/article_list.html:43
+#: templates/articles/error.html:40
+#: templates/articles/favourite_added.html:39
+#: templates/articles/favourites_list.html:6
+#: templates/articles/favourites_list.html:20
+#: templates/articles/favourites_list.html:39
+#: templates/articles/home.html:41
+#: templates/articles/publications_list.html:39
+#: templates/articles/publish.html:39
+msgid "Favourites"
+msgstr "Favoritos"
+
+#: templates/articles/add_favourite.html:42
+#: templates/articles/already_favourite.html:42
+#: templates/articles/article_detail.html:43
+#: templates/articles/article_list.html:46
+#: templates/articles/error.html:43
+#: templates/articles/favourite_added.html:42
+#: templates/articles/favourites_list.html:42
+#: templates/articles/home.html:44
+#: templates/articles/publications_list.html:6
+#: templates/articles/publications_list.html:20
+#: templates/articles/publications_list.html:42
+#: templates/articles/publish.html:42
+msgid "Publications"
+msgstr "Publicaciones"
+
+#: templates/articles/article_list.html:82
+#: templates/articles/favourites_list.html:73
+#: templates/articles/publications_list.html:74
+msgid "Title"
+msgstr "Titulo"
+
+#: templates/articles/article_list.html:83
+#: templates/articles/favourites_list.html:74
+#: templates/articles/publications_list.html:75
+msgid "Synopsis"
+msgstr "Sinopsis"
+
+#: templates/articles/article_list.html:84
+#: templates/articles/favourites_list.html:75
+#: templates/articles/publications_list.html:76
+msgid "Writer"
+msgstr "Autor"
+
+#: templates/articles/article_list.html:85
+#: templates/articles/favourites_list.html:76
+#: templates/articles/publications_list.html:77
+msgid "Created"
+msgstr "Creado"
+
+#: templates/articles/article_list.html:86
+#: templates/articles/favourites_list.html:77
+#: templates/articles/publications_list.html:78
+msgid "When"
+msgstr "Hace"
+
+#: templates/articles/article_list.html:99
+#: templates/articles/favourites_list.html:90
+#: templates/articles/publications_list.html:91
+msgid "Read"
+msgstr "Leer"
+
+#: templates/articles/article_list.html:104
+#: templates/articles/publications_list.html:96
+msgid "No articles found."
+msgstr "No se encontraron artículos."
+
+#: templates/articles/favourites_list.html:95
+msgid "No favourites yet."
+msgstr "Todavía no tienes favoritos."
+
+#: templates/articles/add_favourite.html:48
+#: templates/articles/already_favourite.html:48
+#: templates/articles/article_detail.html:54
+#: templates/articles/article_list.html:57
+#: templates/articles/error.html:54
+#: templates/articles/favourite_added.html:48
+#: templates/articles/favourites_list.html:48
+#: templates/articles/home.html:55
+#: templates/articles/publications_list.html:48
+#: templates/articles/publish.html:48
+#: templates/articles/register.html:59
+msgid "Logged as"
+msgstr "Conectado como"
+
+#: templates/articles/add_favourite.html:51
+#: templates/articles/already_favourite.html:51
+#: templates/articles/article_detail.html:57
+#: templates/articles/article_list.html:60
+#: templates/articles/error.html:57
+#: templates/articles/favourite_added.html:51
+#: templates/articles/favourites_list.html:51
+#: templates/articles/home.html:58
+#: templates/articles/logout.html:6
+#: templates/articles/logout.html:20
+#: templates/articles/publications_list.html:51
+#: templates/articles/publish.html:51
+#: templates/articles/register.html:62
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/articles/add_favourite.html:56
+#: templates/articles/already_favourite.html:56
+#: templates/articles/article_detail.html:62
+#: templates/articles/article_list.html:65
+#: templates/articles/error.html:62
+#: templates/articles/favourite_added.html:56
+#: templates/articles/favourites_list.html:56
+#: templates/articles/home.html:63
+#: templates/articles/publications_list.html:56
+#: templates/articles/publish.html:56
+#: templates/articles/register.html:46
+#: templates/articles/login.html:58
+msgid "username"
+msgstr "usuario"
+
+#: templates/articles/add_favourite.html:57
+#: templates/articles/already_favourite.html:57
+#: templates/articles/article_detail.html:63
+#: templates/articles/article_list.html:66
+#: templates/articles/error.html:63
+#: templates/articles/favourite_added.html:57
+#: templates/articles/favourites_list.html:57
+#: templates/articles/home.html:64
+#: templates/articles/publications_list.html:57
+#: templates/articles/publish.html:57
+#: templates/articles/register.html:47
+#: templates/articles/login.html:62
+msgid "password"
+msgstr "contraseña"
+
+#: templates/articles/add_favourite.html:59
+#: templates/articles/already_favourite.html:59
+#: templates/articles/article_detail.html:65
+#: templates/articles/article_list.html:68
+#: templates/articles/error.html:65
+#: templates/articles/favourite_added.html:59
+#: templates/articles/favourites_list.html:59
+#: templates/articles/home.html:66
+#: templates/articles/login.html:6
+#: templates/articles/login.html:20
+#: templates/articles/login.html:65
+#: templates/articles/publications_list.html:59
+#: templates/articles/publish.html:59
+#: templates/articles/register.html:49
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/articles/logout.html:41
+msgid "You have been logged out."
+msgstr "Has cerrado sesión."
+
+#: templates/articles/publications_list.html:70
+msgid "Publish New Article"
+msgstr "Publica nuevo artículo"
+
+#: templates/articles/publish.html:6
+#: templates/articles/publish.html:20
+msgid "Publish Article"
+msgstr ""
+
+#: templates/articles/publish.html:73
+msgid "Publish"
+msgstr "Publicar"
+
+#: views.py:27
+msgid "Invalid username or password."
+msgstr "Usuario o contraseña inválidos."
+
+# añadidos que no han salido 
+
+
+# Si encuentras alguno de estos bloques sueltos, añádelos si no están arriba:
+msgid "Back to Articles"
+msgstr "Volver a Artículos"
+
+msgid "Already in Favourites"
+msgstr "Ya está en Favoritos"
+
+msgid "This article is already in your favourites."
+msgstr "Este artículo ya está en tus favoritos."
+
+msgid "The article has been added to your favourites!"
+msgstr "¡El artículo ha sido añadido a tus favoritos!"
+
+msgid "View my Favourites"
+msgstr "Ver mis Favoritos"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Welcome to Articles"
+msgstr "Bienvenido a Artículos"
+
+msgid "Redirecting to articles..."
+msgstr "Redirigiendo a artículos..."
+
+msgid "Error"
+msgstr "Error"
+
+msgid "An unexpected error has occurred."
+msgstr "Ha ocurrido un error inesperado."
+
+msgid "Content"
+msgstr "Contenido"
+
+msgid "Register"
+msgstr "Registro"
+

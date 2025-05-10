@@ -22,15 +22,13 @@
                 {% trans "Articles" %} <small class="text-secondary">{% trans "Share your writings" %}</small>
             </h1>
             {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
             <div>
-                {% for lang in LANGUAGES %}
-                    {% if lang.0 != LANGUAGE_CODE %}
-                        <a href="/{{ lang.0 }}{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">
-                            {{ lang.1 }}
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                {% if LANGUAGE_CODE != "en" %}
+                    <a href="/en{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Switch to English</a>
+                {% endif %}
+                {% if LANGUAGE_CODE != "es" %}
+                    <a href="/es{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Volver a español</a>
+                {% endif %}
             </div>
         </div>
         <nav class="menu-bar d-flex align-items-center mb-4">
@@ -90,10 +88,10 @@
             <tbody>
                 {% for article in articles %}
                 <tr>
-                    <td>{{ article.title }}</td>
-                    <td>{{ article.synopsis|truncate_synopsis }}</td>
+                    <td>{{ article.title|safe }}</td>
+                    <td>{{ article.synopsis|my_truncate_synopsis|safe }}</td>
                     <td>{{ article.author.username }}</td>
-                    <td>{{ article.created|date:"M. d, Y, P" }}</td>
+                    <td>{{ article.created|date:"M. d, Y, h:i a" }}</td>
                     <td>{{ article.created|ago }}</td>
                     <td>
                         <a href="{% url 'article-detail' article.pk %}" class="btn btn-info">{% trans "Read" %}</a>

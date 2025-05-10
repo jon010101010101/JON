@@ -6,33 +6,31 @@ from django.utils.translation import get_language
 register = template.Library()
 
 @register.filter
-def truncate_synopsis(value, max_length=20):
+def my_truncate_synopsis(value):
     """
-    Truncates the synopsis to max_length characters (including '...').
-    If the text is longer, shows the first max_length - 3 and adds '...'.
+    Trunca la sinopsis a 20 caracteres exactos (incluyendo los puntos suspensivos).
+    Si el texto es más largo, muestra los primeros 17 caracteres y añade '...'.
     """
     if not isinstance(value, str):
         value = str(value)
-    if len(value) > max_length:
-        return value[:max_length - 3] + '...'
+    if len(value) > 20:
+        return value[:17] + '...'
     return value
 
 @register.filter
 def ago(value):
     """
-    Returns the time since 'value' until now, with the correct suffix/prefix
-    depending on the active language:
-    - English: '1 week, 2 days ago'
-    - Spanish: 'hace 1 semana, 2 días'
-    - French:  'il y a 1 semaine, 2 jours'
+    Devuelve el tiempo transcurrido desde 'value' hasta ahora, adaptando el prefijo/sufijo
+    según el idioma activo.
     """
     if not value:
         return ''
     lang = get_language()
-    delta = timesince(value, timezone.now())
-    if lang.startswith('es'):
+    now = timezone.now()
+    delta = timesince(value, now)
+    if lang and lang.startswith('es'):
         return f"hace {delta}"
-    elif lang.startswith('fr'):
+    elif lang and lang.startswith('fr'):
         return f"il y a {delta}"
     else:
         return f"{delta} ago"

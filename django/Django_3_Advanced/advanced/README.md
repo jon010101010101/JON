@@ -74,3 +74,17 @@ find . -name "__pycache__" -type d -exec rm -rf {} +
 pkill -f "python manage.py runserver"
 lsof -i :8000
 kill -9 38140
+
+
+
+# Poner contraseña
+python manage.py shell
+
+from django.contrib.auth.models import User
+u = User.objects.get(username='empleado2')
+u.set_password('pedro123')
+u.save()
+
+# Comprobar cambio contraseña
+u = User.objects.get(username='empleado2')
+u.check_password('pedro123')
