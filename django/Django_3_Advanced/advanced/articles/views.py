@@ -85,10 +85,10 @@ class RegisterView(LoginMenuMixin, CreateView):
     template_name = 'articles/register.html'
     success_url = reverse_lazy('articles')
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('articles')
-        return super().dispatch(request, *args, **kwargs)
+    #def dispatch(self, request, *args, **kwargs):
+        #if request.user.is_authenticated:
+            #return redirect('articles')
+        #return super().dispatch(request, *args, **kwargs)
 
 class AddFavouriteView(LoginMenuMixin, LoginRequiredMixin, CreateView):
     model = UserFavouriteArticle

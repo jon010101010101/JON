@@ -19,15 +19,13 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="display-5">{{ article.title }}</h1>
             {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
             <div>
-                {% for lang in LANGUAGES %}
-                    {% if lang.0 != LANGUAGE_CODE %}
-                        <a href="/{{ lang.0 }}{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">
-                            {{ lang.1 }}
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                {% if LANGUAGE_CODE == "es" %}
+                    <a href="/en{{ request.path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Switch to English</a>
+                {% endif %}
+                {% if LANGUAGE_CODE == "en" %}
+                    <a href="/es{{ request.path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Volver a español</a>
+                {% endif %}
             </div>
         </div>
         <nav class="menu-bar d-flex align-items-center mb-4">

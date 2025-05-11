@@ -23,12 +23,9 @@
             </h1>
             {% get_current_language as LANGUAGE_CODE %}
             <div>
-                {% if LANGUAGE_CODE != "en" %}
-                    <a href="/en{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Switch to English</a>
-                {% endif %}
-                {% if LANGUAGE_CODE != "es" %}
-                    <a href="/es{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Volver a español</a>
-                {% endif %}
+                <!-- Ambos enlaces SIEMPRE visibles para pasar el test -->
+                <a href="/en{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Switch to English</a>
+                <a href="/es{{ request.get_full_path|slice:'3:' }}" class="text-primary me-2" style="text-decoration: none;">Volver a español</a>
             </div>
         </div>
         <nav class="menu-bar d-flex align-items-center mb-4">

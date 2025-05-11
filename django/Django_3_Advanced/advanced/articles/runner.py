@@ -19,17 +19,23 @@ class CustomTestRunner(DiscoverRunner):
         class VerboseTestResult(DebugSQLTextTestResult):
             def addSuccess(self, test):
                 doc = test.shortDescription() or ""
-                print(colored(f"✅ {test._testMethodName} - {doc}", "green"))
+                print(colored(f"✅ {test._testMethodName}", "green"))
+                if doc:
+                    print(colored(doc, "green"))
                 super().addSuccess(test)
 
             def addFailure(self, test, err):
                 doc = test.shortDescription() or ""
-                print(colored(f"❌ {test._testMethodName} - {doc}", "red"))
+                print(colored(f"❌ {test._testMethodName}", "red"))
+                if doc:
+                    print(colored(doc, "red"))
                 super().addFailure(test, err)
 
             def addError(self, test, err):
                 doc = test.shortDescription() or ""
-                print(colored(f"🟡 {test._testMethodName} - {doc}", "yellow"))
+                print(colored(f"🟡 {test._testMethodName}", "yellow"))
+                if doc:
+                    print(colored(doc, "yellow"))
                 super().addError(test, err)
 
         return VerboseTestResult
