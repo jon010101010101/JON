@@ -1,0 +1,13 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Favourites" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Favourites" %}</h1>
+    <ul class="list-group">
+    {% for fav in favs %}
+        <li class="list-group-item">{{ fav.article.title }}</li>
+    {% empty %}
+        <li class="list-group-item">{% trans "No favourites yet." %}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

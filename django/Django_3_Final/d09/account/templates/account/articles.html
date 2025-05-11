@@ -1,0 +1,43 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Articles" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Articles" %}</h1>
+    <h2>{% trans "Share your writings" %}</h2>
+    {% if login_error %}
+        <div class="alert alert-danger">{% trans "Invalid username or password." %}</div>
+    {% endif %}
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Synopsis" %}</th>
+                <th>{% trans "Author" %}</th>
+                <th>{% trans "When" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td><a href="{% url 'article-detail' article.pk %}">{{ article.title }}</a></td>
+                <td>
+                    {% if article.synopsis|length > 20 %}
+                        {{ article.synopsis|slice:":20" }}...
+                    {% else %}
+                        {{ article.synopsis }}
+                    {% endif %}
+                </td>
+                <td>{{ article.author.username }}</td>
+                <td>
+                    {% if article.created %}
+                        {% with delta=article.created|timesince %}
+                            {{ delta }} {% trans "ago" %}
+                        {% endwith %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+    <h1>{{ article.title }}</h1>
+    <p><strong>{% trans "Synopsis" %}:</strong> {{ article.synopsis }}</p>
+    <p><strong>{% trans "Content" %}:</strong> {{ article.content }}</p>
+    <p><strong>{% trans "Author" %}:</strong> {{ article.author.username }}</p>
+    <p><strong>{% trans "Published" %}:</strong> {{ article.created|date:"Y-m-d H:i" }}</p>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add-favourite' article.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning">{% trans "Add to favourites" %}</button>
+        </form>
+    {% endif %}
+{% endblock %}

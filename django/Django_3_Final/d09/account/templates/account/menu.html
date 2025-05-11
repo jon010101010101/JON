@@ -1,0 +1,30 @@
+{% load i18n %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'articles' %}">Professional Articles Hub</a>
+        <div>
+            {% if user.is_authenticated %}
+                <span class="me-3">{% trans "Logged as" %} {{ user.username }}</span>
+                <a href="{% url 'articles' %}" class="btn btn-outline-info btn-sm me-2">{% trans "Articles" %}</a>
+                <a href="{% url 'favourites' %}" class="btn btn-outline-warning btn-sm me-2">{% trans "Favourites" %}</a>
+                <a href="{% url 'publications' %}" class="btn btn-outline-primary btn-sm me-2">{% trans "Publications" %}</a>
+                <a href="{% url 'publish' %}" class="btn btn-outline-success btn-sm me-2">{% trans "Publish" %}</a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">{% trans "Logout" %}</a>
+            {% else %}
+                <form action="{% url 'articles' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="login_menu" value="1">
+                    <input type="text" name="username" placeholder="{% trans 'Username' %}" class="form-control form-control-sm d-inline w-auto" required>
+                    <input type="password" name="password" placeholder="{% trans 'Password' %}" class="form-control form-control-sm d-inline w-auto" required>
+                    <button type="submit" class="btn btn-outline-success btn-sm">{% trans "Login" %}</button>
+                </form>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">{% trans "Register" %}</a>
+            {% endif %}
+            {% if LANGUAGE_CODE == "en" %}
+                <a href="/es/articles/" class="btn btn-link btn-sm">{% trans "Volver a español" %}</a>
+            {% else %}
+                <a href="/en/articles/" class="btn btn-link btn-sm">{% trans "Switch to English" %}</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

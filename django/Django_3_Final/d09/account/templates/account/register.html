@@ -1,0 +1,25 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Register" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Register" %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">{% trans "Register" %}</button>
+    </form>
+    {% if form.errors %}
+        <div class="alert alert-danger mt-3">
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

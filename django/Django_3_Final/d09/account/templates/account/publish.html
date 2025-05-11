@@ -1,0 +1,13 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Publish" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Publish" %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="{% trans 'Title' %}" class="form-control mb-2" required>
+        <input type="text" name="synopsis" placeholder="{% trans 'Synopsis' %}" class="form-control mb-2" required>
+        <textarea name="content" placeholder="{% trans 'Content' %}" class="form-control mb-2" required></textarea>
+        <button type="submit" class="btn btn-success">{% trans "Publish" %}</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Publications" %}{% endblock %}
+{% block content %}
+    <h1>{% trans "Publications" %}</h1>
+    <ul class="list-group">
+    {% for article in articles %}
+        <li class="list-group-item">{{ article.title }}</li>
+    {% empty %}
+        <li class="list-group-item">{% trans "No publications yet." %}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
