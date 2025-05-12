@@ -1,16 +1,28 @@
 {% extends "account/base.html" %}
 {% load i18n %}
 {% block title %}{{ article.title }}{% endblock %}
+
 {% block content %}
-    <h1>{{ article.title }}</h1>
-    <p><strong>{% trans "Synopsis" %}:</strong> {{ article.synopsis }}</p>
-    <p><strong>{% trans "Content" %}:</strong> {{ article.content }}</p>
-    <p><strong>{% trans "Author" %}:</strong> {{ article.author.username }}</p>
-    <p><strong>{% trans "Published" %}:</strong> {{ article.created|date:"Y-m-d H:i" }}</p>
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'add-favourite' article.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning">{% trans "Add to favourites" %}</button>
-        </form>
-    {% endif %}
+<div class="card shadow-sm mx-auto" style="max-width: 700px;">
+    <div class="card-body">
+        <h1 class="card-title mb-3">{{ article.title }}</h1>
+        <h6 class="card-subtitle mb-2 text-muted">
+            <span class="me-2"><strong>{% trans "Author" %}:</strong> {{ article.author.username }}</span>
+            <span><strong>{% trans "Published" %}:</strong> {{ article.created|date:"d/m/Y H:i" }}</span>
+        </h6>
+        <hr>
+        <p class="lead"><strong>{% trans "Synopsis" %}:</strong> {{ article.synopsis }}</p>
+        <div class="mb-4">
+            <strong>{% trans "Content" %}:</strong>
+            <div class="mt-2" style="white-space: pre-line;">{{ article.content }}</div>
+        </div>
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add-favourite' article.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning btn-lg-custom">{% trans "Add to favourites" %}</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'articles' %}" class="btn btn-secondary mt-4">{% trans "Back to articles" %}</a>
+    </div>
+</div>
 {% endblock %}

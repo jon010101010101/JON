@@ -1,58 +1,37 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from .models import Article, UserFavouriteArticle
 from django.contrib.auth.models import User
 
-# Vista principal de cuenta (puedes mejorar el template después)
+# Vista principal de cuenta (login)
 def account_view(request):
     if request.user.is_authenticated:
         return render(request, 'account/account.html', {'user': request.user})
     else:
-        form = AuthenticationForm()
+        if request.method == "POST":
+            form = AuthenticationForm(request, data=request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                login(request, user)
+                return redirect('articles')
+        else:
+            form = AuthenticationForm()
         return render(request, 'account/account.html', {'form': form})
 
-@csrf_exempt
-def ajax_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return JsonResponse({'success': True, 'username': form.get_user().username})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-    return JsonResponse({'success': False, 'errors': 'Invalid request'})
-
-@csrf_exempt
-def ajax_logout(request):
-    if request.method == 'POST':
-        logout(request)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'errors': 'Invalid request'})
+def logout_view(request):
+    logout(request)
+    return redirect('articles')
 
 def article_list(request):
-    # Lógica básica para mostrar artículos
     articles = Article.objects.all().order_by('-created')
-    if request.method == 'POST' and 'login_menu' in request.POST:
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect('articles')
-        else:
-            return render(request, 'account/articles.html', {
-                'articles': articles,
-                'form': form,
-                'login_error': "Invalid username or password."
-            })
     return render(request, 'account/articles.html', {'articles': articles})
 
 @login_required
 def publications(request):
-    # Artículos publicados por el usuario autenticado
     articles = Article.objects.filter(author=request.user).order_by('-created')
     return render(request, 'account/publications.html', {'articles': articles})
 
@@ -68,10 +47,6 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'account/register.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
-    return redirect('articles')
 
 @login_required
 def publish(request):
@@ -115,5 +90,25 @@ def article_detail(request, pk):
     return render(request, 'account/article_detail.html', {'article': article})
 
 def test_template(request):
-    from django.shortcuts import render
     return render(request, 'account/prueba.html')
+
+# Si realmente necesitas AJAX login/logout para algún frontend JS, puedes dejar estas vistas:
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def ajax_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return JsonResponse({'success': True, 'username': form.get_user().username})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    return JsonResponse({'success': False, 'errors': 'Invalid request'})
+
+@csrf_exempt
+def ajax_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'errors': 'Invalid request'})

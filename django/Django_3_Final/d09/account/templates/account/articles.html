@@ -1,43 +1,71 @@
 {% extends "account/base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Articles" %}{% endblock %}
+
 {% block content %}
-    <h1>{% trans "Articles" %}</h1>
-    <h2>{% trans "Share your writings" %}</h2>
+<div class="container mt-4">
+    <h1 class="mb-3">{% trans "Articles" %}</h1>
+    <h2 class="mb-4 text-secondary">{% trans "Share your writings" %}</h2>
+
     {% if login_error %}
         <div class="alert alert-danger">{% trans "Invalid username or password." %}</div>
     {% endif %}
-    <table class="table table-bordered mt-4">
-        <thead>
-            <tr>
-                <th>{% trans "Title" %}</th>
-                <th>{% trans "Synopsis" %}</th>
-                <th>{% trans "Author" %}</th>
-                <th>{% trans "When" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td><a href="{% url 'article-detail' article.pk %}">{{ article.title }}</a></td>
-                <td>
-                    {% if article.synopsis|length > 20 %}
-                        {{ article.synopsis|slice:":20" }}...
-                    {% else %}
-                        {{ article.synopsis }}
-                    {% endif %}
-                </td>
-                <td>{{ article.author.username }}</td>
-                <td>
-                    {% if article.created %}
-                        {% with delta=article.created|timesince %}
-                            {{ delta }} {% trans "ago" %}
-                        {% endwith %}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
 
+    {% if articles %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>{% trans "Title" %}</th>
+                        <th>{% trans "Synopsis" %}</th>
+                        <th>{% trans "Author" %}</th>
+                        <th>{% trans "When" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td>
+                            {% if article.title %}
+                                <a href="{% url 'article-detail' article.pk %}" class="fw-bold text-decoration-none text-primary">
+                                    {{ article.title }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">{% trans "No title" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if article.synopsis %}
+                                {% if article.synopsis|length > 40 %}
+                                    {{ article.synopsis|slice:":40" }}...
+                                {% else %}
+                                    {{ article.synopsis }}
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">{% trans "No synopsis" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if article.author and article.author.username %}
+                                {{ article.author.username }}
+                            {% else %}
+                                <span class="text-muted">{% trans "No author" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if article.created %}
+                                {{ article.created|date:"d/m/Y H:i" }}
+                            {% else %}
+                                <span class="text-muted">{% trans "No date" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-4">{% trans "No articles have been published yet." %}</div>
+    {% endif %}
+</div>
+{% endblock %}

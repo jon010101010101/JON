@@ -1,14 +1,12 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import User
-from .models import ChatRoom, Message
 from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    # Diccionario para llevar usuarios por sala
     users_in_room = {}
 
     async def connect(self):
+        from .models import ChatRoom 
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
         self.username = self.scope["user"].username
@@ -19,7 +17,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
 
-        # Añade usuario a la lista de conectados
         ChatConsumer.users_in_room.setdefault(self.room_name, set()).add(self.username)
         await self.send_user_list()
 
@@ -87,6 +84,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     def save_message(self, room_name, username, message):
+        from .models import ChatRoom, Message
+        from django.contrib.auth.models import User
         room = ChatRoom.objects.get(name=room_name)
         user = User.objects.get(username=username)
         Message.objects.create(room=room, user=user, content=message)

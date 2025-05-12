@@ -106,7 +106,7 @@ CHANNEL_LAYERS = {
 }
 
 # (Opcional) Configuración de login/logout para los tests y las vistas protegidas
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/account/' 
 LOGIN_REDIRECT_URL = '/articles/'
 LOGOUT_REDIRECT_URL = '/articles/'
 
@@ -123,3 +123,5 @@ LOCALE_PATHS = [
 # (Opcional) Para desarrollo local, puedes añadir esto para servir archivos estáticos
 # STATICFILES_DIRS = [BASE_DIR / "static"]
 
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' 

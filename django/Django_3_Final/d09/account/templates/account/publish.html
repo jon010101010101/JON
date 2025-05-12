@@ -1,13 +1,34 @@
 {% extends "account/base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Publish" %}{% endblock %}
+
 {% block content %}
-    <h1>{% trans "Publish" %}</h1>
-    <form method="post">
+    <h1 class="hello-big mb-4">{% trans "Publish a New Article" %}</h1>
+    <form method="post" class="mx-auto" style="max-width: 500px;">
         {% csrf_token %}
-        <input type="text" name="title" placeholder="{% trans 'Title' %}" class="form-control mb-2" required>
-        <input type="text" name="synopsis" placeholder="{% trans 'Synopsis' %}" class="form-control mb-2" required>
-        <textarea name="content" placeholder="{% trans 'Content' %}" class="form-control mb-2" required></textarea>
-        <button type="submit" class="btn btn-success">{% trans "Publish" %}</button>
+        {% if form %}
+            <div class="mb-3">
+                <label for="id_title" class="form-label">{% trans "Title" %}</label>
+                {{ form.title }}
+            </div>
+            <div class="mb-3">
+                <label for="id_synopsis" class="form-label">{% trans "Synopsis" %}</label>
+                {{ form.synopsis }}
+            </div>
+            <div class="mb-3">
+                <label for="id_content" class="form-label">{% trans "Content" %}</label>
+                {{ form.content }}
+            </div>
+        {% else %}
+            <input type="text" name="title" placeholder="{% trans 'Title' %}" class="form-control mb-2" required>
+            <input type="text" name="synopsis" placeholder="{% trans 'Synopsis' %}" class="form-control mb-2" required>
+            <textarea name="content" placeholder="{% trans 'Content' %}" class="form-control mb-2" required></textarea>
+        {% endif %}
+        <button type="submit" class="btn btn-success btn-lg-custom">{% trans "Publish" %}</button>
     </form>
+    {% if form.errors %}
+        <div class="alert alert-danger mt-3">
+            {{ form.errors }}
+        </div>
+    {% endif %}
 {% endblock %}

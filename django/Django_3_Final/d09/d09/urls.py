@@ -19,6 +19,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('account.urls')),
-    path('chat/', include('chat.urls')),
+    path('', include('account.urls')),   # Todas las rutas de la app 'account'
+    path('chat/', include('chat.urls')), # Todas las rutas de la app 'chat'
 ]
+
+# --- Para que se vea Admin sin estar desfigurado ---
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
