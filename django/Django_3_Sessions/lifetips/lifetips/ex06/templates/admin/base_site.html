@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block branding %}
+  <div style="display: flex; align-items: center; width: 100%;">
+    <a href="{% url 'home' %}" style="font-weight:bold; color:#fff; font-size:1.6em; text-decoration:none;">
+      Life Pro Tips
+    </a>
+    <a href="{% url 'home' %}" style="color:#fff; font-size:1.1em; text-decoration:none; margin-left:auto;">
+      🏠 Back to Home
+    </a>
+  </div>
+{% endblock %}
+
+
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/custom_admin.css' %}">
+{% endblock %}
