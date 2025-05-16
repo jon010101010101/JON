@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Reputation Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding-top: 40px;
+        }
+        .main-content {
+            max-width: 800px;
+            margin: 60px auto 0 auto;
+            background-color: #fff;
+            padding: 40px 30px 30px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        h1 {
+            color: #007bff;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .card {
+            margin-bottom: 24px;
+        }
+        .card-header {
+            background: #f8f9fa;
+            font-size: 1.08em;
+        }
+        .badge.bg-primary {
+            background-color: #007bff !important;
+        }
+        .badge.bg-success {
+            background-color: #28a745 !important;
+        }
+        .badge.bg-info {
+            background-color: #17a2b8 !important;
+        }
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #333 !important;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 10px 0;
+        }
+        /* Navbar custom button style */
+        .btn-reputation {
+            background-color: #ff9800;
+            color: #fff !important;
+            border: none;
+        }
+        .btn-reputation:hover,
+        .btn-reputation:focus {
+            background-color: #e65100;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Life Pro Tips</a>
+            <div>
+                <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm me-2">Home</a>
+                <a href="{% url 'user_reputation_report' %}" class="btn btn-reputation btn-sm me-2">Reputation</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'tips_list' %}" class="btn btn-outline-info btn-sm me-2">View Tips</a>
+                    <a href="{% url 'users_list' %}" class="btn btn-outline-success btn-sm me-2">Users List</a>
+                    <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary btn-sm me-2">Edit Profile</a>
+                    {% if user.is_superuser %}
+                        <a href="/admin/" class="btn btn-outline-dark btn-sm me-2">Admin</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm me-2">Register</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1>User Reputation Report</h1>
+        {% for info in usuarios_info %}
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>{{ info.user.username }}</strong>
+                        <span class="badge bg-primary ms-2">Reputation: {{ info.reputation }}</span>
+                    </span>
+                    {% if info.permissions %}
+                        <span>
+                            {% for permiso in info.permissions %}
+                                <span class="badge bg-success">{{ permiso }}</span>
+                            {% endfor %}
+                        </span>
+                    {% endif %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for tip in info.tips_info %}
+                        <li class="list-group-item">
+                            <strong>Tip #{{ tip.tip.id }}:</strong> {{ tip.tip.content }}<br>
+                            <span class="text-muted">Score: {{ tip.score }}</span><br>
+                            <span>
+                                <strong>Upvoters:</strong>
+                                {% if tip.upvoters %}
+                                    {% for u in tip.upvoters %}
+                                        <span class="badge bg-info text-dark">{{ u.username }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </span>
+                            <br>
+                            <span>
+                                <strong>Downvoters:</strong>
+                                {% if tip.downvoters %}
+                                    {% for u in tip.downvoters %}
+                                        <span class="badge bg-warning text-dark">{{ u.username }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">No tips.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">No users found.</div>
+        {% endfor %}
+    </div>
+    <div class="footer">
+        &copy; 2025 LifeTips Jon,S.A. All rights reserved.
+    </div>
+</body>
+</html>

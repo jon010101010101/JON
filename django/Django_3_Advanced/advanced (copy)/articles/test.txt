@@ -1,0 +1,53 @@
+ex00: Modelos, listado, login, home, fixtures
+Test 1: Verifica que la lista de artículos muestra todos los artículos (cumple listado y fixtures).
+
+Test 2 y 3: Login/logout y errores de login desde el menú (cumple login y feedback).
+
+Fixtures: En el setUp creas dos usuarios y dos artículos, suficiente para pruebas (aunque para la entrega final puedes añadir más con fixtures o admin).
+
+ex01: Publications, detail, favourites, logout
+Test 4: Publications requiere login y muestra solo los artículos del usuario.
+
+Test 8: Añadir a favoritos y ver favoritos.
+
+(Puedes tener más tests para detail y logout, pero ya están cubiertos por los flujos de login/logout y acceso a publicaciones.)
+
+ex02: Register, publish, add to favourite
+Test 5: Registro de usuario funciona correctamente.
+
+Test 6: Registro muestra error si las contraseñas no coinciden.
+
+Test 7: Publicar artículo funciona correctamente.
+
+Test 8: Añadir a favoritos y verlos.
+
+ex03: Menú global, filtros, orden, columna "when"
+Test 1 y 2: El menú está presente y muestra el estado correcto según login/logout.
+
+Test 1: El listado de artículos se muestra correctamente (puedes añadir un test para filtros personalizados si quieres máxima cobertura, pero funcionalmente está cubierto).
+
+Test 3: Mensaje de error en login si falla.
+
+ex04: Bootstrap
+No requiere tests funcionales (es visual), pero tus plantillas usan Bootstrap y el menú está presente en todos los tests.
+
+ex05: Internacionalización
+No requiere tests funcionales (es visual), pero podrías añadir un test para comprobar que el contenido cambia con el prefijo de idioma si quieres máxima cobertura. No es obligatorio.
+
+ex06: Testing (los 3 puntos clave)
+Protected views:
+
+Test 4: Publications requiere login.
+
+Test 17: Favourites requiere login.
+
+Test 18: Publish requiere login.
+
+Register solo para no logueados:
+
+Test 16: Un usuario autenticado no puede acceder a register.
+
+No duplicar favoritos:
+
+Test 15: No se puede añadir el mismo favorito dos veces.
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tip List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f8fc;
+            color: #2c3e50;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .branding {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .title {
+            font-size: 1.5em;
+            text-align: center;
+            flex-grow: 1;
+            color: #1a73e8;
+        }
+        .home-button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .home-button:hover {
+            background-color: #1558b0;
+        }
+        .tip {
+            background-color: #fff;
+            border: 1px solid #d0e2fc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .tip-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .votes {
+            font-size: 0.9em;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f4f8fc;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'home' %}" class="branding">Life Pro Tips</a>
+        <div class="title">Tip List</div>
+        <a href="{% url 'home' %}" class="home-button">Go to Home</a>
+    </div>
+    {% if tips %}
+        {% for tip in tips %}
+            <div class="tip">
+                <!-- Encabezado del tip mostrando el autor y reputación -->
+                <div class="tip-header">
+                    <strong>ID:</strong> {{ tip.id }} |
+                    <strong>Author:</strong> {{ tip.author.username }} ({{ tip.author.reputation }} rep)
+                    {% if tip.author.is_superuser %}
+                        <span style="color:#e67e22;">(superuser)</span>
+                    {% endif %}
+                </div>
+                <!-- Contenido del tip -->
+                <div class="tip-content">
+                    {{ tip.content }}
+                </div>
+                <!-- Votos positivos y negativos -->
+                <div class="votes">
+                    <strong>Upvotes:</strong> {{ tip.upvotes.count }}<br>
+                    <strong>Downvotes:</strong> {{ tip.downvotes.count }}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center;">No tips found.</p>
+    {% endif %}
+    <div class="footer">
+        &copy; 2025 LifeTips Jon, S.A. All rights reserved.
+    </div>
+</body>
+</html>

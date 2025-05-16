@@ -64,7 +64,7 @@ EX06: Testing
 
 
 127.0.0.1:8000/
-
+127.0.0.1:8000/Admin
 
 
 find . -name "*.pyc" -delete
