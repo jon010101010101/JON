@@ -1,0 +1,5 @@
+{% block content %}
+<div class="alert {% if status == "success" %}alert-success{% else %}alert-danger{% endif %} text-center mx-auto" style="max-width: 500px;" role="alert">
+    <p class="mb-0">{{ message }}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Articles" %}{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 700px;">
+    <div class="card-body">
+        <h1 class="card-title mb-4">{% trans "Articles" %}</h1>
+        {% if articles %}
+            <ul class="list-group">
+                {% for article in articles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">{{ article.title }}</h5>
+                            <small class="text-muted">
+                                {% trans "Author" %}: {{ article.author.username }} | 
+                                {% trans "Published" %}: {{ article.created|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        <a href="{% url 'article_detail' article.pk %}" class="btn btn-primary btn-sm">{% trans "View" %}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">{% trans "No articles available." %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

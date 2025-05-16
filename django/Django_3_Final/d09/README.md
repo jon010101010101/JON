@@ -71,12 +71,17 @@ http://localhost:8000/
 
 
 
+# TESTS
+
+Para ejecutar los dos test a la vez
+python manage.py test
+
+Para ejecutar solo Acccount
+python manage.py test account
 
 
-
-
-
-
+Para ejecutar solo Chat
+python manage.py test chat
 
 
 

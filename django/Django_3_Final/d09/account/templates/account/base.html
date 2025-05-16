@@ -61,15 +61,33 @@
 <body>
     <!-- Barra de navegación principal -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
-      <div class="container">
-        <a class="navbar-brand" href="{% url 'articles' %}">
-            <i class="bi bi-journal-text"></i> Professional Articles Hub
-        </a>
-        <div class="navbar-buttons">
-            <!-- Aquí puedes poner botones de login/logout, etc -->
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'articles' %}">
+                <i class="bi bi-journal-text"></i> Professional Articles Hub
+            </a>
+            <div class="navbar-buttons">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">{% trans "Logout" %}</a>
+                    <a href="{% url 'favourites' %}" class="btn btn-warning btn-sm">{% trans "Favourites" %}</a>
+                    <a href="{% url 'publications' %}" class="btn btn-primary btn-sm">{% trans "My Publications" %}</a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-sm">{% trans "Register" %}</a>
+                    <a href="{% url 'account' %}" class="btn btn-outline-success btn-sm">{% trans "Login" %}</a>
+                {% endif %}
+            </div>
         </div>
-      </div>
     </nav>
+    <!-- Mensajes globales -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
     <div class="main-content">
         {% block content %}
         {% endblock %}

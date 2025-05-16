@@ -1,114 +1,139 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
 from .models import Article, UserFavouriteArticle
+from .forms import ArticleForm
 from django.contrib.auth.models import User
 
-# Vista principal de cuenta (login)
-def account_view(request):
-    if request.user.is_authenticated:
-        return render(request, 'account/account.html', {'user': request.user})
-    else:
-        if request.method == "POST":
-            form = AuthenticationForm(request, data=request.POST)
-            if form.is_valid():
-                user = form.get_user()
-                login(request, user)
-                return redirect('articles')
-        else:
-            form = AuthenticationForm()
-        return render(request, 'account/account.html', {'form': form})
+# -----------------------------------
+# Vistas relacionadas con artículos
+# -----------------------------------
 
-def logout_view(request):
-    logout(request)
-    return redirect('articles')
-
+# Vista para listar todos los artículos
 def article_list(request):
-    articles = Article.objects.all().order_by('-created')
-    return render(request, 'account/articles.html', {'articles': articles})
+    articles = Article.objects.all().order_by('-created')  # Ordenados por fecha de creación
+    return render(request, 'account/article_list.html', {'articles': articles})
 
-@login_required
-def publications(request):
-    articles = Article.objects.filter(author=request.user).order_by('-created')
-    return render(request, 'account/publications.html', {'articles': articles})
 
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('articles')
-        else:
-            return render(request, 'account/register.html', {'form': form})
-    else:
-        form = UserCreationForm()
-    return render(request, 'account/register.html', {'form': form})
-
-@login_required
-def publish(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        synopsis = request.POST.get('synopsis')
-        content = request.POST.get('content')
-        if title and synopsis and content:
-            Article.objects.create(
-                title=title,
-                synopsis=synopsis,
-                content=content,
-                author=request.user
-            )
-            return redirect('articles')
-    return render(request, 'account/publish.html')
-
-@login_required
-def favourites(request):
-    favs = UserFavouriteArticle.objects.filter(user=request.user)
-    return render(request, 'account/favourites.html', {'favs': favs})
-
-@login_required
-def add_favourite(request, pk):
-    article = get_object_or_404(Article, pk=pk)
-    fav, created = UserFavouriteArticle.objects.get_or_create(user=request.user, article=article)
-    if not created:
-        return redirect('already-favourite')
-    return redirect('favourite-added')
-
-@login_required
-def favourite_added(request):
-    return render(request, 'account/favourite_added.html')
-
-@login_required
-def already_favourite(request):
-    return render(request, 'account/already_favourite.html')
-
+# Vista para ver los detalles de un artículo
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
     return render(request, 'account/article_detail.html', {'article': article})
 
-def test_template(request):
-    return render(request, 'account/prueba.html')
 
-# Si realmente necesitas AJAX login/logout para algún frontend JS, puedes dejar estas vistas:
-from django.views.decorators.csrf import csrf_exempt
+# Vista para crear un nuevo artículo
+@login_required
+def publish(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user  # Asignar el usuario autenticado como autor
+            article.save()
+            messages.success(request, 'El artículo fue creado con éxito.')
+            return redirect('article_list')
+    else:
+        form = ArticleForm()
+    return render(request, 'account/article_form.html', {'form': form})
 
-@csrf_exempt
+
+# -----------------------------------
+# Vistas relacionadas con favoritos
+# -----------------------------------
+
+# Vista para listar los artículos favoritos del usuario
+@login_required
+def favourites(request):
+    favourites = UserFavouriteArticle.objects.filter(user=request.user).select_related('article')
+    return render(request, 'account/favourite_list.html', {'favourites': favourites})
+
+
+# Vista para añadir un artículo a favoritos
+@login_required
+def add_favourite(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    favourite, created = UserFavouriteArticle.objects.get_or_create(user=request.user, article=article)
+    if created:
+        messages.success(request, f'El artículo "{article.title}" fue añadido a tus favoritos.')
+    else:
+        messages.info(request, f'El artículo "{article.title}" ya está en tus favoritos.')
+    return redirect('article_detail', pk=pk)
+
+
+# Vista para mostrar un mensaje de favorito añadido
+@login_required
+def favourite_added(request):
+    messages.success(request, 'El artículo fue añadido a tus favoritos con éxito.')
+    return redirect('favourites')
+
+
+# Vista para mostrar un mensaje si el artículo ya está en favoritos
+@login_required
+def already_favourite(request):
+    messages.info(request, 'El artículo ya está en tus favoritos.')
+    return redirect('favourites')
+
+
+# -----------------------------------
+# Vistas relacionadas con usuarios
+# -----------------------------------
+
+# Vista para registrar un nuevo usuario
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario ya existe.')
+        else:
+            user = User.objects.create_user(username=username, password=password)
+            login(request, user)
+            messages.success(request, 'Te has registrado con éxito.')
+            return redirect('article_list')
+    return render(request, 'account/register.html')
+
+
+# Vista para cerrar sesión
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Cerraste sesión con éxito.')
+    return redirect('article_list')
+
+
+# Vista para manejar el inicio de sesión vía AJAX
 def ajax_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return JsonResponse({'success': True, 'username': form.get_user().username})
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return render(request, 'account/ajax_response.html', {'status': 'success', 'message': f'Welcome, {user.username}!'})
         else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-    return JsonResponse({'success': False, 'errors': 'Invalid request'})
+            return render(request, 'account/ajax_response.html', {'status': 'error', 'message': 'Invalid username or password.'})
+    return redirect('account')
 
-@csrf_exempt
+
+# Vista para manejar el cierre de sesión vía AJAX
+@login_required
 def ajax_logout(request):
-    if request.method == 'POST':
-        logout(request)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'errors': 'Invalid request'})
+    logout(request)
+    return render(request, 'account/ajax_response.html', {'status': 'success', 'message': 'Has cerrado sesión con éxito.'})
+
+
+# Vista para mostrar la cuenta del usuario (perfil)
+@login_required
+def account_view(request):
+    return render(request, 'account/account.html', {'user': request.user})
+
+
+# -----------------------------------
+# Vista para mostrar publicaciones (opcional)
+# -----------------------------------
+
+# Vista de publicaciones (puede ser personalizada)
+def publications(request):
+    # Puedes personalizar esta vista para manejar publicaciones específicas
+    return render(request, 'account/publications.html')
